@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #005daa;
+  --color-background-pure: #FFFFFF;
+  --color-charcoal: #0F0F0F;
+  --color-charcoal-muted: #666666;
+  --font-sans: "Inter", sans-serif;
+}
+
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: #FFFFFF;
+    color: #0F0F0F;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  html {
+    scroll-padding-top: 100px;
+  }
+}
+
+.reveal {
+  will-change: transform, opacity;
+}
+
+.reveal-blur {
+}
+
+.reveal-slide {
+}
+
+.reveal-scale {
+}
+
+.layered-card {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem 4rem;
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 900px;
+}
+
+.card-content {
+  background: #FFFFFF;
+  border-radius: 32px;
+  width: 100%;
+  max-width: 1400px;
+  box-shadow: 0 4px 40px -8px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  position: relative;
+}
+
+.floating-nav {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.glass-pill {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
+}
+
+.glass-pill:hover {
+  transform: translateY(-2px);
+  background: white;
+  box-shadow: 0 8px 20px -4px rgba(0, 93, 170, 0.12);
+  border-color: rgba(0, 93, 170, 0.15);
+}
+
+.fade-mask {
+  mask-image: linear-gradient(to bottom, black 0%, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 85%, transparent 100%);
+}
+
+.progress-glow {
+  box-shadow: 0 0 12px rgba(0, 93, 170, 0.5);
+}
+
+.video-player {
+  border-radius: 24px;
+  background: #F8F9FA;
+  overflow: hidden;
+}
+
+.central-glow {
+  background: radial-gradient(circle at center, rgba(0, 93, 170, 0.025) 0%, transparent 60%);
+}
+
+@media (max-width: 768px) {
+  .layered-card {
+    padding: 5rem 0.5rem 3rem;
+    min-height: auto;
+    padding-bottom: 4rem;
+  }
+  
+  .card-content {
+    border-radius: 16px;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layered-card,
+  .glass-pill,
+  .video-player img,
+  .video-player .play-button {
+    transition: none;
+    animation: none;
+  }
+  
+  .reveal,
+  .reveal-blur,
+  .reveal-slide,
+  .reveal-scale,
+  .stagger-item,
+  .line-reveal {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    filter: none !important;
+  }
+  
+  .progress-bar {
+    transform: scaleX(1) !important;
+  }
+}

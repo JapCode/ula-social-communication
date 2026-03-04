@@ -1,0 +1,87 @@
+<nav class="reveal fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-[100] w-[95%] md:w-[90%] max-w-6xl" aria-label="Navegación superior">
+	<div class="floating-nav rounded-full px-4 md:px-8 py-2 md:py-3 flex items-center justify-between">
+		<div class="flex items-center gap-2 md:gap-3">
+			<img src="/ula_logo.jpg" alt="ULA NURR" class="h-6 md:h-8 w-auto" />
+			<span class="font-bold tracking-[0.2em] text-[8px] md:text-[10px] uppercase hidden xs:inline">ULA NURR</span>
+		</div>
+		
+		<div class="hidden md:flex items-center gap-10">
+			<a class="text-[9px] font-bold tracking-[0.2em] uppercase text-charcoal-muted hover:text-primary transition-colors magnetic" href="#">Inscripciones</a>
+			<a class="text-[9px] font-bold tracking-[0.2em] uppercase text-charcoal-muted hover:text-primary transition-colors magnetic" href="#">Horarios</a>
+			<a class="text-[9px] font-bold tracking-[0.2em] uppercase text-charcoal-muted hover:text-primary transition-colors magnetic" href="#">Pénsum</a>
+			<a class="text-[9px] font-bold tracking-[0.2em] uppercase text-charcoal-muted hover:text-primary transition-colors magnetic" href="#">Recursos</a>
+		</div>
+		
+		<div class="flex items-center gap-2">
+			<button class="bg-primary text-white text-[8px] md:text-[9px] font-bold tracking-[0.2em] uppercase px-3 md:px-6 py-2 md:py-2.5 rounded-full hover:shadow-lg hover:shadow-primary/20 transition-all magnetic hidden md:block">
+				Portal
+			</button>
+			
+			<button class="md:hidden p-2 rounded-full hover:bg-black/5 transition-colors" id="mobile-menu-btn" aria-label="Abrir menú" aria-expanded="false">
+				<span class="material-symbols-outlined text-charcoal">menu</span>
+			</button>
+		</div>
+	</div>
+</nav>
+
+<div id="mobile-menu" class="fixed inset-0 z-[150] bg-black/50 hidden" aria-hidden="true">
+	<div class="absolute right-0 top-0 h-full w-72 bg-white shadow-2xl transform translate-x-full transition-transform duration-300" id="mobile-menu-panel">
+		<div class="p-6">
+			<div class="flex items-center justify-between mb-8">
+				<img src="/ula_logo.jpg" alt="ULA NURR" class="h-8 w-auto" />
+				<button id="mobile-menu-close" class="p-2 rounded-full hover:bg-black/5 transition-colors" aria-label="Cerrar menú">
+					<span class="material-symbols-outlined text-charcoal">close</span>
+				</button>
+			</div>
+			<nav class="space-y-4">
+				<a href="#inicio" class="block py-3 text-[12px] font-bold tracking-[0.2em] uppercase text-charcoal hover:text-primary transition-colors">Inicio</a>
+				<a href="#noticias" class="block py-3 text-[12px] font-bold tracking-[0.2em] uppercase text-charcoal hover:text-primary transition-colors">Noticias</a>
+				<a href="#video" class="block py-3 text-[12px] font-bold tracking-[0.2em] uppercase text-charcoal hover:text-primary transition-colors">Experiencia</a>
+				<a href="#accesos" class="block py-3 text-[12px] font-bold tracking-[0.2em] uppercase text-charcoal hover:text-primary transition-colors">Accesos Rápidos</a>
+				<hr class="my-4 border-black/10" />
+				<a href="#" class="block py-3 text-[11px] font-bold tracking-[0.2em] uppercase text-charcoal-muted hover:text-primary transition-colors">Inscripciones</a>
+				<a href="#" class="block py-3 text-[11px] font-bold tracking-[0.2em] uppercase text-charcoal-muted hover:text-primary transition-colors">Horarios</a>
+				<a href="#" class="block py-3 text-[11px] font-bold tracking-[0.2em] uppercase text-charcoal-muted hover:text-primary transition-colors">Pénsum</a>
+				<a href="#" class="block py-3 text-[11px] font-bold tracking-[0.2em] uppercase text-charcoal-muted hover:text-primary transition-colors">Recursos</a>
+			</nav>
+			<button class="w-full bg-primary text-white text-[10px] font-bold tracking-[0.2em] uppercase px-6 py-3 rounded-full mt-8 hover:shadow-lg hover:shadow-primary/20 transition-all">
+				Portal
+			</button>
+		</div>
+	</div>
+</div>
+
+<script>
+	const menuBtn = document.getElementById('mobile-menu-btn');
+	const menuClose = document.getElementById('mobile-menu-close');
+	const mobileMenu = document.getElementById('mobile-menu');
+	const menuPanel = document.getElementById('mobile-menu-panel');
+	
+	function openMenu() {
+		if (!mobileMenu || !menuPanel) return;
+		mobileMenu.classList.remove('hidden');
+		setTimeout(() => {
+			menuPanel.classList.remove('translate-x-full');
+		}, 10);
+		document.body.style.overflow = 'hidden';
+	}
+	
+	function closeMenu() {
+		if (!menuPanel || !mobileMenu) return;
+		menuPanel.classList.add('translate-x-full');
+		setTimeout(() => {
+			mobileMenu.classList.add('hidden');
+		}, 300);
+		document.body.style.overflow = '';
+	}
+	
+	menuBtn?.addEventListener('click', openMenu);
+	menuClose?.addEventListener('click', closeMenu);
+	mobileMenu?.addEventListener('click', (e) => {
+		if (e.target === mobileMenu) closeMenu();
+	});
+	
+	document.querySelectorAll('#mobile-menu a').forEach(link => {
+		link.addEventListener('click', closeMenu);
+	});
+</script>

@@ -1,17 +1,41 @@
 ---
-
+import Layout from '../layouts/Layout.astro';
+import FloatingNav from '../components/FloatingNav.astro';
+import TopNav from '../components/TopNav.astro';
+import HeroSection from '../components/HeroSection.astro';
+import NewsSection from '../components/NewsSection.astro';
+import VideoSection from '../components/VideoSection.astro';
+import QuickAccessSection from '../components/QuickAccessSection.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title="Comunicación Social ULA NURR | Discovery">
+	<FloatingNav />
+	<TopNav />
+	<main class="relative">
+		<HeroSection />
+		<NewsSection />
+		<VideoSection />
+		<QuickAccessSection />
+	</main>
+	<Footer />
+</Layout>
+
+<style is:global>
+	#inicio,
+	#noticias,
+	#video,
+	#accesos {
+		scroll-margin-top: 5rem;
+	}
+	
+	@media (min-width: 768px) {
+		#inicio,
+		#noticias,
+		#video,
+		#accesos {
+			scroll-margin-top: 6rem;
+		}
+	}
+</style>
