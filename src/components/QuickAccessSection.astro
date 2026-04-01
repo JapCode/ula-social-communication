@@ -1,66 +1,91 @@
 <section class="layered-card z-40" id="accesos" aria-labelledby="access-title">
-	<div class="card-content bg-white p-6 md:p-24 flex items-center justify-center">
-		<div class="w-full max-w-4xl">
-			<h2 id="access-title" class="text-2xl md:text-4xl font-bold text-center mb-8 md:mb-12">Accesos Rápidos</h2>
+	<div class="card-content bg-white p-6 md:p-16 lg:p-20 flex items-center justify-center">
+		<div class="w-full max-w-5xl">
+			<!-- Header -->
+			<div class="text-center mb-10 md:mb-16">
+				<span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 text-primary text-[10px] font-bold tracking-[0.2em] uppercase mb-5">
+					<span class="w-1 h-1 rounded-full bg-primary"></span>
+					Navegación
+				</span>
+				<h2 id="access-title" class="text-3xl md:text-4xl lg:text-5xl font-display font-semibold tracking-tight">Accesos Rápidos</h2>
+			</div>
 			
-			<div class="md:hidden flex overflow-x-auto gap-4 pb-4 -mx-6 px-6 snap-x snap-mandatory scrollbar-hide">
-				<a class="stagger-item snap-center glass-pill p-6 rounded-[32px] flex-shrink-0 w-72 flex items-center gap-4 group" href="#">
-					<span class="material-symbols-outlined text-primary text-3xl" aria-hidden="true">person_add</span>
+			<!-- Mobile: horizontal scroll -->
+			<div class="md:hidden flex overflow-x-auto gap-3 pb-4 -mx-4 px-4 snap-x snap-mandatory scrollbar-hide">
+				<a class="snap-center access-card p-5 flex-shrink-0 w-64 flex items-center gap-3 group" href="#" aria-label="Inscripciones - Nuevos ingresos">
+					<span class="flex-shrink-0 w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="access-icon text-primary" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+					</span>
 					<div class="space-y-1">
-						<span class="text-[11px] font-black tracking-widest uppercase block">Inscripciones</span>
-						<span class="text-sm text-charcoal-muted font-light">Nuevos ingresos.</span>
+						<span class="text-[11px] font-bold tracking-widest uppercase block">Inscripciones</span>
+						<span class="text-sm text-ink-muted font-normal">Nuevos ingresos.</span>
 					</div>
 				</a>
-				<a class="stagger-item snap-center glass-pill p-6 rounded-[32px] flex-shrink-0 w-72 flex items-center gap-4 group" href="#">
-					<span class="material-symbols-outlined text-primary text-3xl" aria-hidden="true">schedule</span>
+				<a class="snap-center access-card p-5 flex-shrink-0 w-64 flex items-center gap-3 group" href="#" aria-label="Horarios - Cronograma semestre">
+					<span class="flex-shrink-0 w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="access-icon text-primary" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+					</span>
 					<div class="space-y-1">
-						<span class="text-[11px] font-black tracking-widest uppercase block">Horarios</span>
-						<span class="text-sm text-charcoal-muted font-light">Cronograma semestre.</span>
+						<span class="text-[11px] font-bold tracking-widest uppercase block">Horarios</span>
+						<span class="text-sm text-ink-muted font-normal">Cronograma semestre.</span>
 					</div>
 				</a>
-				<a class="stagger-item snap-center glass-pill p-6 rounded-[32px] flex-shrink-0 w-72 flex items-center gap-4 group" href="#">
-					<span class="material-symbols-outlined text-primary text-3xl" aria-hidden="true">account_tree</span>
+				<a class="snap-center access-card p-5 flex-shrink-0 w-64 flex items-center gap-3 group" href="#" aria-label="Pénsum - Malla curricular">
+					<span class="flex-shrink-0 w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="access-icon text-primary" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+					</span>
 					<div class="space-y-1">
-						<span class="text-[11px] font-black tracking-widest uppercase block">Pénsum</span>
-						<span class="text-sm text-charcoal-muted font-light">Malla curricular.</span>
+						<span class="text-[11px] font-bold tracking-widest uppercase block">Pénsum</span>
+						<span class="text-sm text-ink-muted font-normal">Malla curricular.</span>
 					</div>
 				</a>
-				<a class="stagger-item snap-center glass-pill p-6 rounded-[32px] flex-shrink-0 w-72 flex items-center gap-4 group" href="#">
-					<span class="material-symbols-outlined text-primary text-3xl" aria-hidden="true">menu_book</span>
+				<a class="snap-center access-card p-5 flex-shrink-0 w-64 flex items-center gap-3 group" href="#" aria-label="Recursos - Biblioteca digital">
+					<span class="flex-shrink-0 w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
+						<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="access-icon text-primary" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+					</span>
 					<div class="space-y-1">
-						<span class="text-[11px] font-black tracking-widest uppercase block">Recursos</span>
-						<span class="text-sm text-charcoal-muted font-light">Biblioteca digital.</span>
+						<span class="text-[11px] font-bold tracking-widest uppercase block">Recursos</span>
+						<span class="text-sm text-ink-muted font-normal">Biblioteca digital.</span>
 					</div>
 				</a>
 			</div>
 
-			<div class="hidden md:grid grid-cols-2 gap-8" data-stagger="0.08">
-				<a class="stagger-item reveal-scale glass-pill p-10 rounded-[40px] flex items-center gap-8 group" href="#">
-					<span class="material-symbols-outlined text-primary text-4xl" aria-hidden="true">person_add</span>
+			<!-- Desktop: grid -->
+			<div class="hidden md:grid grid-cols-2 gap-5 lg:gap-6" data-stagger="0.1">
+				<a class="stagger-item reveal-scale access-card p-8 lg:p-10 flex items-center gap-5 group" href="#" aria-label="Inscripciones - Gestión de nuevos ingresos y reingresos">
+					<span class="flex-shrink-0 w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="access-icon text-primary" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+					</span>
 					<div class="space-y-1">
-						<span class="text-[12px] font-black tracking-widest uppercase block">Inscripciones</span>
-						<span class="text-sm text-charcoal-muted font-light">Gestión de nuevos ingresos y reingresos.</span>
+						<span class="text-[11px] font-bold tracking-widest uppercase block">Inscripciones</span>
+						<span class="text-sm text-ink-muted font-normal">Gestión de nuevos ingresos y reingresos.</span>
 					</div>
 				</a>
-				<a class="stagger-item reveal-scale glass-pill p-10 rounded-[40px] flex items-center gap-8 group" href="#">
-					<span class="material-symbols-outlined text-primary text-4xl" aria-hidden="true">schedule</span>
+				<a class="stagger-item reveal-scale access-card p-8 lg:p-10 flex items-center gap-5 group" href="#" aria-label="Horarios - Cronograma académico del semestre actual">
+					<span class="flex-shrink-0 w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="access-icon text-primary" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+					</span>
 					<div class="space-y-1">
-						<span class="text-[12px] font-black tracking-widest uppercase block">Horarios</span>
-						<span class="text-sm text-charcoal-muted font-light">Cronograma académico del semestre actual.</span>
+						<span class="text-[11px] font-bold tracking-widest uppercase block">Horarios</span>
+						<span class="text-sm text-ink-muted font-normal">Cronograma académico del semestre actual.</span>
 					</div>
 				</a>
-				<a class="stagger-item reveal-scale glass-pill p-10 rounded-[40px] flex items-center gap-8 group" href="#">
-					<span class="material-symbols-outlined text-primary text-4xl" aria-hidden="true">account_tree</span>
+				<a class="stagger-item reveal-scale access-card p-8 lg:p-10 flex items-center gap-5 group" href="#" aria-label="Pénsum - Malla curricular y plan de estudios">
+					<span class="flex-shrink-0 w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="access-icon text-primary" aria-hidden="true"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+					</span>
 					<div class="space-y-1">
-						<span class="text-[12px] font-black tracking-widest uppercase block">Pénsum</span>
-						<span class="text-sm text-charcoal-muted font-light">Malla curricular y plan de estudios.</span>
+						<span class="text-[11px] font-bold tracking-widest uppercase block">Pénsum</span>
+						<span class="text-sm text-ink-muted font-normal">Malla curricular y plan de estudios.</span>
 					</div>
 				</a>
-				<a class="stagger-item reveal-scale glass-pill p-10 rounded-[40px] flex items-center gap-8 group" href="#">
-					<span class="material-symbols-outlined text-primary text-4xl" aria-hidden="true">menu_book</span>
+				<a class="stagger-item reveal-scale access-card p-8 lg:p-10 flex items-center gap-5 group" href="#" aria-label="Recursos Bibliográficos - Acceso a biblioteca digital y archivos">
+					<span class="flex-shrink-0 w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+						<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="access-icon text-primary" aria-hidden="true"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/></svg>
+					</span>
 					<div class="space-y-1">
-						<span class="text-[12px] font-black tracking-widest uppercase block">Recursos Bibliográficos</span>
-						<span class="text-sm text-charcoal-muted font-light">Acceso a biblioteca digital y archivos.</span>
+						<span class="text-[11px] font-bold tracking-widest uppercase block">Recursos Bibliográficos</span>
+						<span class="text-sm text-ink-muted font-normal">Acceso a biblioteca digital y archivos.</span>
 					</div>
 				</a>
 			</div>
