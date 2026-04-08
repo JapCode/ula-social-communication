@@ -1,91 +1,261 @@
-<section
-	class="layered-card z-20 news-section"
-	id="noticias"
-	aria-labelledby="news-title"
->
-	<div class="card-content bg-white">
-		<div class="relative w-full flex flex-col md:flex-row">
-			<!-- Image side (60%) -->
-			<div
-				class="relative w-full md:w-[60%] min-h-[250px] md:min-h-[550px] overflow-hidden"
-			>
-				<div class="news-image-container absolute inset-0">
-					<img
-						alt="Showcase - Estudiantes de Comunicación Social en actividad académica"
-						class="w-full h-full object-cover"
-						src="/images/brooke-cagle-g1Kr4Ozfoac-unsplash.jpg "
-						loading="lazy"
-						width="800"
-						height="600"
-					/>
-				</div>
-				<!-- Gradient overlay: white on right side to blend with text area -->
-				<div
-					class="absolute inset-0 bg-gradient-to-t from-white/80 via-white/20 to-transparent md:bg-gradient-to-l md:from-white/60 md:via-white/20 md:to-transparent"
-				>
-				</div>
-				<!-- Floating tag -->
-				<div class="absolute top-6 left-6 md:top-8 md:left-8 z-10">
-					<span
-						class="inline-flex items-center gap-1.5 bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase text-primary border border-primary/10"
-					>
-						<span
-							class="w-1.5 h-1.5 rounded-full bg-primary animate-pulse"
-						></span>
-						Actualidad
-					</span>
-				</div>
+---
+import { PhArrowRight } from "phosphor-icons-astro";
+---
+
+<!-- News section — split card layout with image -->
+<section class="news-section" id="noticias" aria-labelledby="news-title">
+	<div class="news-container">
+		<div class="news-card">
+			<!-- Image side -->
+			<div class="news-card-image">
+				<img
+					alt="Estudiantes de Comunicación Social en actividad académica"
+					src="/images/brooke-cagle-g1Kr4Ozfoac-unsplash.jpg"
+					srcset="/images/brooke-cagle-g1Kr4Ozfoac-unsplash.jpg 480w, /images/brooke-cagle-g1Kr4Ozfoac-unsplash.jpg 800w, /images/brooke-cagle-g1Kr4Ozfoac-unsplash.jpg 1200w"
+					sizes="(max-width: 768px) 100vw, 55vw"
+					loading="lazy"
+					width="800"
+					height="600"
+				/>
 			</div>
 
-			<!-- Text side (40%) -->
-			<div
-				class="w-full md:w-[40%] p-6 md:p-10 lg:p-14 flex flex-col justify-center relative"
-			>
-				<!-- Accent border -->
-				<div
-					class="absolute left-0 top-1/4 bottom-1/4 w-px bg-gradient-to-b from-transparent via-primary/30 to-transparent hidden md:block"
-				>
-				</div>
+			<!-- Text side -->
+			<div class="news-card-content">
+				<!-- Tag -->
+				<span class="news-tag">Actualidad</span>
 
-				<div class="md:pl-8 lg:pl-10 space-y-5" data-line-stagger="0.1">
-					<span
-						class="reveal-slide text-[10px] font-bold tracking-[0.4em] uppercase text-ink-faint block"
-						>Investigación</span
+				<!-- Category -->
+				<span
+					class="text-[10px] font-bold tracking-[0.4em] uppercase text-slate-400 block"
+				>
+					Investigación
+				</span>
+
+				<!-- Title -->
+				<h2
+					id="news-title"
+					class="text-2xl md:text-3xl lg:text-4xl font-display font-semibold tracking-tight text-slate-900 text-wrap balance leading-tight"
+				>
+					Nuevas narrativas transmedia en el entorno digital
+				</h2>
+
+				<!-- Description -->
+				<p
+					class="text-sm md:text-base text-slate-500 font-normal leading-relaxed"
+				>
+					Un recorrido por las últimas investigaciones de nuestra
+					facultad sobre el impacto de la tecnología en el
+					periodismo moderno.
+				</p>
+
+				<!-- Link -->
+				<div class="pt-2">
+					<a
+						href="/portfolio/articles"
+						class="inline-flex items-center gap-2 text-sm font-bold text-primary hover:text-primary-deep transition-colors duration-300 group"
 					>
-					<h2
-						id="news-title"
-						class="reveal-slide text-2xl md:text-3xl lg:text-4xl font-display font-semibold tracking-tight text-wrap balance leading-tight"
-					>
-						Nuevas narrativas transmedia en el entorno digital
-					</h2>
-					<p
-						class="reveal-slide text-sm md:text-base text-ink-muted font-normal leading-relaxed"
-					>
-						Un recorrido por las últimas investigaciones de nuestra
-						facultad sobre el impacto de la tecnología en el
-						periodismo moderno.
-					</p>
-					<div class="reveal-slide pt-2">
-						<a
-							href="#"
-							class="inline-flex items-center gap-1.5 text-sm font-bold text-primary hover:text-primary-deep transition-colors duration-300 group focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded"
-						>
-							Leer artículo
-							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true">
-								<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-							</svg>
-						</a>
-					</div>
+						<span>Leer artículo</span>
+						<PhArrowRight
+							size={16}
+							weight="regular"
+							class="transition-transform duration-300 group-hover:translate-x-1"
+							aria-hidden="true"
+						/>
+					</a>
 				</div>
 			</div>
 		</div>
 
-		<!-- Bottom accent line -->
-		<div class="h-[3px] w-full bg-black/[0.03] relative overflow-hidden">
-			<div
-				class="reveal-scale h-full bg-gradient-to-r from-primary to-primary-light w-1/3 progress-glow"
-			>
-			</div>
+		<!-- Secondary articles -->
+		<div class="news-secondary">
+			<a href="/portfolio/articles" class="news-secondary-item group">
+				<span class="text-[9px] font-bold tracking-[0.25em] uppercase text-primary/70 block mb-1">Comunicación</span>
+				<h3 class="text-base font-display font-semibold text-slate-900 group-hover:text-primary transition-colors duration-300 leading-snug">
+					Periodismo digital y el futuro de la información local
+				</h3>
+				<span class="text-xs text-slate-400 mt-1 block">Hace 3 días</span>
+			</a>
+
+			<a href="/student-life/events" class="news-secondary-item group">
+				<span class="text-[9px] font-bold tracking-[0.25em] uppercase text-primary/70 block mb-1">Eventos</span>
+				<h3 class="text-base font-display font-semibold text-slate-900 group-hover:text-primary transition-colors duration-300 leading-snug">
+					Foro: Inteligencia Artificial en la comunicación pública
+				</h3>
+				<span class="text-xs text-slate-400 mt-1 block">Hace 1 semana</span>
+			</a>
+
+			<a href="/student-life/community" class="news-secondary-item group">
+				<span class="text-[9px] font-bold tracking-[0.25em] uppercase text-primary/70 block mb-1">Comunidad</span>
+				<h3 class="text-base font-display font-semibold text-slate-900 group-hover:text-primary transition-colors duration-300 leading-snug">
+					Comunicación comunitaria: voces desde el territorio
+				</h3>
+				<span class="text-xs text-slate-400 mt-1 block">Hace 2 semanas</span>
+			</a>
 		</div>
 	</div>
 </section>
+
+<style>
+	.news-section {
+		padding: 5rem 2rem;
+	}
+
+	.news-container {
+		max-width: 1200px;
+		margin: 0 auto;
+	}
+
+	/* Simple text label instead of pill badge */
+	.news-tag {
+		display: inline-block;
+		font-size: 10px;
+		font-weight: 700;
+		letter-spacing: 0.2em;
+		text-transform: uppercase;
+		color: var(--color-primary);
+		padding-left: 0.75rem;
+		border-left: 2px solid var(--color-primary);
+		line-height: 1.4;
+	}
+
+	/* Main card — split layout */
+	.news-card {
+		display: flex;
+		flex-direction: column;
+		background: var(--color-surface-elevated);
+		border-radius: var(--radius-luma);
+		overflow: hidden;
+		box-shadow: var(--shadow-luma);
+	}
+
+	@media (min-width: 768px) {
+		.news-card {
+			flex-direction: row;
+		}
+	}
+
+	.news-card-image {
+		flex: 0 0 100%;
+		overflow: hidden;
+	}
+
+	@media (max-width: 767px) {
+		.news-card-image {
+			aspect-ratio: 16 / 9;
+			max-height: 200px;
+		}
+	}
+
+	@media (min-width: 768px) {
+		.news-card-image {
+			flex: 0 0 55%;
+			min-height: 400px;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.news-card-image {
+			min-height: 500px;
+		}
+	}
+
+	.news-card-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+	}
+
+	.news-card:hover .news-card-image img {
+		transform: scale(1.03);
+	}
+
+	.news-card-content {
+		flex: 1;
+		padding: 2rem;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 1.25rem;
+	}
+
+	@media (min-width: 768px) {
+		.news-card-content {
+			padding: 2.5rem;
+		}
+	}
+
+	@media (min-width: 1024px) {
+		.news-card-content {
+			padding: 3rem;
+		}
+	}
+
+	/* Secondary articles */
+	.news-secondary {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 0;
+		margin-top: 2rem;
+	}
+
+	@media (min-width: 640px) {
+		.news-secondary {
+			grid-template-columns: repeat(3, 1fr);
+		}
+	}
+
+	.news-secondary-item {
+		padding: 1.5rem 1.5rem 1.5rem 0;
+		border-right: 1px solid rgba(226, 232, 240, 0.6);
+	}
+
+	.news-secondary-item:first-child {
+		padding-left: 0;
+	}
+
+	.news-secondary-item:last-child {
+		border-right: none;
+		padding-right: 0;
+	}
+
+	@media (max-width: 768px) {
+		.news-section {
+			padding: 4rem 1.5rem;
+		}
+
+		.news-secondary {
+			grid-template-columns: 1fr;
+			gap: 0;
+			margin-top: 2.5rem;
+			padding-top: 2rem;
+			border-top: 2px solid rgba(226, 232, 240, 0.6);
+		}
+
+		.news-secondary::before {
+			content: 'Más noticias';
+			display: block;
+			font-size: 10px;
+			font-weight: 700;
+			letter-spacing: 0.2em;
+			text-transform: uppercase;
+			color: var(--color-primary);
+			margin-bottom: 1rem;
+		}
+
+		.news-secondary-item {
+			padding: 1rem 0;
+			border-right: none;
+			border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+		}
+
+		.news-secondary-item:first-child {
+			padding-top: 0;
+		}
+
+		.news-secondary-item:last-child {
+			padding-bottom: 0;
+			border-bottom: none;
+		}
+	}
+</style>

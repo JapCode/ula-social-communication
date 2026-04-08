@@ -1,0 +1,53 @@
+---
+import {
+  PhUsersThree,
+  PhMaskHappy,
+  PhHeart,
+  PhCalendar,
+  PhCalendarCheck,
+  type Icon,
+} from 'phosphor-icons-astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  icon?: string;
+  href?: string;
+  variant?: "default" | "accent";
+}
+
+const { title, description, icon, href = "#", variant = "default" } = Astro.props;
+
+const bgClass = variant === "accent" ? "bg-primary/10" : "bg-primary/5";
+
+// Map string icon names to Phosphor components
+const iconMap: Record<string, typeof PhUsersThree> = {
+  groups: PhUsersThree,
+  theater_comedy: PhMaskHappy,
+  heart: PhHeart,
+  calendar_month: PhCalendar,
+  event: PhCalendarCheck,
+};
+
+const IconComponent = icon ? iconMap[icon] : null;
+---
+
+<a href={href} class="group block bg-white border border-slate-100/50 rounded-luma p-6 md:p-8 transition-all duration-300 hover:shadow-luma hover:border-slate-100 hover:-translate-y-1">
+  <div class="flex items-start gap-4">
+    {IconComponent && (
+      <div class={`flex-shrink-0 w-12 h-12 ${bgClass} rounded-full flex items-center justify-center`}>
+        <IconComponent size={20} weight="light" class="text-primary" />
+      </div>
+    )}
+    <div class="min-w-0">
+      <h3 class="text-sm md:text-base font-bold text-slate-900 tracking-tight group-hover:text-primary transition-colors">
+        {title}
+      </h3>
+      {description && (
+        <p class="mt-1 text-sm text-slate-500 leading-relaxed">
+          {description}
+        </p>
+      )}
+    </div>
+  </div>
+</a>

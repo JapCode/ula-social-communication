@@ -1,0 +1,606 @@
+---
+import ContentLayout from "@/layouts/ContentLayout.astro";
+import {
+  PhClipboardText,
+  PhFiles,
+  PhPencilSimpleLine,
+  PhMegaphone,
+  PhStudent,
+  PhQuestion,
+  PhArrowRight,
+} from "phosphor-icons-astro";
+
+const pageTitle = "Proceso de Admisión";
+const pageSubtitle =
+  "Pasos y fechas para realizar tu inscripción en Comunicación Social";
+
+// ============================================================
+// CMS-ready data structure — swap with CMS query later
+// ============================================================
+
+const introText =
+  "El proceso de admisión se realiza dos veces al año, correspondiente al inicio de cada semestre académico. A continuación las fechas y pasos que debes seguir.";
+
+type Step = {
+  title: string;
+  description: string;
+  date: string;
+  icon: string;
+  emphasis?: "critical" | "standard";
+};
+
+const steps: Step[] = [
+  {
+    title: "Preinscripción Online",
+    description:
+      "Llena el formulario de preinscripción en el portal de la ULA. Debes crear una cuenta y seleccionar la carrera de Comunicación Social en el NURR (Núcleo Universitario Rafael Rangel).",
+    date: "Enero / Julio",
+    icon: "clipboard-text",
+    emphasis: "standard",
+  },
+  {
+    title: "Validación de Documentos",
+    description:
+      "Presenta los documentos requeridos en las oficinas del NURR para validación. Recibirás una constancia de inscripción provisional.",
+    date: "Febrero / Agosto",
+    icon: "files",
+    emphasis: "standard",
+  },
+  {
+    title: "Prueba de Admisión",
+    description:
+      "Presentas las pruebas de ingreso establecidas por la Universidad. Esta incluye pruebas de aptitud académica y razonamiento verbal.",
+    date: "Marzo / Septiembre",
+    icon: "pencil-simple-line",
+    emphasis: "critical",
+  },
+  {
+    title: "Publicación de Resultados",
+    description:
+      "Se publican los resultados de admitidos. Los estudiantes seleccionados deben confirmar su lugar realizando el pago de la matrícula.",
+    date: "Abril / Octubre",
+    icon: "megaphone",
+    emphasis: "standard",
+  },
+  {
+    title: "Inducción y Matrícula",
+    description:
+      "Asistes a la jornada de inducción donde conocerás las instalaciones, horarios y proceso de selección de unidades curriculares.",
+    date: "Agosto / Enero",
+    icon: "student",
+    emphasis: "standard",
+  },
+];
+
+// ============================================================
+// Icon component map — add new icons here as CMS content grows
+// ============================================================
+
+const iconMap: Record<string, typeof PhClipboardText> = {
+  "clipboard-text": PhClipboardText,
+  files: PhFiles,
+  "pencil-simple-line": PhPencilSimpleLine,
+  megaphone: PhMegaphone,
+  student: PhStudent,
+};
+---
+
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Admisión">
+  <div class="py-8 md:py-12">
+    <!-- Intro -->
+    <div class="mb-10 md:mb-14 max-w-2xl reveal-intro">
+      <p class="text-slate-500 leading-relaxed text-lg">
+        {introText}
+      </p>
+    </div>
+
+    <!-- Steps Timeline -->
+    <div class="relative">
+      <!-- Vertical timeline line -->
+      <div class="absolute left-0 top-0 bottom-0 w-px bg-slate-200 md:left-0" />
+
+      <!-- Current period indicator -->
+      <div id="timeline-indicator" class="hidden mb-8 p-4 rounded-lg bg-primary/[0.03] border border-primary/10">
+        <div class="flex items-center gap-3">
+          <div class="w-2 h-2 rounded-full bg-primary animate-pulse" />
+          <p class="text-sm text-slate-600">
+            <span class="font-medium text-slate-800" id="current-step-label"></span>
+            <span class="text-slate-400"> — </span>
+            <span id="current-step-date" class="text-primary font-mono text-xs tracking-wide"></span>
+          </p>
+        </div>
+      </div>
+
+      <!-- Off-period notice (when no active step) -->
+      <div id="off-period-notice" class="hidden mb-8 p-4 rounded-lg bg-amber-50 border border-amber-100">
+        <div class="flex items-center gap-3">
+          <div class="w-2 h-2 rounded-full bg-amber-400" />
+          <p class="text-sm text-amber-800">
+            <span class="font-medium">Período entre ciclos.</span>
+            <span class="text-amber-600"> El próximo proceso de admisión comienza en enero o julio.</span>
+          </p>
+        </div>
+      </div>
+
+      {
+        steps.map((step, index) => {
+          const isCritical = step.emphasis === "critical";
+          const isLast = index === steps.length - 1;
+          return (
+            <article
+              class:list={[
+                "step-row group relative pl-8 md:pl-12",
+                isCritical ? "step-row--critical" : "",
+                isLast ? "" : "mb-0",
+              ]}
+            >
+              {/* Timeline dot */}
+              <div
+                class:list={[
+                  "step-dot absolute left-[-5px] top-10 w-2.5 h-2.5 rounded-full border-2 border-surface bg-slate-300 transition-all duration-300",
+                  isCritical ? "step-dot--critical" : "",
+                ]}
+              />
+
+              <div
+                class:list={[
+                  "step-content relative",
+                  isCritical ? "step-content--critical" : "",
+                ]}
+              >
+                {/* Step number — subtle, solid color, no gradient */}
+                <div class="absolute right-4 md:right-8 top-6 pointer-events-none select-none">
+                  <span
+                    class:list={[
+                      "step-bg-number text-6xl md:text-8xl font-bold font-body leading-none",
+                      isCritical
+                        ? "text-primary/10"
+                        : "text-slate-200/60",
+                    ]}
+                  >
+                    {String(index + 1).padStart(2, "0")}
+                  </span>
+                </div>
+
+                {/* Phase label for critical step */}
+                {isCritical && (
+                  <div class="step-phase-label mb-3">
+                    <span class="inline-block text-[10px] font-mono tracking-widest uppercase text-primary bg-primary/5 px-3 py-1 rounded-full">
+                      Paso decisivo
+                    </span>
+                  </div>
+                )}
+
+                <div class="flex flex-col md:flex-row md:items-start md:justify-between md:gap-8">
+                  {/* Content */}
+                  <div class="flex-1 mb-3 md:mb-0 pr-16 md:pr-24">
+                    <h2
+                      class:list={[
+                        "step-title text-lg md:text-xl font-medium tracking-tight mb-1.5",
+                        isCritical
+                          ? "text-slate-900"
+                          : "text-slate-700",
+                      ]}
+                    >
+                      {step.title}
+                    </h2>
+                    <p
+                      class:list={[
+                        "step-desc leading-relaxed max-w-xl",
+                        isCritical
+                          ? "text-slate-500"
+                          : "text-slate-400",
+                      ]}
+                    >
+                      {step.description}
+                    </p>
+                  </div>
+
+                  {/* Date — Monospace Label */}
+                  {step.date && (
+                    <div class="flex-shrink-0 self-start text-right">
+                      <div
+                        class:list={[
+                          "step-date-line w-6 h-px ml-auto mb-1.5",
+                          isCritical
+                            ? "bg-primary/30"
+                            : "bg-slate-200",
+                        ]}
+                      />
+                      <p
+                        class:list={[
+                          "step-date-text text-[10px] font-mono tracking-wider uppercase",
+                          isCritical
+                            ? "text-primary/60"
+                            : "text-slate-300",
+                        ]}
+                      >
+                        {step.date}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Separator line between steps */}
+              {!isLast && (
+                <div class="step-separator ml-1.5 mt-6 mb-6 md:mt-8 md:mb-8">
+                  <div class="h-px bg-slate-100" />
+                </div>
+              )}
+            </article>
+          );
+        })
+      }
+    </div>
+
+    <!-- Contextual Help — placed after steps, before info blocks -->
+    <div class="mt-10 md:mt-14 p-6 md:p-8 rounded-xl bg-slate-50/80 border border-slate-100">
+      <div class="flex items-start gap-4">
+        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center">
+          <PhQuestion size={20} weight="light" class="text-primary" />
+        </div>
+        <div class="flex-1 min-w-0">
+          <h3 class="text-base font-medium text-slate-700 mb-1">
+            ¿Tienes dudas sobre el proceso?
+          </h3>
+          <p class="text-slate-400 leading-relaxed text-sm mb-4">
+            La coordinación de la carrera y las oficinas del NURR (Núcleo Universitario Rafael Rangel) pueden orientarte sobre requisitos, fechas y documentación necesaria.
+          </p>
+          <div class="flex flex-wrap gap-3">
+            <a
+              href="/contact"
+              class="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-deep transition-colors"
+            >
+              Contactar Coordinación
+              <PhArrowRight size={14} weight="light" class="transition-transform duration-200 hover:translate-x-0.5" />
+            </a>
+            <span class="text-slate-300">|</span>
+            <a
+              href="https://www.ula.ve"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 hover:text-primary transition-colors"
+            >
+              Portal de Admisión ULA
+              <PhArrowRight size={14} weight="light" class="transition-transform duration-200 hover:translate-x-0.5" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</ContentLayout>
+
+<style>
+  /* ============================================================
+     Scroll Reveal Animations
+     ============================================================ */
+
+  .reveal-intro,
+  .step-row {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .reveal-intro.is-visible,
+  .step-row.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Stagger delays for step rows — dynamic via CSS custom property */
+  .step-row:nth-child(1) {
+    transition-delay: 0ms;
+  }
+  .step-row:nth-child(2) {
+    transition-delay: 80ms;
+  }
+  .step-row:nth-child(3) {
+    transition-delay: 160ms;
+  }
+  .step-row:nth-child(4) {
+    transition-delay: 240ms;
+  }
+  .step-row:nth-child(5) {
+    transition-delay: 320ms;
+  }
+
+  /* ============================================================
+     Step Row Layout — Clean, no gimmicky padding shifts
+     ============================================================ */
+
+  .step-row {
+    transition: opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* Subtle hover: background tint only, no layout shift */
+  .step-row:hover {
+    background-color: rgba(248, 250, 252, 0.4);
+    border-radius: 6px;
+  }
+
+  .step-row .step-title {
+    transition: color 0.3s ease;
+  }
+
+  .step-row:hover .step-title {
+    color: var(--color-primary);
+  }
+
+  .step-row .step-desc {
+    transition: color 0.3s ease;
+  }
+
+  .step-row:hover .step-desc {
+    color: #94a3b8;
+  }
+
+  .step-row .step-bg-number {
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .step-row:hover .step-bg-number {
+    opacity: 0.15;
+    transform: scale(1.03);
+  }
+
+  .step-row .step-date-line {
+    transition: width 0.3s ease, background-color 0.3s ease;
+  }
+
+  .step-row:hover .step-date-line {
+    width: 16px;
+    background-color: var(--color-primary);
+  }
+
+  .step-row .step-date-text {
+    transition: color 0.3s ease;
+  }
+
+  .step-row:hover .step-date-text {
+    color: var(--color-primary);
+  }
+
+  /* ============================================================
+     Critical Step Emphasis
+     ============================================================ */
+
+  .step-row--critical {
+    padding: 1.5rem 1rem;
+    margin: 0 -1rem;
+    background-color: rgba(0, 93, 170, 0.02);
+    border-radius: 8px;
+    border-left: 2px solid var(--color-primary);
+  }
+
+  .step-row--critical:hover {
+    background-color: rgba(0, 93, 170, 0.04);
+  }
+
+  .step-dot--critical {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-surface) !important;
+    box-shadow: 0 0 0 3px rgba(0, 93, 170, 0.15);
+  }
+
+  .step-content--critical {
+    padding-left: 0.5rem;
+  }
+
+  /* ============================================================
+     Current Step Highlight
+     ============================================================ */
+
+  .step-row--current {
+    background-color: rgba(0, 93, 170, 0.03);
+    border-radius: 6px;
+  }
+
+  .step-row--current:hover {
+    background-color: rgba(0, 93, 170, 0.05);
+  }
+
+  .step-dot--current {
+    background-color: var(--color-primary) !important;
+    border-color: var(--color-surface) !important;
+    box-shadow: 0 0 0 3px rgba(0, 93, 170, 0.12);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .step-dot--current {
+      animation: none;
+    }
+  }
+
+  /* ============================================================
+     Animated Underline Links
+     ============================================================ */
+
+  .animated-link {
+    position: relative;
+    text-decoration: none;
+  }
+
+  .animated-link::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: currentColor;
+    transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .animated-link:hover::after {
+    width: 100%;
+  }
+
+  .animated-link:hover {
+    color: var(--color-primary-deep);
+  }
+
+  /* ============================================================
+     Reduced Motion
+     ============================================================ */
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal-intro,
+    .step-row {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .step-row:hover {
+      background-color: transparent;
+    }
+
+    .step-row .step-title,
+    .step-row .step-desc,
+    .step-row .step-bg-number,
+    .step-row .step-date-line,
+    .step-row .step-date-text {
+      transition: none;
+    }
+
+    .step-row:hover .step-bg-number {
+      opacity: 0.05;
+      transform: none;
+    }
+
+    .animated-link::after {
+      transition: none;
+      width: 100%;
+    }
+  }
+</style>
+
+  <script>
+    // ============================================================
+    // Current period detection — highlights active step
+    // ============================================================
+    function detectCurrentStep() {
+      const month = new Date().getMonth(); // 0=Jan, 11=Dec
+
+      // Map months to step indices (0-based):
+      // Jan(0) → Step 0 (Preinscripción)
+      // Feb(1) → Step 1 (Validación)
+      // Mar(2) → Step 2 (Prueba)
+      // Apr(3) → Step 3 (Resultados)
+      // May-Jun(4-5) → Between cycles
+      // Jul(6) → Step 0 (Preinscripción)
+      // Aug(7) → Step 1 (Validación)
+      // Sep(8) → Step 2 (Prueba)
+      // Oct(9) → Step 3 (Resultados)
+      // Nov-Dec(10-11) → Between cycles
+
+      const stepMap: Record<number, { index: number; label: string }> = {
+        0: { index: 0, label: "Preinscripción abierta" },
+        1: { index: 1, label: "Validación de documentos" },
+        2: { index: 2, label: "Prueba de admisión" },
+        3: { index: 3, label: "Resultados pendientes" },
+        6: { index: 0, label: "Preinscripción abierta" },
+        7: { index: 1, label: "Validación de documentos" },
+        8: { index: 2, label: "Prueba de admisión" },
+        9: { index: 3, label: "Resultados pendientes" },
+      };
+
+      const current = stepMap[month];
+      if (!current) return null;
+
+      const dateMap: Record<number, string> = {
+        0: "Enero",
+        1: "Febrero",
+        2: "Marzo",
+        3: "Abril",
+        6: "Julio",
+        7: "Agosto",
+        8: "Septiembre",
+        9: "Octubre",
+      };
+
+      return {
+        index: current.index,
+        label: current.label,
+        date: dateMap[month] || "",
+      };
+    }
+
+    // ============================================================
+    // Highlight current step in timeline
+    // ============================================================
+    function highlightCurrentStep() {
+      const current = detectCurrentStep();
+
+      const indicator = document.getElementById("timeline-indicator");
+      const offPeriodNotice = document.getElementById("off-period-notice");
+      const labelEl = document.getElementById("current-step-label");
+      const dateEl = document.getElementById("current-step-date");
+
+      if (current) {
+        if (indicator && labelEl && dateEl) {
+          indicator.classList.remove("hidden");
+          labelEl.textContent = current.label;
+          dateEl.textContent = current.date;
+        }
+
+        // Highlight the corresponding step row
+        const stepRows = document.querySelectorAll(".step-row");
+        const targetRow = stepRows[current.index] as HTMLElement;
+        if (targetRow) {
+          targetRow.classList.add("step-row--current");
+          const dot = targetRow.querySelector(".step-dot");
+          if (dot) dot.classList.add("step-dot--current");
+        }
+      } else {
+        // Off-period: show notice
+        if (offPeriodNotice) {
+          offPeriodNotice.classList.remove("hidden");
+        }
+      }
+    }
+
+    // ============================================================
+    // Scroll-triggered reveal animations
+    // ============================================================
+    function initRevealAnimations() {
+      const revealElements = document.querySelectorAll(
+        ".reveal-intro, .step-row"
+      );
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("is-visible");
+              observer.unobserve(entry.target);
+            }
+          });
+        },
+        {
+          threshold: 0.1,
+          rootMargin: "0px 0px -40px 0px",
+        }
+      );
+
+      revealElements.forEach((el) => observer.observe(el));
+    }
+
+    // Run on full page load
+    document.addEventListener("DOMContentLoaded", () => {
+      highlightCurrentStep();
+      initRevealAnimations();
+    });
+
+    // Run on Astro client-side navigation
+    document.addEventListener("astro:page-load", () => {
+      highlightCurrentStep();
+      initRevealAnimations();
+    });
+  </script>

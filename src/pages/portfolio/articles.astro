@@ -1,0 +1,223 @@
+---
+import ContentLayout from '@/layouts/ContentLayout.astro';
+import { PhEnvelopeSimple, PhNewspaper, PhArrowRight, PhCalendar, PhTag } from 'phosphor-icons-astro';
+import { getCollection } from 'astro:content';
+
+const articles = await getCollection('articles');
+const sortedArticles = articles.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+const categories = [
+  { key: 'todos', label: 'Todos' },
+  { key: 'investigacion', label: 'Investigación' },
+  { key: 'actualidad', label: 'Actualidad' },
+  { key: 'opinion', label: 'Opinión' },
+  { key: 'cronica', label: 'Crónica' },
+];
+
+const pageTitle = "Artículos Periodísticos";
+const pageSubtitle = "Reportajes, crónicas y análisis producidos por estudiantes y docentes";
+
+function formatDate(date: string | Date): string {
+  return new Date(date).toLocaleDateString('es-VE', { day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function catLabel(key: string): string {
+  return categories.find(c => c.key === key)?.label || key;
+}
+---
+
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Portafolio" narrow={true}>
+
+  <!-- Category Filter -->
+  <nav class="mb-12" aria-label="Filtrar por categoría">
+    <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+      {categories.map((cat) => (
+        <button
+          type="button"
+          class="filter-link text-sm font-medium text-ink-muted relative transition-colors duration-200 hover:text-primary"
+          data-category={cat.key}
+          aria-pressed={cat.key === 'todos'}
+        >
+          {cat.label}
+        </button>
+      ))}
+    </div>
+  </nav>
+
+  {sortedArticles.length > 0 ? (
+    <div class="mx-auto mb-12 max-w-[1200px]">
+      <div class="flex flex-col gap-12 sm:grid sm:grid-cols-2 sm:gap-x-10 sm:gap-y-8">
+        {sortedArticles.map((article, i) => (
+          <article
+            class={i === 0 ? 'group col-span-full flex flex-col' : 'group flex flex-col'}
+            data-category={article.data.category}
+          >
+            <!-- Image -->
+            {article.data.coverImage ? (
+              <a href={`/portfolio/articles/${article.id}`} class="mb-8 block overflow-hidden rounded-luma aspect-video w-full ">
+                <img
+                  src={article.data.coverImage}
+                  alt=""
+                  class={i === 0
+                    ? 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03] m-0!'
+                    : 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03] m-0!1'
+                  }
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                />
+              </a>
+            ) : (
+              <div class={
+                i === 0
+                  ? 'mb-6 flex aspect-video max-h-[300px] items-center justify-center rounded-luma border border-slate-100/50 bg-surface'
+                  : 'mb-6 flex aspect-video max-h-[180px] items-center justify-center rounded-luma border border-slate-100/50 bg-surface'
+              }>
+                <PhNewspaper size={i === 0 ? 64 : 32} weight="light" class="text-primary/15" />
+              </div>
+            )}
+
+            <!-- Metadata row: author, date, category -->
+            <ul class="mb-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-ink-faint">
+              <li class="font-medium text-ink-muted">
+                <span>{article.data.author}</span>
+              </li>
+              <li class="flex items-center gap-1">
+                <PhCalendar size={14} weight="regular" class="text-ink-faint" />
+                <span>{formatDate(article.data.date)}</span>
+              </li>
+              <li class="flex items-center gap-1">
+                <PhTag size={14} weight="regular" class="text-ink-faint" />
+                <a href="#" class="font-medium text-primary transition-colors duration-200 hover:text-primary-deep hover:underline" data-filter={article.data.category}>
+                  {catLabel(article.data.category)}
+                </a>
+              </li>
+            </ul>
+
+            <!-- Title -->
+            <h3 class={i === 0
+              ? 'mb-3 text-2xl font-display font-bold tracking-tight text-ink leading-tight sm:text-3xl'
+              : 'mb-3 text-lg font-display font-semibold tracking-tight text-ink leading-snug'
+            }>
+              <a href={`/portfolio/articles/${article.id}`} class="transition-colors duration-300 hover:text-primary">
+                {article.data.title}
+              </a>
+            </h3>
+
+            <!-- Excerpt -->
+            <p class="line-clamp-2 text-sm leading-relaxed text-ink-muted">
+              {article.data.excerpt}
+            </p>
+          </article>
+        ))}
+      </div>
+    </div>
+  ) : (
+    <div class="text-center py-16 md:py-24 animate-[fadeIn_0.4s_ease]">
+      <PhNewspaper size={48} weight="light" class="mx-auto mb-6 text-slate-200" />
+      <h2 class="mb-2 text-xl font-display font-bold text-slate-900">Próximamente</h2>
+      <p class="mx-auto mb-8 max-w-md text-slate-500">
+        Estamos preparando los primeros artículos del portafolio. 
+        Pronto podrás leer el trabajo de nuestros estudiantes aquí.
+      </p>
+      <a href="/contact" class="inline-flex items-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-white shadow-[var(--shadow-luma)] transition-all hover:shadow-lg">
+        <PhEnvelopeSimple size={16} weight="regular" />
+        Contactar Coordinación
+      </a>
+    </div>
+  )}
+
+  <!-- CTA -->
+  <div class="border-t border-slate-100/50 py-8">
+    <div class="flex items-start gap-6 md:gap-10">
+      <span class="hidden md:flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-slate-100">
+        <PhArrowRight size={20} weight="light" class="text-slate-300" />
+      </span>
+      <div>
+        <h2 class="mb-2 text-xl font-display font-bold tracking-tight text-slate-900 md:text-2xl">
+          ¿Quieres publicar tu artículo?
+        </h2>
+        <p class="mb-4 max-w-lg text-sm leading-relaxed text-slate-500">
+          Contacta a la coordinación para conocer los requisitos y proceso de publicación.
+        </p>
+        <a href="/contact" class="group inline-flex items-center gap-2 text-sm font-bold text-primary transition-colors duration-300 hover:text-primary-deep">
+          <span>Contactar Coordinación</span>
+          <PhArrowRight size={16} weight="regular" class="transition-transform duration-300 group-hover:translate-x-1" aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  </div>
+
+</ContentLayout>
+
+<script>
+  // Category filter
+  const filterBar = document.querySelector('nav[aria-label="Filtrar por categoría"]');
+  if (filterBar) {
+    const links = filterBar.querySelectorAll('.filter-link');
+    links.forEach(link => {
+      link.addEventListener('click', () => {
+        links.forEach(l => {
+          l.classList.remove('active');
+          l.setAttribute('aria-pressed', 'false');
+        });
+        link.classList.add('active');
+        link.setAttribute('aria-pressed', 'true');
+
+        const category = link.getAttribute('data-category');
+        const allArticles = document.querySelectorAll<HTMLElement>('[data-category]');
+        
+        allArticles.forEach(article => {
+          if (category === 'todos') {
+            article.style.display = '';
+            return;
+          }
+          const articleCategory = article.getAttribute('data-category');
+          article.style.display = articleCategory === category ? '' : 'none';
+        });
+      });
+    });
+  }
+
+  // Category links in meta also trigger filter
+  document.querySelectorAll('[data-filter]').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const category = link.getAttribute('data-filter');
+      const filterBtn = document.querySelector<HTMLElement>(`.filter-link[data-category="${category}"]`);
+      if (filterBtn) {
+        filterBtn.click();
+      }
+    });
+  });
+</script>
+
+<style>
+  /* Filter link active state with underline animation */
+  .filter-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--color-primary);
+    transition: width 0.3s ease;
+  }
+
+  .filter-link:hover::after {
+    width: 100%;
+  }
+
+  .filter-link.active {
+    color: var(--color-primary);
+    font-weight: 600;
+  }
+
+  .filter-link.active::after {
+    width: 100%;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>

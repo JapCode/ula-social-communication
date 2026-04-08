@@ -1,0 +1,167 @@
+---
+import ContentLayout from '@/layouts/ContentLayout.astro';
+import { PhVideo, PhMicrophone, PhCamera, PhPaintBrush, PhClock, PhMapPin, PhMonitor } from 'phosphor-icons-astro';
+
+const pageTitle = "Laboratorio de Medios";
+const pageSubtitle = "Producción audiovisual, radio y contenido multimedia de los estudiantes";
+
+const disciplines = [
+  {
+    title: 'Producción de Video',
+    description: 'Los estudiantes producen documentales, videos institucionales, cortometrajes y contenido para redes sociales. Trabajan en todas las etapas del proceso: preproducción, grabación, edición y postproducción.',
+    icon: PhVideo,
+  },
+  {
+    title: 'Producción Radial',
+    description: 'La radio estudiantil es un espacio de práctica donde los estudiantes crean programas, noticieros, podcasts y contenido de audio para distintas audiencias y formatos.',
+    icon: PhMicrophone,
+  },
+  {
+    title: 'Fotografía',
+    description: 'Los estudiantes desarrollan proyectos fotográficos que van desde la fotografía periodística hasta la fotografía de autor, explorando diferentes técnicas y estilos.',
+    icon: PhCamera,
+  },
+  {
+    title: 'Diseño Digital',
+    description: 'Los estudiantes trabajan en branding, diseño editorial, infografías y contenido visual para medios digitales, desarrollando habilidades en herramientas de diseño profesional.',
+    icon: PhPaintBrush,
+  },
+];
+
+const equipment = [
+  { icon: PhVideo, label: 'Cámaras de Video' },
+  { icon: PhCamera, label: 'Cámaras Fotográficas' },
+  { icon: PhMicrophone, label: 'Equipos de Audio' },
+  { icon: PhMonitor, label: 'Estaciones de Edición' },
+];
+---
+
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Portafolio">
+
+  <!-- Intro -->
+  <div class="media-lab-intro mb-12 md:mb-16">
+    <div class="flex items-center gap-3 mb-5">
+      <span class="block w-6 h-px bg-primary/40"></span>
+      <span class="text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400">Espacio de creación</span>
+    </div>
+    <p class="text-slate-500 leading-relaxed max-w-2xl">
+      El Laboratorio de Medios es un espacio de creación y producción donde los estudiantes de Comunicación 
+      Social desarrollan sus habilidades en la elaboración de contenido audiovisual, radio, fotografía y 
+      diseño digital. Equipado con tecnología de vanguardia para apoyar las actividades académicas y extracurriculares.
+    </p>
+  </div>
+
+  <!-- Disciplines — alternating editorial rows -->
+  <div class="disciplines mb-12 md:mb-16">
+    <div class="flex items-center gap-3 mb-8">
+      <span class="block w-6 h-px bg-primary/40"></span>
+      <span class="text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400">Áreas de producción</span>
+    </div>
+
+    {disciplines.map((disc, i) => (
+      <div class="discipline-row group flex flex-col md:flex-row gap-6 md:gap-10 py-8 md:py-10">
+        {i % 2 === 0 ? (
+          <>
+            <div class="flex-shrink-0 w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+              <disc.icon size={28} weight="duotone" class="text-primary" />
+            </div>
+            <div class="flex-1">
+              <h3 class="text-lg font-display font-bold text-slate-900 tracking-tight mb-2">{disc.title}</h3>
+              <p class="text-sm text-slate-500 leading-relaxed">{disc.description}</p>
+            </div>
+          </>
+        ) : (
+          <>
+            <div class="flex-1 md:order-1 md:text-right">
+              <h3 class="text-lg font-display font-bold text-slate-900 tracking-tight mb-2">{disc.title}</h3>
+              <p class="text-sm text-slate-500 leading-relaxed">{disc.description}</p>
+            </div>
+            <div class="flex-shrink-0 w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110 md:order-2">
+              <disc.icon size={28} weight="duotone" class="text-primary" />
+            </div>
+          </>
+        )}
+      </div>
+    ))}
+  </div>
+
+  <!-- Equipment Strip -->
+  <div class="equipment-strip mb-12 md:mb-16">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="block w-6 h-px bg-primary/40"></span>
+      <span class="text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400">Equipos disponibles</span>
+    </div>
+    <div class="equipment-grid">
+      {equipment.map(item => (
+        <div class="equipment-item">
+          <item.icon size={28} weight="duotone" class="text-primary/60" />
+          <p class="text-sm font-medium text-slate-700 mt-3">{item.label}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+
+  <!-- Schedule -->
+  <div class="schedule-panel">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="block w-6 h-px bg-primary/40"></span>
+      <span class="text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400">Horario y ubicación</span>
+    </div>
+    <div class="bg-surface-elevated border border-slate-100/50 p-6 md:p-8">
+      <p class="text-slate-500 mb-5">
+        El Laboratorio de Medios está disponible para todos los estudiantes de Comunicación Social.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 sm:gap-8">
+        <div class="flex items-center gap-3 text-slate-600">
+          <PhClock size={18} weight="regular" class="text-primary/60 flex-shrink-0" />
+          <span class="text-sm">Lunes a Viernes: 8:00 AM – 6:00 PM</span>
+        </div>
+        <div class="flex items-center gap-3 text-slate-600">
+          <PhMapPin size={18} weight="regular" class="text-primary/60 flex-shrink-0" />
+          <span class="text-sm">Escuela de Comunicación Social, Planta Baja</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</ContentLayout>
+
+<style>
+  .discipline-row {
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+  }
+
+  .discipline-row:last-child {
+    border-bottom: none;
+  }
+
+  .equipment-strip {
+    border: 1px solid rgba(226, 232, 240, 0.5);
+    border-radius: var(--radius-luma);
+    background: var(--color-surface-elevated);
+    padding: 1.5rem;
+  }
+
+  .equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  @media (min-width: 640px) {
+    .equipment-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .equipment-item {
+    text-align: center;
+    padding: 1.25rem 0.75rem;
+    border-radius: calc(var(--radius-luma) * 0.6);
+    transition: background 0.2s ease;
+  }
+
+  .equipment-item:hover {
+    background: rgba(0, 93, 170, 0.03);
+  }
+</style>

@@ -1,0 +1,123 @@
+---
+import { PhHouse, PhCaretRight, PhClock } from "phosphor-icons-astro";
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  eyebrow?: string;
+  breadcrumb?: Array<{ label: string; href: string }>;
+  readingTime?: number;
+}
+
+const { title, subtitle, eyebrow, breadcrumb = [], readingTime } = Astro.props;
+---
+
+<section
+  class="relative overflow-hidden bg-gradient-to-b from-surface to-white border-b border-slate-100/50"
+>
+  <div
+    class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 pt-24 pb-10 md:pt-28 md:pb-14"
+  >
+    <!-- Breadcrumbs -->
+    {
+      breadcrumb.length > 0 && (
+        <nav class="mb-5" aria-label="Breadcrumb">
+          <ol class="flex items-center flex-wrap gap-1.5 text-xs text-slate-400">
+            <li>
+              <a
+                href="/"
+                class="inline-flex items-center gap-1.5 hover:text-primary transition-colors duration-300"
+              >
+                <PhHouse size={14} weight="regular" />
+                <span>Inicio</span>
+              </a>
+            </li>
+            {breadcrumb.map((item, i) => (
+              <>
+                <li class="text-slate-300">
+                  <PhCaretRight size={12} weight="regular" />
+                </li>
+                <li>
+                  {i === breadcrumb.length - 1 ? (
+                    <span class="text-slate-500 font-medium">{item.label}</span>
+                  ) : (
+                    <a
+                      href={item.href}
+                      class="hover:text-primary transition-colors duration-300"
+                    >
+                      {item.label}
+                    </a>
+                  )}
+                </li>
+              </>
+            ))}
+          </ol>
+        </nav>
+      )
+    }
+
+    <!-- Eyebrow -->
+    {
+      eyebrow && (
+        <span class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-3">
+          {eyebrow}
+        </span>
+      )
+    }
+
+    <!-- Title -->
+    <h1
+      class="text-3xl md:text-4xl lg:text-5xl font-display font-bold tracking-tight text-slate-900 text-wrap balance leading-[1.1]"
+    >
+      {title}
+    </h1>
+
+    <!-- Subtitle -->
+    {
+      subtitle && (
+        <p class="mt-3 text-sm md:text-base text-slate-500 max-w-2xl leading-relaxed">
+          {subtitle}
+        </p>
+      )
+    }
+
+    <!-- Meta info: reading time -->
+    {
+      readingTime && (
+        <div class="mt-3 flex items-center gap-2 text-xs text-slate-400">
+          <PhClock size={14} weight="regular" />
+          <span>{readingTime} min de lectura</span>
+        </div>
+      )
+    }
+
+    <!-- Subtle divider -->
+    <div class="mt-6 border-t border-slate-100/50">
+      <p class="text-xs text-slate-400">
+        Escuela de Comunicación Social — ULA NURR
+      </p>
+    </div>
+  </div>
+
+  <!-- Background decoration (LUMA-compliant: subtle, no blur) -->
+  <div
+    class="absolute top-0 right-0 w-80 h-80 opacity-[0.06] pointer-events-none"
+    aria-hidden="true"
+  >
+    <div
+      class="w-full h-full rounded-full"
+      style="background: radial-gradient(circle, var(--color-primary) 0%, transparent 70%);"
+    >
+    </div>
+  </div>
+  <div
+    class="absolute bottom-0 left-1/4 w-64 h-64 opacity-[0.04] pointer-events-none"
+    aria-hidden="true"
+  >
+    <div
+      class="w-full h-full rounded-full"
+      style="background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%);"
+    >
+    </div>
+  </div>
+</section>

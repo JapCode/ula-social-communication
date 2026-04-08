@@ -1,0 +1,142 @@
+---
+import ContentLayout from '@/layouts/ContentLayout.astro';
+import {
+  PhUsersThree,
+  PhMaskHappy,
+  PhHeart,
+  PhCalendar,
+  PhCalendarCheck,
+  PhArrowRight,
+} from 'phosphor-icons-astro';
+import { getCollection } from 'astro:content';
+
+const pageTitle = "Vida Estudiantil";
+const pageSubtitle = "Actividades, organizaciones y oportunidades para los estudiantes de Comunicación Social";
+
+// Fetch upcoming events for preview
+const allEvents = await getCollection('events');
+const today = new Date();
+today.setHours(0, 0, 0, 0);
+const upcomingEvents = allEvents
+  .filter(e => new Date(e.data.date) >= today)
+  .sort((a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime())
+  .slice(0, 3);
+
+const sections = [
+  { title: "Asociación", subtitle: "Representación estudiantil", icon: PhUsersThree, href: "/student-life/association" },
+  { title: "Grupos y Talleres", subtitle: "Cine, teatro, radio, fotografía", icon: PhMaskHappy, href: "/student-life/groups" },
+  { title: "Servicio Comunitario", subtitle: "Proyectos sociales", icon: PhHeart, href: "/student-life/community" },
+  { title: "Calendario", subtitle: "Fechas importantes", icon: PhCalendar, href: "/student-life/calendar" },
+  { title: "Eventos", subtitle: "Foros y charlas", icon: PhCalendarCheck, href: "/student-life/events" },
+];
+---
+
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Comunidad">
+  <div class="py-4 md:py-8">
+
+    <!-- Intro -->
+    <div class="mb-10 md:mb-14 max-w-2xl">
+      <p class="text-slate-500 leading-relaxed text-lg">
+        La vida estudiantil en Comunicación Social va más allá del aula. Conocé las organizaciones, actividades y oportunidades que forman parte de tu experiencia académica.
+      </p>
+    </div>
+
+    <!-- Navigation strip — horizontal on desktop, 2-col grid on mobile -->
+    <div class="mb-12 md:mb-16">
+      <h2 class="text-[10px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-6 md:mb-8">Secciones</h2>
+
+      <!-- Mobile: 2-col grid -->
+      <div class="md:hidden grid grid-cols-2 gap-3">
+        {sections.map(section => {
+          const Icon = section.icon;
+          return (
+            <a href={section.href} class="group flex flex-col items-center gap-3 p-5 bg-white border border-slate-100/50 rounded-luma text-center transition-all duration-300 hover:shadow-luma active:scale-[0.98]">
+              <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center transition-transform duration-300 group-active:scale-95">
+                <Icon size={22} weight="light" class="text-primary" />
+              </div>
+              <div>
+                <span class="text-[11px] font-bold tracking-widest uppercase block text-slate-900">{section.title}</span>
+                <span class="text-xs text-slate-500">{section.subtitle}</span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+
+      <!-- Desktop: horizontal strip with dividers -->
+      <div class="hidden md:grid grid-cols-5 gap-0 bg-white border border-slate-100/50 rounded-luma overflow-hidden">
+        {sections.map((section, i) => {
+          const Icon = section.icon;
+          const isLast = i === sections.length - 1;
+          return (
+            <a
+              href={section.href}
+              class:list={[
+                "group flex flex-col items-center gap-3 py-8 px-6 text-center transition-all duration-300",
+                !isLast ? "border-r border-slate-100" : "",
+              ]}
+            >
+              <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+                <Icon size={22} weight="light" class="text-primary" />
+              </div>
+              <div>
+                <span class="text-[11px] font-bold tracking-widest uppercase block text-slate-900">{section.title}</span>
+                <span class="text-xs text-slate-500">{section.subtitle}</span>
+              </div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+
+    <!-- Upcoming events preview -->
+    <div class="mb-10 md:mb-14">
+      <div class="flex items-center justify-between mb-6 md:mb-8">
+        <h2 class="text-[10px] font-bold tracking-[0.4em] uppercase text-slate-400">Próximos Eventos</h2>
+        <a href="/student-life/calendar" class="inline-flex items-center gap-1.5 text-xs font-bold text-primary hover:text-primary-deep transition-colors group">
+          Ver calendario
+          <PhArrowRight size={12} weight="light" class="transition-transform duration-200 group-hover:translate-x-0.5" />
+        </a>
+      </div>
+
+      {upcomingEvents.length > 0 ? (
+        <div class="space-y-0">
+          {upcomingEvents.map((event, index) => {
+            const eventDate = new Date(event.data.date);
+            const formattedDate = eventDate.toLocaleDateString('es-VE', {
+              day: 'numeric',
+              month: 'short',
+            });
+            const isLast = index === upcomingEvents.length - 1;
+            return (
+              <a
+                href={`/student-life/events/${event.id}`}
+                class:list={[
+                  "group flex items-center gap-4 md:gap-6 py-4 md:py-5 transition-all duration-200 hover:bg-slate-50/50 rounded-lg px-2 -mx-2",
+                  !isLast ? "border-b border-slate-100" : "",
+                ]}
+              >
+                <div class="flex-shrink-0 w-14 text-center">
+                  <span class="block text-lg font-bold text-slate-900 leading-none">{eventDate.getDate()}</span>
+                  <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mt-0.5">{formattedDate.split(' ')[1]}</span>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <h3 class="text-sm md:text-base font-medium text-slate-700 group-hover:text-primary transition-colors truncate">
+                    {event.data.title}
+                  </h3>
+                  <p class="text-xs text-slate-400 mt-0.5 truncate">{event.data.location}</p>
+                </div>
+                <PhArrowRight size={14} weight="light" class="text-slate-300 group-hover:text-primary transition-colors flex-shrink-0" />
+              </a>
+            );
+          })}
+        </div>
+      ) : (
+        <div class="text-center py-10 px-6 bg-surface border border-slate-100/50 rounded-luma">
+          <p class="text-sm text-slate-400">No hay eventos programados próximamente.</p>
+        </div>
+      )}
+    </div>
+
+  </div>
+</ContentLayout>

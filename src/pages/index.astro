@@ -1,25 +1,25 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import FloatingNav from '../components/FloatingNav.astro';
-import TopNav from '../components/TopNav.astro';
-import HeroSection from '../components/HeroSection.astro';
-import NewsSection from '../components/NewsSection.astro';
-import VideoSection from '../components/VideoSection.astro';
-import QuickAccessSection from '../components/QuickAccessSection.astro';
-import Footer from '../components/Footer.astro';
-import WhatsAppButton from '../components/WhatsAppButton.astro';
-import SearchModal from '../components/SearchModal.astro';
-import '../styles/global.css';
+import Layout from "../layouts/Layout.astro";
+import FloatingNav from "../components/FloatingNav.astro";
+import TopNav from "../components/TopNav.astro";
+import HeroSection from "../components/HeroSection.astro";
+import NewsSection from "../components/NewsSection.astro";
+import VideoSection from "../components/VideoSection.astro";
+import QuickAccessSection from "../components/QuickAccessSection.astro";
+import Footer from "../components/Footer.astro";
+import WhatsAppButton from "../components/WhatsAppButton.astro";
+import SearchModal from "../components/SearchModal.astro";
+import "../styles/global.css";
 ---
 
-<Layout title="Comunicación Social ULA NURR | Discovery">
-	<FloatingNav />
+<Layout title="Comunicación Social ULA NURR | Discovery" loadAnimations>
+	<!-- <FloatingNav /> -->
 	<TopNav />
 	<main id="main-content" class="relative" role="main">
 		<HeroSection />
+		<QuickAccessSection />
 		<NewsSection />
 		<VideoSection />
-		<QuickAccessSection />
 	</main>
 	<Footer />
 	<WhatsAppButton />
@@ -33,7 +33,7 @@ import '../styles/global.css';
 	#accesos {
 		scroll-margin-top: 5rem;
 	}
-	
+
 	@media (min-width: 768px) {
 		#inicio,
 		#noticias,

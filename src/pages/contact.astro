@@ -1,0 +1,377 @@
+---
+import ContentLayout from "@/layouts/ContentLayout.astro";
+import {
+  PhEnvelope,
+  PhPhone,
+  PhMapPin,
+  PhInstagramLogo,
+  PhYoutubeLogo,
+  PhTwitterLogo,
+  PhArrowRight,
+} from "phosphor-icons-astro";
+
+const pageTitle = "Contacto";
+const pageSubtitle =
+  "Canales de comunicación con la Escuela de Comunicación Social del NURR";
+const breadcrumb = [{ label: "Inicio", href: "/" }];
+
+const contactMethods = [
+  {
+    icon: PhEnvelope,
+    label: "Correo electrónico",
+    value: "comunicacion@nurr.ula.ve",
+    href: "mailto:comunicacion@nurr.ula.ve",
+    detail: "Respondemos en 2–3 días hábiles",
+  },
+  {
+    icon: PhPhone,
+    label: "Teléfono",
+    value: "+58 272 221-2222",
+    href: "tel:+582722212222",
+    detail: "Lunes a Viernes, 8:00 AM – 4:00 PM",
+  },
+  {
+    icon: PhMapPin,
+    label: "Ubicación",
+    value: "Núcleo Universitario Rafael Rangel",
+    href: "https://maps.app.goo.gl/?q=N%C3%BAcleo+Universitario+Rafael+Rangel+Trujillo",
+    detail: "Trujillo, Estado Trujillo, Venezuela",
+    external: true,
+  },
+];
+
+const socialLinks = [
+  {
+    icon: PhInstagramLogo,
+    label: "Instagram",
+    href: "https://www.instagram.com/comunicacionnurr/",
+  },
+  {
+    icon: PhTwitterLogo,
+    label: "X (Twitter)",
+    href: "https://x.com/ComunicacionNURR",
+  },
+  {
+    icon: PhYoutubeLogo,
+    label: "YouTube",
+    href: "https://www.youtube.com/@ComunicacionNURR",
+  },
+];
+---
+
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} breadcrumb={breadcrumb} narrow={true}>
+  <div class="contact-grid">
+
+    <!-- Contact Methods -->
+    <div class="contact-methods">
+      {
+        contactMethods.map((method) => {
+          const Icon = method.icon;
+          return (
+            <a
+              href={method.href}
+              class="contact-method group"
+              target={method.external ? "_blank" : undefined}
+              rel={method.external ? "noopener noreferrer" : undefined}
+            >
+              <div class="contact-method-icon">
+                <Icon size={22} weight="duotone" class="text-primary" />
+              </div>
+              <div class="contact-method-content">
+                <span class="contact-method-label">{method.label}</span>
+                <span class="contact-method-value">{method.value}</span>
+                <span class="contact-method-detail">{method.detail}</span>
+              </div>
+              <PhArrowRight
+                size={16}
+                weight="light"
+                class="contact-method-arrow text-slate-300 group-hover:text-primary group-hover:translate-x-0.5 transition-all duration-300"
+              />
+            </a>
+          );
+        })
+      }
+
+      <!-- Social Links -->
+      <div class="contact-socials">
+        <span class="contact-socials-label">Síguenos</span>
+        <div class="contact-socials-list">
+          {
+            socialLinks.map((social) => {
+              const Icon = social.icon;
+              return (
+                <a
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="contact-social-link group"
+                  aria-label={social.label}
+                >
+                  <Icon size={20} weight="regular" />
+                  <span>{social.label}</span>
+                </a>
+              );
+            })
+          }
+        </div>
+      </div>
+    </div>
+
+    <!-- Map -->
+    <div class="contact-map-wrapper">
+      <iframe
+        class="contact-map"
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1973.8!2d-70.4369!3d9.3658!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8e69a2a0e5b0b0b1%3A0x0!2sN%C3%BAcleo%20Universitario%20Rafael%20Rangel!5e0!3m2!1ses!2sve!4v1712000000000!5m2!1ses!2sve"
+        width="100%"
+        height="100%"
+        style="border:0;"
+        allowfullscreen=""
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+        title="Ubicación del Núcleo Universitario Rafael Rangel en Google Maps"
+      ></iframe>
+    </div>
+  </div>
+</ContentLayout>
+
+<style>
+  /* ============================================================
+     Contact Grid — two columns on desktop, stacked on mobile
+     ============================================================ */
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    padding: 2rem 0 3rem;
+  }
+
+  @media (min-width: 768px) {
+    .contact-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      padding: 2.5rem 0 4rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .contact-grid {
+      grid-template-columns: 5fr 7fr;
+      gap: 4rem;
+    }
+  }
+
+  /* ============================================================
+     Contact Methods — clean rows, no card wrappers
+     ============================================================ */
+
+  .contact-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .contact-method {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
+    text-decoration: none;
+    transition: background 0.2s ease;
+  }
+
+  .contact-method:first-child {
+    padding-top: 0;
+  }
+
+  .contact-method:last-of-type {
+    border-bottom: none;
+  }
+
+  .contact-method:hover {
+    background: rgba(0, 93, 170, 0.015);
+    margin: 0 -1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    border-radius: 8px;
+  }
+
+  .contact-method-icon {
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    background: rgba(0, 93, 170, 0.06);
+    transition: background 0.3s ease, transform 0.3s ease;
+  }
+
+  .contact-method:hover .contact-method-icon {
+    background: rgba(0, 93, 170, 0.1);
+    transform: scale(1.05);
+  }
+
+  .contact-method-content {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .contact-method-label {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+  }
+
+  .contact-method-value {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-ink);
+    line-height: 1.4;
+    transition: color 0.2s ease;
+  }
+
+  .contact-method:hover .contact-method-value {
+    color: var(--color-primary);
+  }
+
+  .contact-method-detail {
+    font-size: 0.8125rem;
+    color: var(--color-ink-muted);
+    line-height: 1.5;
+  }
+
+  .contact-method-arrow {
+    flex-shrink: 0;
+    margin-top: 0.75rem;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+  }
+
+  .contact-method:hover .contact-method-arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  /* ============================================================
+     Social Links — compact row
+     ============================================================ */
+
+  .contact-socials {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(226, 232, 240, 0.5);
+  }
+
+  .contact-socials-label {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    margin-bottom: 0.75rem;
+  }
+
+  .contact-socials-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .contact-social-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.875rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(226, 232, 240, 0.5);
+    color: var(--color-ink-muted);
+    text-decoration: none;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+
+  .contact-social-link:hover {
+    color: var(--color-primary);
+    border-color: rgba(0, 93, 170, 0.2);
+    background: rgba(0, 93, 170, 0.04);
+  }
+
+  .contact-social-link:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+
+  /* ============================================================
+     Map — full height, subtle border
+     ============================================================ */
+
+  .contact-map-wrapper {
+    position: relative;
+    border-radius: var(--radius-luma);
+    overflow: hidden;
+    border: 1px solid rgba(226, 232, 240, 0.5);
+    min-height: 280px;
+  }
+
+  @media (min-width: 768px) {
+    .contact-map-wrapper {
+      min-height: 100%;
+    }
+  }
+
+  .contact-map {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    filter: grayscale(0.3) contrast(1.05);
+    transition: filter 0.4s ease;
+  }
+
+  .contact-map-wrapper:hover .contact-map {
+    filter: grayscale(0) contrast(1);
+  }
+
+  /* ============================================================
+     Reduced Motion
+     ============================================================ */
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-method,
+    .contact-method-icon,
+    .contact-method-value,
+    .contact-method-arrow,
+    .contact-social-link,
+    .contact-map {
+      transition: none !important;
+    }
+
+    .contact-method:hover {
+      background: transparent;
+    }
+
+    .contact-method:hover .contact-method-icon {
+      transform: none;
+    }
+
+    .contact-method:hover .contact-method-arrow {
+      opacity: 1;
+      transform: none;
+    }
+
+    .contact-map-wrapper:hover .contact-map {
+      filter: grayscale(0.3) contrast(1.05);
+    }
+  }
+</style>

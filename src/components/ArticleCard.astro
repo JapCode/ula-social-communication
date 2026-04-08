@@ -1,0 +1,134 @@
+---
+import { PhNewspaper, PhUser } from 'phosphor-icons-astro';
+
+interface Props {
+  title: string;
+  author: string;
+  date: string | Date;
+  category: 'investigacion' | 'actualidad' | 'opinion' | 'cronica';
+  excerpt?: string;
+  href?: string;
+  image?: string;
+  variant?: 'featured' | 'compact';
+  slug?: string;
+}
+
+const { title, author, date, category, excerpt, href, image, variant = 'compact', slug } = Astro.props;
+
+const categoryLabels: Record<string, string> = {
+  investigacion: 'Investigación',
+  actualidad: 'Actualidad',
+  opinion: 'Opinión',
+  cronica: 'Crónica',
+};
+
+const formattedDate = new Date(date).toLocaleDateString('es-VE', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+});
+
+const articleHref = href || (slug ? `/portfolio/articles/${slug}` : '#');
+---
+
+{variant === 'featured' ? (
+  <article>
+    <a href={articleHref} class="group featured-card block overflow-hidden border-l-4 border-primary bg-surface-elevated transition-all duration-300 hover:shadow-luma">
+      <div class="flex flex-col md:flex-row">
+        <!-- Image -->
+        <div class="featured-card-image md:w-2/5 flex-shrink-0">
+          {image ? (
+            <img src={image} alt="" class="w-full h-full object-cover" loading="lazy" />
+          ) : (
+            <div class="w-full h-full flex items-center justify-center bg-primary/5">
+              <PhNewspaper size={48} weight="light" class="text-primary/20" />
+            </div>
+          )}
+        </div>
+        <!-- Content -->
+        <div class="flex flex-col justify-center p-6 md:p-8 md:w-3/5">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full bg-primary text-[10px] font-bold text-white uppercase tracking-wider">
+              {categoryLabels[category] || category}
+            </span>
+            <span class="text-xs text-slate-400">{formattedDate}</span>
+          </div>
+          <h2 class="text-xl md:text-2xl font-display font-bold text-slate-900 tracking-tight group-hover:text-primary transition-colors leading-tight">
+            {title}
+          </h2>
+          <p class="text-sm text-slate-500 mt-3 leading-relaxed line-clamp-3">{excerpt}</p>
+          <div class="flex items-center gap-2 mt-4 text-xs text-slate-400">
+            <PhUser size={14} weight="regular" class="text-slate-300" />
+            <span>{author}</span>
+          </div>
+        </div>
+      </div>
+    </a>
+  </article>
+) : (
+  <article>
+    <a href={articleHref} class="group compact-card block bg-surface-elevated transition-all duration-300 hover:shadow-luma">
+      <!-- Image -->
+      <div class="compact-card-image">
+        {image ? (
+          <img src={image} alt="" class="w-full h-full object-cover" loading="lazy" />
+        ) : (
+          <div class="w-full h-full flex items-center justify-center bg-primary/5">
+            <PhNewspaper size={32} weight="light" class="text-primary/20" />
+          </div>
+        )}
+      </div>
+      <!-- Content -->
+      <div class="p-5">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary/10 text-[10px] font-bold text-primary uppercase tracking-wider">
+            {categoryLabels[category] || category}
+          </span>
+          <span class="text-xs text-slate-400">{formattedDate}</span>
+        </div>
+        <h3 class="text-sm font-bold text-slate-900 tracking-tight group-hover:text-primary transition-colors leading-tight line-clamp-2">
+          {title}
+        </h3>
+        <p class="text-xs text-slate-500 mt-1.5 leading-relaxed line-clamp-2">{excerpt}</p>
+        <div class="flex items-center gap-1.5 mt-3 text-[11px] text-slate-400">
+          <PhUser size={12} weight="regular" class="text-slate-300" />
+          <span>{author}</span>
+        </div>
+      </div>
+    </a>
+  </article>
+)}
+
+<style>
+  .featured-card-image {
+    height: 200px;
+  }
+
+  @media (min-width: 768px) {
+    .featured-card-image {
+      height: auto;
+      min-height: 260px;
+    }
+  }
+
+  .compact-card-image {
+    height: 160px;
+    overflow: hidden;
+  }
+
+  .compact-card-image img {
+    transition: transform 0.4s ease;
+  }
+
+  .compact-card:hover .compact-card-image img {
+    transform: scale(1.05);
+  }
+
+  .featured-card:hover .featured-card-image img {
+    transform: scale(1.03);
+  }
+
+  .featured-card-image img {
+    transition: transform 0.4s ease;
+  }
+</style>

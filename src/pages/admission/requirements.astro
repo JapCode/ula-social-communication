@@ -1,0 +1,148 @@
+---
+import ContentLayout from '@/layouts/ContentLayout.astro';
+import {
+  PhIdentificationCard,
+  PhScroll,
+  PhImage,
+  PhGraduationCap,
+  PhHeartbeat,
+  PhCheckCircle,
+  PhEnvelopeSimple,
+  PhWarning,
+} from 'phosphor-icons-astro';
+
+const pageTitle = "Requisitos de Admisión";
+const pageSubtitle = "Documentación necesaria para ingresar a la carrera de Comunicación Social";
+
+const documentos = [
+  {
+    icon: PhIdentificationCard,
+    title: "Cédula de Identidad",
+    description: "Copia legible por ambos lados. Debe estar vigente."
+  },
+  {
+    icon: PhScroll,
+    title: "Constancia de Notas / Certificado de Estudios",
+    description: "Certificado de notas de los estudios anteriores (bachiller o técnico medio)."
+  },
+  {
+    icon: PhImage,
+    title: "Fotografías",
+    description: "Dos (2) fotos recientes tamaño carnet (2×2 cm), fondo blanco."
+  },
+  {
+    icon: PhGraduationCap,
+    title: "Título de Bachiller",
+    description: "Copia del título o constancia de estar en proceso de obtención."
+  },
+  {
+    icon: PhHeartbeat,
+    title: "Certificado de Salud",
+    description: "Emitido por el servicio de salud universitario o un centro autorizado."
+  }
+];
+
+const requisitos = [
+  "Haber completado la educación media (bachiller)",
+  "Presentar y aprobar la prueba de admisión de la ULA",
+  "Realizar el pago de los derechos de inscripción",
+  "Asistir a la jornada de inducción"
+];
+---
+
+<ContentLayout
+  title={pageTitle}
+  subtitle={pageSubtitle}
+  eyebrow="Admisión"
+  breadcrumb={[{ label: "Admisión", href: "/admission" }]}
+>
+  <div>
+
+    <!-- Documentos Requeridos — numbered list with left accent -->
+    <div>
+      <span class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-2">
+        Documentación
+      </span>
+      <h2 class="text-2xl md:text-3xl font-display font-bold tracking-tight text-slate-900 mb-8">
+        Documentos Requeridos
+      </h2>
+
+      <div class="space-y-6">
+        {documentos.map((doc, i) => (
+          <div class="flex items-start gap-5 pl-6 border-l-2 border-primary/20 hover:border-primary transition-colors duration-300">
+            <span class="text-xs font-mono font-bold text-slate-300 tabular-nums mt-0.5">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-1">
+                <doc.icon size={18} weight="light" class="text-primary" />
+                <h3 class="text-lg font-display font-bold text-slate-900 tracking-tight">
+                  {doc.title}
+                </h3>
+              </div>
+              <p class="text-sm text-slate-500 leading-relaxed">
+                {doc.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+    <!-- Requisitos Adicionales — tinted background block -->
+    <div class="mt-16 p-8 md:p-10 bg-primary/5 rounded-luma">
+      <span class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-2">
+        Elegibilidad
+      </span>
+      <h2 class="text-2xl md:text-3xl font-display font-bold tracking-tight text-slate-900 mb-6">
+        Requisitos Adicionales
+      </h2>
+
+      <ul class="space-y-4">
+        {requisitos.map((req) => (
+          <li class="flex items-start gap-3">
+            <PhCheckCircle size={20} weight="light" class="text-primary mt-0.5 flex-shrink-0" />
+            <span class="text-slate-600 leading-relaxed">{req}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <!-- Nota Importante — warning callout -->
+    <div class="mt-16 flex items-start gap-4 p-6 md:p-8 bg-accent/5 border border-accent/20 rounded-luma">
+      <PhWarning size={24} weight="light" class="text-accent flex-shrink-0 mt-0.5" />
+      <div>
+        <h3 class="font-display font-semibold text-slate-900 mb-1">
+          Nota Importante
+        </h3>
+        <p class="text-sm text-slate-600 leading-relaxed">
+          Los requisitos pueden variar según el período académico y las disposiciones de la Universidad.
+          Te recomendamos verificar siempre la información actualizada en el portal oficial de la ULA
+          o contactar a la coordinación de la carrera.
+        </p>
+      </div>
+    </div>
+
+    <!-- CTA — plain section with clear action -->
+    <div class="mt-16">
+      <span class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-2">
+        ¿Dudas?
+      </span>
+      <h2 class="text-2xl md:text-3xl font-display font-bold tracking-tight text-slate-900 mb-4">
+        ¿Necesitas más información?
+      </h2>
+      <p class="text-base text-slate-500 leading-relaxed max-w-prose mb-6">
+        Si tienes dudas sobre los requisitos o necesitas orientación adicional,
+        no dudes en contactar a la coordinación.
+      </p>
+      <a
+        href="/contact"
+        class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-full hover:bg-primary-deep transition-colors duration-300"
+      >
+        <PhEnvelopeSimple size={18} weight="light" />
+        Contactar Coordinación
+      </a>
+    </div>
+
+  </div>
+</ContentLayout>

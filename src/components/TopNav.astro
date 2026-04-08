@@ -1,123 +1,715 @@
-<nav class="reveal fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-[100] w-[95%] md:w-[90%] max-w-6xl" aria-label="Navegación superior">
-	<div class="floating-nav rounded-full px-4 md:px-8 py-2 md:py-3 flex items-center justify-between">
-		<div class="flex items-center gap-2 md:gap-3">
-			<img src="/ula_logo.jpg" alt="ULA NURR" class="h-6 md:h-8 w-auto" width="32" height="32" />
-			<span class="font-bold tracking-[0.2em] text-[8px] md:text-[10px] uppercase hidden xs:inline">ULA NURR</span>
-		</div>
-		
-		<div class="hidden md:flex items-center gap-10">
-			<a class="text-[9px] font-bold tracking-[0.2em] uppercase text-ink-muted hover:text-primary transition-colors duration-300 relative group" href="#">
-				Inscripciones
-				<span class="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full"></span>
-			</a>
-			<a class="text-[9px] font-bold tracking-[0.2em] uppercase text-ink-muted hover:text-primary transition-colors duration-300 relative group" href="#">
-				Horarios
-				<span class="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full"></span>
-			</a>
-			<a class="text-[9px] font-bold tracking-[0.2em] uppercase text-ink-muted hover:text-primary transition-colors duration-300 relative group" href="#">
-				Pénsum
-				<span class="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full"></span>
-			</a>
-			<a class="text-[9px] font-bold tracking-[0.2em] uppercase text-ink-muted hover:text-primary transition-colors duration-300 relative group" href="#">
-				Recursos
-				<span class="absolute -bottom-1 left-0 w-0 h-px bg-primary transition-all duration-300 group-hover:w-full"></span>
-			</a>
-		</div>
-		
-		<div class="flex items-center gap-2">
-			<!-- Search button (desktop + mobile) -->
-			<button class="p-2 rounded-full hover:bg-black/5 transition-colors duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center" id="search-btn" aria-label="Buscar contenido" onclick="openSearch()">
-				<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-ink-muted" aria-hidden="true">
-					<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>
-				</svg>
-			</button>
-			
-			<button class="bg-primary text-white text-[8px] md:text-[9px] font-bold tracking-[0.2em] uppercase px-3 md:px-6 py-2 md:py-2.5 rounded-full hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 hidden md:block focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
-				Portal
-			</button>
-			
-			<button class="md:hidden p-2 rounded-full hover:bg-black/5 transition-colors duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center" id="mobile-menu-btn" aria-label="Abrir menú" aria-expanded="false" aria-controls="mobile-menu">
-				<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-ink-muted" aria-hidden="true">
-					<line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="18" y2="18"/>
-				</svg>
-			</button>
-		</div>
-	</div>
+---
+import DropdownNav from "@/components/DropdownNav.astro";
+import {
+  PhMagnifyingGlass,
+  PhList,
+  PhX,
+  PhCaretDown,
+  PhHouse,
+} from "phosphor-icons-astro";
+
+// Get current path for active state
+const currentPath = Astro.url.pathname;
+
+// ============================================================
+// CONSOLIDATED NAVIGATION DATA (reduced from 6 to 3 dropdowns)
+// ============================================================
+
+// Dropdown 1: El Programa (Programa + Académico)
+const programaData = [
+  {
+    heading: "Institucional",
+    items: [
+      {
+        label: "Misión y Visión",
+        href: "/program/mission",
+        description: "Propósito del programa",
+        icon: "eye",
+      },
+      {
+        label: "Historia",
+        href: "/program/history",
+        description: "Orígenes del programa",
+        icon: "book-open-text",
+      },
+      {
+        label: "Autoridades",
+        href: "/program/authorities",
+        description: "Directores y coordinadores",
+        icon: "gear",
+      },
+      {
+        label: "Docentes",
+        href: "/program/faculty",
+        description: "Directorio de profesores",
+        icon: "users",
+      },
+    ],
+  },
+  {
+    heading: "Académico",
+    items: [
+      {
+        label: "Perfil del Egresado",
+        href: "/program/graduate-profile",
+        description: "Competencias de graduados",
+        icon: "graduation-cap",
+      },
+      {
+        label: "Currículo",
+        href: "/academics/curriculum",
+        description: "Malla curricular",
+        icon: "tree-structure",
+      },
+      {
+        label: "Contenido de Cursos",
+        href: "/academics/course-content",
+        description: "Material por materia",
+        icon: "book-open",
+      },
+      {
+        label: "Líneas de Investigación",
+        href: "/academics/research",
+        description: "Temas de tesis",
+        icon: "flask",
+      },
+      {
+        label: "Pasantías",
+        href: "/academics/internships",
+        description: "Requisitos",
+        icon: "briefcase",
+      },
+    ],
+  },
+];
+
+// Dropdown 2: Vida Estudiantil (Vida Estudiantil + Portafolio)
+const vidaEstudiantilData = [
+  {
+    heading: "Vida Estudiantil",
+    items: [
+      {
+        label: "Asociación",
+        href: "/student-life/association",
+        description: "Contacto y noticias",
+        icon: "users",
+      },
+      {
+        label: "Grupos y Talleres",
+        href: "/student-life/groups",
+        description: "Cine, teatro, radio",
+        icon: "masks",
+      },
+      {
+        label: "Servicio Comunitario",
+        href: "/student-life/community",
+        description: "Proyectos activos",
+        icon: "heart",
+      },
+      {
+        label: "Calendario",
+        href: "/student-life/calendar",
+        description: "Fechas clave",
+        icon: "calendar",
+      },
+      {
+        label: "Eventos",
+        href: "/student-life/events",
+        description: "Foros, charlas",
+        icon: "calendar",
+      },
+    ],
+  },
+  {
+    heading: "Producción",
+    items: [
+      {
+        label: "NURR en Medios",
+        href: "/portfolio/articles",
+        description: "Artículos",
+        icon: "newspaper",
+      },
+      {
+        label: "Lab Radio/TV",
+        href: "/portfolio/media-lab",
+        description: "Producción audiovisual",
+        icon: "video",
+      },
+      {
+        label: "Revista Digital",
+        href: "/portfolio/magazine",
+        description: "Publicaciones",
+        icon: "notebook",
+      },
+    ],
+  },
+];
+
+// Dropdown 3: Admisión (Admisión + Egresados)
+const admisionData = [
+  {
+    heading: "Admisión",
+    items: [
+      {
+        label: "Proceso",
+        href: "/admission/process",
+        description: "OPSU, pruebas",
+        icon: "user-plus",
+      },
+      {
+        label: "Requisitos",
+        href: "/admission/requirements",
+        description: "Documentación",
+        icon: "file-text",
+      },
+    ],
+  },
+  {
+    heading: "Egresados",
+    items: [
+      {
+        label: "Testimonios",
+        href: "/alumni/testimonials",
+        description: "Historias de éxito",
+        icon: "medal",
+      },
+      {
+        label: "Educación Continua",
+        href: "/alumni/continuing-education",
+        description: "Postgrados",
+        icon: "trend-up",
+      },
+    ],
+  },
+];
+
+// Helper to check if path is active
+const isActive = (href: string) => {
+  if (href === "/") return currentPath === "/";
+  return currentPath.startsWith(href);
+};
+---
+
+<nav
+  class="fixed top-3 left-1/2 -translate-x-1/2 z-[100] w-[95%] md:w-[90%] max-w-7xl"
+  aria-label="Navegación principal"
+>
+  <div
+    class="floating-nav bg-[var(--color-surface-elevated)] border border-[rgba(226,232,240,0.5)] shadow-luma rounded-full px-4 md:px-8 py-2.5 md:py-3 flex items-center justify-between"
+  >
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2 md:gap-3">
+      <img
+        src="/ula_logo.jpg"
+        alt="ULA NURR"
+        class="h-5 md:h-7 w-auto"
+        width="48"
+        height="48"
+      />
+      <span
+        class="font-bold tracking-[0.15em] text-[10px] md:text-[12px] uppercase hidden xs:inline text-[var(--color-ink)]"
+        >ULA NURR</span
+      >
+    </a>
+
+    <!-- Desktop Navigation -->
+    <div class="hidden lg:flex items-center gap-6">
+      <a
+        class:list={[
+          "text-[10px] md:text-[12px] font-bold tracking-[0.15em] uppercase transition-colors duration-300 relative group py-1.5 px-2.5",
+          isActive("/") ? "text-primary" : "text-[var(--color-ink-muted)] hover:text-primary",
+        ]}
+        href="/"
+        aria-current={isActive("/") ? "page" : undefined}
+      >
+        <span class="relative">
+          Inicio
+          {
+            isActive("/") && (
+              <span class="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full" />
+            )
+          }
+        </span>
+      </a>
+
+      <DropdownNav label="El Programa" sections={programaData} />
+      <DropdownNav label="Vida Estudiantil" sections={vidaEstudiantilData} />
+      <DropdownNav label="Admisión" sections={admisionData} />
+    </div>
+
+    <!-- Actions -->
+    <div class="flex items-center gap-1.5">
+      <button
+        class="p-1.5 rounded-full hover:bg-[rgba(248,250,252,0.8)] transition-colors duration-300 min-w-[36px] min-h-[36px] flex items-center justify-center"
+        id="search-btn"
+        aria-label="Buscar"
+        onclick="openSearch()"
+      >
+        <PhMagnifyingGlass size={18} weight="light" class="text-[var(--color-ink-muted)]" />
+      </button>
+
+      <a
+        href="/contact"
+        class="bg-primary text-white text-[10px] md:text-[11px] font-bold tracking-[0.15em] uppercase px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-white/20 hover:border-white/40 hover:shadow-luma hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 inline-block"
+      >
+        Contacto
+      </a>
+
+      <button
+        class="md:hidden p-1.5 rounded-full hover:bg-[rgba(248,250,252,0.8)] transition-colors duration-300 min-w-[36px] min-h-[36px] flex items-center justify-center"
+        id="mobile-menu-btn"
+        aria-label="Abrir menú"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+      >
+        <PhList size={20} weight="duotone" class="text-[var(--color-ink-muted)]" />
+      </button>
+    </div>
+  </div>
 </nav>
 
-<!-- Mobile Menu -->
-<div id="mobile-menu" class="fixed inset-0 z-[150] bg-black/50 hidden" aria-hidden="true" role="dialog" aria-modal="true">
-	<div class="absolute right-0 top-0 h-full w-72 bg-white shadow-2xl transform translate-x-full transition-transform duration-300 overscroll-y-contain" id="mobile-menu-panel">
-		<div class="p-6">
-			<div class="flex items-center justify-between mb-8">
-				<img src="/ula_logo.jpg" alt="ULA NURR" class="h-8 w-auto" width="32" height="32" />
-				<button id="mobile-menu-close" class="p-2 rounded-full hover:bg-black/5 transition-colors duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Cerrar menú">
-					<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="text-ink-muted" aria-hidden="true">
-						<path d="M18 6 6 18"/><path d="m6 6 12 12"/>
-					</svg>
-				</button>
-			</div>
-			<nav class="space-y-4" aria-label="Menú móvil">
-				<a href="#inicio" class="block py-3 text-[12px] font-bold tracking-[0.2em] uppercase text-ink hover:text-primary transition-colors duration-300">Inicio</a>
-				<a href="#noticias" class="block py-3 text-[12px] font-bold tracking-[0.2em] uppercase text-ink hover:text-primary transition-colors duration-300">Noticias</a>
-				<a href="#video" class="block py-3 text-[12px] font-bold tracking-[0.2em] uppercase text-ink hover:text-primary transition-colors duration-300">Experiencia</a>
-				<a href="#accesos" class="block py-3 text-[12px] font-bold tracking-[0.2em] uppercase text-ink hover:text-primary transition-colors duration-300">Accesos Rápidos</a>
-				<hr class="my-4 border-black/10" />
-				<a href="#" class="block py-3 text-[11px] font-bold tracking-[0.2em] uppercase text-ink-muted hover:text-primary transition-colors duration-300">Inscripciones</a>
-				<a href="#" class="block py-3 text-[11px] font-bold tracking-[0.2em] uppercase text-ink-muted hover:text-primary transition-colors duration-300">Horarios</a>
-				<a href="#" class="block py-3 text-[11px] font-bold tracking-[0.2em] uppercase text-ink-muted hover:text-primary transition-colors duration-300">Pénsum</a>
-				<a href="#" class="block py-3 text-[11px] font-bold tracking-[0.2em] uppercase text-ink-muted hover:text-primary transition-colors duration-300">Recursos</a>
-			</nav>
-			<button class="w-full bg-primary text-white text-[10px] font-bold tracking-[0.2em] uppercase px-6 py-3 rounded-full mt-8 hover:shadow-lg hover:shadow-primary/20 transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
-				Portal
-			</button>
-		</div>
-	</div>
+<!-- Mobile Menu - Bottom Sheet -->
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-[150] bg-[rgba(15,23,42,0.4)] hidden"
+  aria-hidden="true"
+  role="dialog"
+  aria-modal="true"
+  aria-label="Menú de navegación"
+>
+  <div
+    class="absolute bottom-0 left-0 right-0 h-[85vh] bg-[var(--color-surface-elevated)] rounded-t-3xl shadow-2xl transform translate-y-full transition-transform duration-300 ease-out"
+    id="mobile-menu-panel"
+  >
+    <!-- Drag Handle -->
+    <div class="flex justify-center pt-3 pb-1">
+      <div class="w-10 h-1.5 bg-[rgba(226,232,240,1)] rounded-full"></div>
+    </div>
+
+    <div class="p-6 h-full overflow-y-auto pb-12">
+      <div class="flex items-center justify-between mb-6">
+        <span class="font-bold tracking-[0.15em] text-[11px] uppercase text-[var(--color-ink)]"
+          >Menú</span
+        >
+        <button
+          id="mobile-menu-close"
+          class="p-2 rounded-full hover:bg-[rgba(248,250,252,0.8)] transition-colors duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center"
+          aria-label="Cerrar menú"
+        >
+          <PhX size={20} weight="duotone" class="text-[var(--color-ink-muted)]" />
+        </button>
+      </div>
+
+      <nav class="space-y-1" aria-label="Menú móvil">
+        <!-- Quick Actions — priority links for first-time users -->
+        <div class="mb-4 pb-4 border-b border-slate-100/50">
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 px-3">Acciones rápidas</p>
+          <div class="grid grid-cols-2 gap-2">
+            <a href="/admission/process" class="quick-action-card flex flex-col items-center gap-2 p-4 bg-primary/5 rounded-xl hover:bg-primary/10 active:bg-primary/15 transition-colors">
+              <span class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-primary"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+              </span>
+              <span class="text-[11px] font-bold text-slate-900 text-center leading-tight">Inscripciones</span>
+            </a>
+            <a href="/contact" class="quick-action-card flex flex-col items-center gap-2 p-4 bg-primary/5 rounded-xl hover:bg-primary/10 active:bg-primary/15 transition-colors">
+              <span class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-primary"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+              </span>
+              <span class="text-[11px] font-bold text-slate-900 text-center leading-tight">Contacto</span>
+            </a>
+            <a href="/academics/curriculum" class="quick-action-card flex flex-col items-center gap-2 p-4 bg-primary/5 rounded-xl hover:bg-primary/10 active:bg-primary/15 transition-colors">
+              <span class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-primary"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+              </span>
+              <span class="text-[11px] font-bold text-slate-900 text-center leading-tight">Pénsum</span>
+            </a>
+            <a href="/student-life/events" class="quick-action-card flex flex-col items-center gap-2 p-4 bg-primary/5 rounded-xl hover:bg-primary/10 active:bg-primary/15 transition-colors">
+              <span class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-primary"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+              </span>
+              <span class="text-[11px] font-bold text-slate-900 text-center leading-tight">Eventos</span>
+            </a>
+          </div>
+        </div>
+
+        <a
+          href="/"
+          class="mobile-nav-link flex items-center gap-3 py-3 text-[12px] font-bold tracking-[0.15em] uppercase text-[var(--color-ink)] hover:text-primary transition-colors duration-300 rounded-xl px-3 -mx-3"
+        >
+          <PhHouse size={18} weight="duotone" class="text-primary/70" />
+          Inicio
+        </a>
+
+        <!-- El Programa (Programa + Académico) -->
+        <div class="mobile-nav-group">
+          <button
+            class="mobile-nav-toggle w-full flex items-center justify-between py-3 text-[12px] font-bold tracking-[0.15em] uppercase text-[var(--color-ink)] hover:text-primary transition-colors duration-300 rounded-xl px-3 -mx-3"
+            data-group="programa"
+            aria-expanded="false"
+          >
+            <span>El Programa</span>
+            <PhCaretDown
+              size={16}
+              weight="duotone"
+              class="text-[var(--color-ink-muted)] transition-transform duration-200"
+              data-icon
+            />
+          </button>
+          <div
+            class="mobile-nav-submenu hidden pl-4 space-y-1"
+            data-submenu="programa"
+          >
+            <!-- Institucional section -->
+            <p
+              class="text-[10px] font-bold text-primary uppercase tracking-wider py-2"
+            >
+              Institucional
+            </p>
+            <a
+              href="/program/mission"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Misión y Visión</a
+            >
+            <a
+              href="/program/history"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Historia</a
+            >
+            <a
+              href="/program/authorities"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Autoridades</a
+            >
+            <a
+              href="/program/faculty"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Docentes</a
+            >
+            <!-- Académico section -->
+            <p
+              class="text-[10px] font-bold text-primary uppercase tracking-wider py-2 mt-2"
+            >
+              Académico
+            </p>
+            <a
+              href="/program/graduate-profile"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Perfil del Egresado</a
+            >
+            <a
+              href="/academics/curriculum"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Currículo</a
+            >
+            <a
+              href="/academics/course-content"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Contenido Cursos</a
+            >
+            <a
+              href="/academics/research"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Investigación</a
+            >
+            <a
+              href="/academics/internships"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Pasantías</a
+            >
+          </div>
+        </div>
+
+        <!-- Vida Estudiantil (Vida Estudiantil + Portafolio) -->
+        <div class="mobile-nav-group">
+          <button
+            class="mobile-nav-toggle w-full flex items-center justify-between py-3 text-[12px] font-bold tracking-[0.15em] uppercase text-[var(--color-ink)] hover:text-primary transition-colors duration-300 rounded-xl px-3 -mx-3"
+            data-group="vida-estudiantil"
+            aria-expanded="false"
+          >
+            <span>Vida Estudiantil</span>
+            <PhCaretDown
+              size={16}
+              weight="duotone"
+              class="text-[var(--color-ink-muted)] transition-transform duration-200"
+              data-icon
+            />
+          </button>
+          <div
+            class="mobile-nav-submenu hidden pl-4 space-y-1"
+            data-submenu="vida-estudiantil"
+          >
+            <!-- Vida Estudiantil section -->
+            <p
+              class="text-[10px] font-bold text-primary uppercase tracking-wider py-2"
+            >
+              Vida Estudiantil
+            </p>
+            <a
+              href="/student-life/association"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Asociación</a
+            >
+            <a
+              href="/student-life/groups"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Grupos y Talleres</a
+            >
+            <a
+              href="/student-life/community"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Servicio Comunitario</a
+            >
+            <a
+              href="/student-life/calendar"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Calendario</a
+            >
+            <a
+              href="/student-life/events"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Eventos</a
+            >
+            <!-- Producción section -->
+            <p
+              class="text-[10px] font-bold text-primary uppercase tracking-wider py-2 mt-2"
+            >
+              Producción
+            </p>
+            <a
+              href="/portfolio/articles"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >NURR en Medios</a
+            >
+            <a
+              href="/portfolio/media-lab"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Lab Radio/TV</a
+            >
+            <a
+              href="/portfolio/magazine"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Revista Digital</a
+            >
+          </div>
+        </div>
+
+        <!-- Admisión (Admisión + Egresados) -->
+        <div class="mobile-nav-group">
+          <button
+            class="mobile-nav-toggle w-full flex items-center justify-between py-3 text-[12px] font-bold tracking-[0.15em] uppercase text-[var(--color-ink)] hover:text-primary transition-colors duration-300 rounded-xl px-3 -mx-3"
+            data-group="admision"
+            aria-expanded="false"
+          >
+            <span>Admisión</span>
+            <PhCaretDown
+              size={16}
+              weight="duotone"
+              class="text-[var(--color-ink-muted)] transition-transform duration-200"
+              data-icon
+            />
+          </button>
+          <div
+            class="mobile-nav-submenu hidden pl-4 space-y-1"
+            data-submenu="admision"
+          >
+            <!-- Admisión section -->
+            <p
+              class="text-[10px] font-bold text-primary uppercase tracking-wider py-2"
+            >
+              Admisión
+            </p>
+            <a
+              href="/admission/process"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Proceso</a
+            >
+            <a
+              href="/admission/requirements"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Requisitos</a
+            >
+            <!-- Egresados section -->
+            <p
+              class="text-[10px] font-bold text-primary uppercase tracking-wider py-2 mt-2"
+            >
+              Egresados
+            </p>
+            <a
+              href="/alumni/testimonials"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Testimonios</a
+            >
+            <a
+              href="/alumni/continuing-education"
+              class="block py-2 pl-3 text-[12px] text-[var(--color-ink-muted)] hover:text-primary transition-colors border-l-2 border-transparent hover:border-primary rounded-r-lg"
+              >Educación Continua</a
+            >
+          </div>
+        </div>
+
+        <a
+          href="/contact"
+          class="w-full bg-primary text-white text-[11px] font-bold tracking-[0.15em] uppercase px-6 py-3.5 rounded-full mt-4 hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 block text-center"
+        >
+          Contacto
+        </a>
+      </nav>
+    </div>
+  </div>
 </div>
 
 <script>
-	const menuBtn = document.getElementById('mobile-menu-btn');
-	const menuClose = document.getElementById('mobile-menu-close');
-	const mobileMenu = document.getElementById('mobile-menu');
-	const menuPanel = document.getElementById('mobile-menu-panel');
-	
-	function openMenu() {
-		if (!mobileMenu || !menuPanel) return;
-		mobileMenu.classList.remove('hidden');
-		mobileMenu.setAttribute('aria-hidden', 'false');
-		menuBtn?.setAttribute('aria-expanded', 'true');
-		setTimeout(() => {
-			menuPanel.classList.remove('translate-x-full');
-		}, 10);
-		document.body.style.overflow = 'hidden';
-		menuClose?.focus();
-	}
-	
-	function closeMenu() {
-		if (!menuPanel || !mobileMenu) return;
-		menuPanel.classList.add('translate-x-full');
-		setTimeout(() => {
-			mobileMenu.classList.add('hidden');
-			mobileMenu.setAttribute('aria-hidden', 'true');
-			menuBtn?.setAttribute('aria-expanded', 'false');
-		}, 300);
-		document.body.style.overflow = '';
-		menuBtn?.focus();
-	}
-	
-	menuBtn?.addEventListener('click', openMenu);
-	menuClose?.addEventListener('click', closeMenu);
-	mobileMenu?.addEventListener('click', (e) => {
-		if (e.target === mobileMenu) closeMenu();
-	});
-	
-	document.querySelectorAll('#mobile-menu a').forEach(link => {
-		link.addEventListener('click', closeMenu);
-	});
-	
-	document.addEventListener('keydown', (e) => {
-		if (e.key === 'Escape' && !mobileMenu?.classList.contains('hidden')) {
-			closeMenu();
-		}
-	});
+  document.addEventListener('astro:page-load', () => {
+    const menuBtn = document.getElementById("mobile-menu-btn");
+  const menuClose = document.getElementById("mobile-menu-close");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const menuPanel = document.getElementById("mobile-menu-panel");
+
+  // Collect all focusable elements within the mobile menu panel
+  function getFocusableElements() {
+    if (!menuPanel) return [];
+    return Array.from(
+      menuPanel.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])'
+      )
+    );
+  }
+
+  // Focus trap handler
+  function trapFocus(e: KeyboardEvent) {
+    if (e.key !== "Tab") return;
+    const focusable = getFocusableElements();
+    if (focusable.length === 0) return;
+
+    const firstFocusable = focusable[0];
+    const lastFocusable = focusable[focusable.length - 1];
+
+    if (e.shiftKey) {
+      // Shift+Tab: if on first element, wrap to last
+      if (document.activeElement === firstFocusable) {
+        e.preventDefault();
+        lastFocusable.focus();
+      }
+    } else {
+      // Tab: if on last element, wrap to first
+      if (document.activeElement === lastFocusable) {
+        e.preventDefault();
+        firstFocusable.focus();
+      }
+    }
+  }
+
+  function openMenu() {
+    if (!mobileMenu || !menuPanel) return;
+    mobileMenu.classList.remove("hidden");
+    mobileMenu.setAttribute("aria-hidden", "false");
+    menuBtn?.setAttribute("aria-expanded", "true");
+    // Bottom sheet - translate up
+    setTimeout(() => menuPanel.classList.remove("translate-y-full"), 10);
+    document.body.style.overflow = "hidden";
+    // Focus trap - focus first interactive element
+    setTimeout(() => {
+      menuClose?.focus();
+      document.addEventListener("keydown", trapFocus);
+    }, 350);
+  }
+
+  function closeMenu() {
+    if (!menuPanel || !mobileMenu) return;
+    // Bottom sheet - translate down
+    menuPanel.classList.add("translate-y-full");
+    document.removeEventListener("keydown", trapFocus);
+    setTimeout(() => {
+      mobileMenu.classList.add("hidden");
+      mobileMenu.setAttribute("aria-hidden", "true");
+      menuBtn?.setAttribute("aria-expanded", "false");
+    }, 300);
+    document.body.style.overflow = "";
+    menuBtn?.focus();
+  }
+
+  menuBtn?.addEventListener("click", openMenu);
+  menuClose?.addEventListener("click", closeMenu);
+  mobileMenu?.addEventListener("click", (e) => {
+    if (e.target === mobileMenu) closeMenu();
+  });
+
+  // Mobile accordion with CSS class-based animation (no inline style.animation)
+  document.querySelectorAll(".mobile-nav-toggle").forEach((toggle) => {
+    toggle.addEventListener("click", () => {
+      const group = toggle.getAttribute("data-group");
+      const submenu = document.querySelector<HTMLElement>(
+        `[data-submenu="${group}"]`
+      );
+      const icon = toggle.querySelector<SVGElement>("[data-icon]");
+      const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+
+      if (submenu) {
+        // Toggle aria-expanded
+        toggle.setAttribute("aria-expanded", (!isExpanded).toString());
+
+        // Toggle icon rotation
+        icon?.classList.toggle("rotate-180");
+
+        // Toggle submenu with CSS class-based animation
+        if (submenu.classList.contains("hidden")) {
+          submenu.classList.remove("hidden");
+          submenu.classList.add("submenu-open");
+        } else {
+          submenu.classList.remove("submenu-open");
+          // Wait for animation to finish before hiding
+          setTimeout(() => {
+            if (!submenu.classList.contains("submenu-open")) {
+              submenu.classList.add("hidden");
+            }
+          }, 200);
+        }
+      }
+    });
+  });
+
+  // Close menu on escape key
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !mobileMenu?.classList.contains("hidden")) {
+      closeMenu();
+    }
+  });
+
+  // Prevent panel click from closing menu
+  menuPanel?.addEventListener("click", (e) => {
+    e.stopPropagation();
+  });
+  });
 </script>
+
+<style>
+  /* Submenu slide animation via CSS class instead of inline style.animation */
+  .mobile-nav-submenu.submenu-open {
+    animation: slideDown 0.2s ease-out;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .floating-nav,
+    #mobile-menu-panel,
+    .mobile-nav-toggle [data-icon],
+    .mobile-nav-submenu {
+      transition: none !important;
+      animation: none !important;
+    }
+
+    #mobile-menu-panel {
+      transform: translateY(0) !important;
+    }
+  }
+</style>

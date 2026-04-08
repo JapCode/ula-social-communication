@@ -1,0 +1,157 @@
+---
+import ContentLayout from '@/layouts/ContentLayout.astro';
+import FacultyCard from '@/components/FacultyCard.astro';
+import { PhUsers, PhMagnifyingGlass, PhClock, PhMapPin } from 'phosphor-icons-astro';
+import { getCollection } from 'astro:content';
+
+const pageTitle = "Docentes";
+const breadcrumb = [
+  { label: "Programa", href: "/program" }
+];
+
+const allFaculty = await getCollection('faculty');
+const activeFaculty = allFaculty.filter(f => f.data.status === 'active');
+const retiredFaculty = allFaculty.filter(f => f.data.status === 'retired');
+---
+
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb}>
+
+  <!-- Introductory context -->
+  <p class="text-base md:text-lg text-slate-500 leading-relaxed max-w-2xl mb-8">
+    Nuestro cuerpo docente está conformado por profesionales con amplia trayectoria en comunicación social, investigación y producción académica.
+  </p>
+
+  <!-- Search (client-side island) -->
+  {activeFaculty.length > 2 && (
+    <div class="mb-8">
+      <div class="relative max-w-sm">
+        <PhMagnifyingGlass size={18} weight="light" class="search-icon absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+        <input
+          type="search"
+          id="faculty-search"
+          class="search-input w-full pl-10 pr-4 py-2.5 bg-surface-elevated border border-slate-100/50 rounded-full text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all"
+          placeholder="Buscar por nombre, especialidad o cargo..."
+          aria-label="Buscar docentes"
+        />
+      </div>
+    </div>
+  )}
+
+  <!-- Empty state -->
+  {allFaculty.length === 0 && (
+    <div class="text-center py-16">
+      <PhUsers size={40} weight="light" class="text-slate-300 mx-auto mb-4" />
+      <h3 class="text-lg font-bold text-slate-900 mb-2">Sin docentes registrados</h3>
+      <p class="text-sm text-slate-400 max-w-sm mx-auto">
+        Aún no se ha registrado información sobre el cuerpo docente. Contacta a secretaría para más detalles.
+      </p>
+    </div>
+  )}
+
+  {allFaculty.length > 0 && (
+    <>
+      <!-- Active Faculty -->
+      {activeFaculty.length > 0 && (
+        <div class="mb-12">
+          <span class="inline-block text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400 mb-4">
+            Profesores Activos
+          </span>
+          <div id="faculty-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {activeFaculty.map(teacher => (
+              <FacultyCard
+                name={teacher.data.name}
+                title={teacher.data.title}
+                specialization={teacher.data.specialization}
+                email={teacher.data.email}
+                bio={teacher.data.bio}
+                status={teacher.data.status}
+              />
+            ))}
+          </div>
+          <p id="no-results" class="hidden text-center py-12 text-sm text-slate-400">
+            No se encontraron docentes con ese criterio de búsqueda.
+          </p>
+        </div>
+      )}
+
+      <!-- Retired Faculty -->
+      {retiredFaculty.length > 0 && (
+        <div class="mt-12 pt-10 border-t border-slate-100/50">
+          <span class="inline-block text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400 mb-4">
+            Profesores Eméritos
+          </span>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {retiredFaculty.map(teacher => (
+              <FacultyCard
+                name={teacher.data.name}
+                title={teacher.data.title}
+                specialization={teacher.data.specialization}
+                bio={teacher.data.bio}
+                status={teacher.data.status}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      <!-- Contact Guidance -->
+      <div class="mt-14 p-6 md:p-8 bg-surface-elevated border border-slate-100/50 rounded-luma">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+            <PhClock size={20} weight="light" class="text-primary" />
+          </div>
+          <div>
+            <h3 class="text-sm font-bold text-slate-900 mb-1">Contacto Docente</h3>
+            <p class="text-sm text-slate-500 leading-relaxed">
+              Para contactar a un docente, utiliza el correo electrónico indicado en su perfil. Las consultas académicas pueden realizarse en horario de oficina.
+            </p>
+            <div class="flex flex-col gap-1.5 mt-3">
+              <span class="inline-flex items-center gap-2 text-xs text-slate-400">
+                <PhClock size={14} weight="light" />
+                Horario de consulta: Lunes a viernes, 8:00 AM — 4:00 PM
+              </span>
+              <span class="inline-flex items-center gap-2 text-xs text-slate-400">
+                <PhMapPin size={14} weight="light" />
+                Núcleo Universitario Rafael Rangel, Trujillo, Venezuela
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
+  )}
+</ContentLayout>
+
+<!-- Client-side search island -->
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const input = document.getElementById('faculty-search');
+    const grid = document.getElementById('faculty-grid');
+    const noResults = document.getElementById('no-results');
+    if (!input || !grid) return;
+
+    input.addEventListener('input', () => {
+      const query = input.value.toLowerCase().trim();
+      const cards = grid.querySelectorAll('.faculty-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const name = (card.getAttribute('data-faculty-name') || '').toLowerCase();
+        const spec = (card.getAttribute('data-faculty-spec') || '').toLowerCase();
+        const title = (card.getAttribute('data-faculty-title') || '').toLowerCase();
+        const match = !query || name.includes(query) || spec.includes(query) || title.includes(query);
+
+        if (match) {
+          card.style.display = '';
+          visibleCount++;
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      if (noResults) {
+        noResults.classList.toggle('hidden', visibleCount > 0);
+      }
+    });
+  });
+</script>

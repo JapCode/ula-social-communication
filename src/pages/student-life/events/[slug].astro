@@ -1,0 +1,70 @@
+---
+import ContentLayout from '@/layouts/ContentLayout.astro';
+import { getCollection, render } from 'astro:content';
+import { PhArrowRight } from 'phosphor-icons-astro';
+import { getTypeLabel, getTypeColors } from '@/lib/events';
+
+export async function getStaticPaths() {
+  const events = await getCollection('events');
+  return events.map(event => ({
+    params: { slug: event.id },
+    props: { event },
+  }));
+}
+
+const { event } = Astro.props;
+const { Content } = await render(event);
+
+const eventDate = new Date(event.data.date);
+const formattedDate = eventDate.toLocaleDateString('es-VE', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+
+const pageTitle = event.data.title;
+const pageSubtitle = formattedDate;
+---
+
+<ContentLayout 
+  title={pageTitle} 
+  subtitle={pageSubtitle}
+  eyebrow={getTypeLabel(event.data.type) || "Evento"}
+  breadcrumb={[
+    { label: "Vida Estudiantil", href: "/student-life" },
+    { label: "Calendario", href: "/student-life/calendar" },
+  ]}
+>
+  <article class="max-w-3xl">
+
+    <!-- Event info bar — minimal, no icons -->
+    <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-8 text-sm">
+      <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${getTypeColors(event.data.type)}`}>
+        {getTypeLabel(event.data.type)}
+      </span>
+      <span class="text-slate-300">·</span>
+      <span class="text-slate-500">{event.data.location}</span>
+    </div>
+
+    <!-- Event Content -->
+    <div class="content-area">
+      <Content />
+    </div>
+
+    <!-- CTA -->
+    <div class="mt-10 pt-8 border-t border-slate-100">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h3 class="text-base font-bold text-slate-900">¿Quieres participar?</h3>
+          <p class="text-sm text-slate-500 mt-1">Contacta a la coordinación para más información o inscripción.</p>
+        </div>
+        <a href="/contact" class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded-full hover:shadow-luma hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 flex-shrink-0">
+          Contactar
+          <PhArrowRight size={14} weight="regular" />
+        </a>
+      </div>
+    </div>
+
+  </article>
+</ContentLayout>

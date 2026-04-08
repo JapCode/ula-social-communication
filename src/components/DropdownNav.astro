@@ -1,0 +1,260 @@
+---
+import {
+  PhCaretDown,
+  PhEye,
+  PhGraduationCap,
+  PhBookOpenText,
+  PhGear,
+  PhUsers,
+  PhTreeStructure,
+  PhBookOpen,
+  PhFlask,
+  PhBriefcase,
+  PhHeart,
+  PhCalendar,
+  PhNewspaper,
+  PhNotebook,
+  PhVideo,
+  PhFileText,
+  PhMedal,
+  PhTrendUp,
+  PhUserPlus,
+} from "phosphor-icons-astro";
+
+// Get current path for active state
+const currentPath = Astro.url.pathname;
+
+interface DropdownItem {
+  label: string;
+  href: string;
+  description?: string;
+  icon?: string;
+}
+
+interface DropdownSection {
+  heading?: string;
+  items: DropdownItem[];
+}
+
+interface Props {
+  label: string;
+  sections: DropdownSection[];
+}
+
+const { label, sections } = Astro.props;
+
+// Icon component mapping
+const iconMap: Record<string, any> = {
+  eye: PhEye,
+  "graduation-cap": PhGraduationCap,
+  "book-open-text": PhBookOpenText,
+  gear: PhGear,
+  users: PhUsers,
+  "tree-structure": PhTreeStructure,
+  "book-open": PhBookOpen,
+  flask: PhFlask,
+  briefcase: PhBriefcase,
+  masks: PhHeart,
+  heart: PhHeart,
+  calendar: PhCalendar,
+  newspaper: PhNewspaper,
+  notebook: PhNotebook,
+  video: PhVideo,
+  "file-text": PhFileText,
+  medal: PhMedal,
+  "trend-up": PhTrendUp,
+  "user-plus": PhUserPlus,
+};
+
+// Helper to check if path is active
+const isActive = (href: string) => currentPath.startsWith(href);
+
+// Check if any item in the dropdown is active
+const hasActiveItem = sections.some((section) =>
+  section.items.some((item) => isActive(item.href))
+);
+---
+
+<div class="relative group/dropdown" data-dropdown>
+  <button
+    class:list={[
+      "dropdown-button flex items-center cursor-pointer gap-1.5 text-[11px] md:text-[12px] font-bold tracking-[0.15em] uppercase transition-colors duration-300 py-2 relative",
+      hasActiveItem ? "text-primary" : "text-ink-muted hover:text-primary",
+    ]}
+    aria-haspopup="true"
+    aria-expanded={hasActiveItem ? "true" : "false"}
+    data-dropdown-trigger
+  >
+    <span class="relative">
+      {label}
+      {
+        hasActiveItem && (
+          <span class="absolute -bottom-0.5 left-0 right-0 h-0.5 bg-primary rounded-full" />
+        )
+      }
+    </span>
+    <PhCaretDown
+      size={12}
+      weight="bold"
+      class="transition-transform duration-200 ease-out group-hover/dropdown:rotate-180 text-ink-faint"
+      data-dropdown-chevron
+    />
+  </button>
+
+  <!-- Dropdown panel -->
+  <div
+    class="absolute top-full left-1/2 -translate-x-1/2 opacity-0 invisible group-hover/dropdown:opacity-100 group-hover/dropdown:visible group-focus-within/dropdown:opacity-100 group-focus-within/dropdown:visible transition-all duration-250 ease-out z-[200] dropdown-panel"
+    style="transform-origin: top center;"
+    aria-label={label}
+    data-dropdown-panel
+  >
+    <!-- Transparent bridge to prevent hover gap -->
+    <div class="absolute -top-3 left-0 right-0 h-3" aria-hidden="true"></div>
+    <div
+      class="bg-[var(--color-surface-elevated)] border border-[rgba(226,232,240,0.5)] shadow-luma rounded-luma p-3 min-w-[300px] pt-3"
+    >
+      {
+        sections.map((section, sectionIndex) => (
+          <div
+            class={
+              sectionIndex > 0 ? "mt-3 pt-3 border-t border-[rgba(226,232,240,0.5)]" : ""
+            }
+          >
+            {section.heading && (
+              <p class="text-[10px] font-semibold tracking-[0.15em] uppercase text-[var(--color-ink-faint)] px-4 pb-2">
+                {section.heading}
+              </p>
+            )}
+            <div class="space-y-0.5">
+              {section.items.map((item) => (
+                <a
+                  href={item.href}
+                  class:list={[
+                    "flex items-start gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 group/item",
+                    isActive(item.href)
+                      ? "bg-primary/5 text-primary"
+                      : "hover:bg-[rgba(248,250,252,0.8)]",
+                  ]}
+                >
+                  {item.icon && iconMap[item.icon] && (
+                    <div
+                      class:list={[
+                        "mt-0.5 flex-shrink-0 transition-colors duration-200",
+                        isActive(item.href)
+                          ? "text-primary"
+                          : "text-primary/60 group-hover/item:text-primary",
+                      ]}
+                    >
+                      {(() => {
+                        const IconComponent = iconMap[item.icon];
+                        return IconComponent ? (
+                          <IconComponent size={18} weight="duotone" />
+                        ) : null;
+                      })()}
+                    </div>
+                  )}
+                  <div class="min-w-0">
+                    <span
+                      class:list={[
+                        "text-sm font-medium block transition-colors duration-200",
+                        isActive(item.href)
+                          ? "text-primary"
+                          : "text-[var(--color-ink)] group-hover/item:text-primary",
+                      ]}
+                    >
+                      {item.label}
+                    </span>
+                    {item.description && (
+                      <span class="text-xs text-[var(--color-ink-faint)] mt-0.5 block leading-tight">
+                        {item.description}
+                      </span>
+                    )}
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    // Keyboard accessibility for dropdown menus
+  document.querySelectorAll('[data-dropdown]').forEach((dropdown) => {
+    const trigger = dropdown.querySelector<HTMLButtonElement>('[data-dropdown-trigger]');
+    const panel = dropdown.querySelector<HTMLElement>('[data-dropdown-panel]');
+    const chevron = dropdown.querySelector<SVGElement>('[data-dropdown-chevron]');
+    if (!trigger || !panel) return;
+
+    const getItems = () => Array.from(panel.querySelectorAll<HTMLAnchorElement>('a[href]'));
+
+    function openDropdown() {
+      trigger.setAttribute('aria-expanded', 'true');
+      chevron?.classList.add('rotate-180');
+    }
+
+    function closeDropdown() {
+      trigger.setAttribute('aria-expanded', 'false');
+      chevron?.classList.remove('rotate-180');
+    }
+
+    // Toggle aria-expanded on focus
+    trigger.addEventListener('focus', openDropdown);
+
+    // Close on blur (when focus leaves the entire dropdown group)
+    dropdown.addEventListener('focusout', (e) => {
+      const relatedTarget = e.relatedTarget as Node | null;
+      if (!dropdown.contains(relatedTarget)) {
+        closeDropdown();
+      }
+    });
+
+    // Click toggle for touch devices
+    trigger.addEventListener('click', (e) => {
+      e.preventDefault();
+      const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+      if (isExpanded) {
+        closeDropdown();
+      } else {
+        openDropdown();
+      }
+    });
+
+    // Arrow key navigation from trigger
+    trigger.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        const items = getItems();
+        if (items.length > 0) {
+          openDropdown();
+          items[0].focus();
+        }
+      }
+    });
+
+    // Arrow key navigation within dropdown items
+    panel.addEventListener('keydown', (e) => {
+      const items = getItems();
+      const currentIndex = items.indexOf(document.activeElement as HTMLAnchorElement);
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        const next = items[(currentIndex + 1) % items.length];
+        next?.focus();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prev = items[(currentIndex - 1 + items.length) % items.length];
+        prev?.focus();
+      } else if (e.key === 'Escape') {
+        e.preventDefault();
+        closeDropdown();
+        trigger.focus();
+      }
+      // Tab naturally flows through items — no handler needed
+    });
+  });
+  });
+</script>

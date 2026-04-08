@@ -1,0 +1,104 @@
+---
+import ContentLayout from '@/layouts/ContentLayout.astro';
+import { PhNewspaper, PhVideo, PhBookBookmark, PhArrowRight } from 'phosphor-icons-astro';
+import { getCollection } from 'astro:content';
+
+const articles = await getCollection('articles');
+
+const pageTitle = "Portafolio Estudiantil";
+const pageSubtitle = "Proyectos, trabajos y producciones de los estudiantes de Comunicación Social";
+
+const sections = [
+  {
+    title: 'Artículos Periodísticos',
+    description: 'Notas, reportajes, crónicas y publicaciones de estudiantes',
+    icon: PhNewspaper,
+    href: '/portfolio/articles',
+    count: articles.length,
+    countLabel: articles.length === 1 ? 'artículo publicado' : 'artículos publicados',
+  },
+  {
+    title: 'Laboratorio de Medios',
+    description: 'Producción audiovisual, radio, fotografía y diseño digital',
+    icon: PhVideo,
+    href: '/portfolio/media-lab',
+  },
+  {
+    title: 'Revista de la Carrera',
+    description: 'Publicación oficial de la Escuela de Comunicación Social',
+    icon: PhBookBookmark,
+    href: '/portfolio/magazine',
+  },
+];
+---
+
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Portafolio">
+
+  <!-- Sections — editorial horizontal strips with dividers -->
+  <div class="portfolio-sections">
+    {sections.map((section, i) => (
+      <>
+        {i > 0 && <div class="section-divider"></div>}
+        <a href={section.href} class="portfolio-section group flex flex-col md:flex-row md:items-center gap-4 md:gap-8 py-8 md:py-10">
+          <div class="flex items-center gap-5 flex-1">
+            <div class="flex-shrink-0 w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center transition-transform duration-300 group-hover:scale-110">
+              <section.icon size={24} weight="duotone" class="text-primary" />
+            </div>
+            <div>
+              <h2 class="text-lg md:text-xl font-display font-bold text-slate-900 tracking-tight group-hover:text-primary transition-colors">
+                {section.title}
+              </h2>
+              <p class="text-sm text-slate-500 mt-1 leading-relaxed">{section.description}</p>
+              {section.count !== undefined && (
+                <span class="inline-block text-xs text-slate-400 mt-2">{section.count} {section.countLabel}</span>
+              )}
+            </div>
+          </div>
+          <div class="flex items-center gap-2 text-primary text-sm font-semibold opacity-0 group-hover:opacity-100 transition-opacity duration-300 md:self-center">
+            Explorar
+            <PhArrowRight size={16} weight="regular" class="transition-transform duration-300 group-hover:translate-x-1" />
+          </div>
+        </a>
+      </>
+    ))}
+  </div>
+
+</ContentLayout>
+
+<style>
+  .portfolio-sections {
+    border: 1px solid rgba(226, 232, 240, 0.5);
+    border-radius: var(--radius-luma);
+    background: var(--color-surface-elevated);
+    overflow: hidden;
+  }
+
+  .portfolio-section {
+    padding-left: 2rem;
+    padding-right: 2rem;
+    transition: background 0.3s ease;
+  }
+
+  .portfolio-section:hover {
+    background: rgba(0, 93, 170, 0.02);
+  }
+
+  .section-divider {
+    height: 1px;
+    background: rgba(226, 232, 240, 0.5);
+    margin-left: 2rem;
+    margin-right: 2rem;
+  }
+
+  @media (max-width: 767px) {
+    .portfolio-section {
+      padding-left: 1.25rem;
+      padding-right: 1.25rem;
+    }
+
+    .section-divider {
+      margin-left: 1.25rem;
+      margin-right: 1.25rem;
+    }
+  }
+</style>

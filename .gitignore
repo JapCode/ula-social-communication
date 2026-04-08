@@ -26,3 +26,8 @@ pnpm-debug.log*
 .agent/
 .agents/
 skills-lock.json
+.claude/
+.serena/
+.opencode/
+AGENTS.md
+LUMA_STYLES.md

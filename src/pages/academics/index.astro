@@ -1,0 +1,63 @@
+---
+import ContentLayout from '@/layouts/ContentLayout.astro';
+import SectionCard from '@/components/SectionCard.astro';
+
+const pageTitle = "Oferta Académica";
+const pageSubtitle = "Todo lo que necesitas saber sobre el pensum, cursos e investigación de la carrera";
+---
+
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Estudios">
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+    <SectionCard 
+      title="Currículo" 
+      description="Malla curricular completa de la carrera"
+      icon="tree-structure"
+      href="/academics/curriculum"
+    />
+    <SectionCard 
+      title="Contenido de Cursos" 
+      description="Material y programas por materia"
+      icon="book-open"
+      href="/academics/course-content"
+    />
+    <SectionCard 
+      title="Líneas de Investigación" 
+      description="Temas y proyectos de investigación"
+      icon="science"
+      href="/academics/research"
+    />
+    <SectionCard 
+      title="Pasantías" 
+      description="Requisitos y formularios"
+      icon="work"
+      href="/academics/internships"
+    />
+  </div>
+  
+  <div class="mt-16 p-8 bg-white border border-slate-100/50 rounded-luma shadow-luma">
+    <h3 class="text-lg font-bold text-slate-900 mb-4">Información Académica</h3>
+    <p class="text-slate-500 leading-relaxed">
+      La carrera de Comunicación Social en el NURR tiene una duración de 5 años (10 semestres) 
+      con un total de 180 créditos. El pensum incluye materias de teoría comunicacional, 
+      producción periodística, audiovisual, digital, investigación y práctica profesional.
+    </p>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+      <div class="text-center p-4 bg-slate-50/50 rounded-lg">
+        <span class="text-2xl font-bold text-primary">10</span>
+        <p class="text-xs text-slate-500 mt-1">Semestres</p>
+      </div>
+      <div class="text-center p-4 bg-slate-50/50 rounded-lg">
+        <span class="text-2xl font-bold text-primary">180</span>
+        <p class="text-xs text-slate-500 mt-1">Créditos</p>
+      </div>
+      <div class="text-center p-4 bg-slate-50/50 rounded-lg">
+        <span class="text-2xl font-bold text-primary">50+</span>
+        <p class="text-xs text-slate-500 mt-1">Materias</p>
+      </div>
+      <div class="text-center p-4 bg-slate-50/50 rounded-lg">
+        <span class="text-2xl font-bold text-primary">4</span>
+        <p class="text-xs text-slate-500 mt-1">Mesas de trabajo</p>
+      </div>
+    </div>
+  </div>
+</ContentLayout>

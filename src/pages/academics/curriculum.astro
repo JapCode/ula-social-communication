@@ -1,0 +1,251 @@
+---
+import ContentLayout from '@/layouts/ContentLayout.astro';
+import { PhDownloadSimple, PhInfo } from 'phosphor-icons-astro';
+
+const pageTitle = "Currículo";
+const breadcrumb = [
+  { label: "Académico", href: "/academics" }
+];
+
+const cycles = [
+  {
+    name: "Ciclo Básico",
+    description: "Fundamentos teóricos y herramientas de comunicación",
+    semesters: [
+      { num: 1, courses: ["Introducción a la Comunicación Social", "Teoría General de Sistemas", "Lingüística", "Historia de Venezuela", "Introducción a la Investigación"] },
+      { num: 2, courses: ["Comunicación Oral y Escrita", "Semiología", "Historia del Periodismo", "Matemáticas", "Estadística I"] },
+      { num: 3, courses: ["Teoría de la Comunicación", "Periodismo I", "Producción Gráfica", "Sociología", "Estadística II"] },
+      { num: 4, courses: ["Comunicación Organizacional", "Periodismo II", "Fotografía", "Psicología Social", "Legislación Comunicacional"] },
+    ]
+  },
+  {
+    name: "Ciclo Profesional",
+    description: "Formación especializada en medios y producción",
+    semesters: [
+      { num: 5, courses: ["Investigación Comunicacional I", "Radio I", "Televisión I", "Comunicación Digital", "Ética Profesional"] },
+      { num: 6, courses: ["Investigación Comunicacional II", "Radio II", "Televisión II", "Relaciones Públicas", "Optativa I"] },
+      { num: 7, courses: ["Producción Audiovisual I", "Cine", "Comunicación Comunitaria", "Optativa II", "Optativa III"] },
+      { num: 8, courses: ["Producción Audiovisual II", "Gerencia de Medios", "Tesis I", "Pasantía", "Optativa IV"] },
+    ]
+  },
+  {
+    name: "Especialización",
+    description: "Trabajo de grado y práctica profesional",
+    semesters: [
+      { num: 9, courses: ["Proyecto Comunicacional", "Tesis II", "Pasantía II", "Optativa V"] },
+      { num: 10, courses: ["Seminario de Grado", "Tesis III", "Práctica Profesional"] },
+    ]
+  }
+];
+---
+
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb}>
+
+  <!-- Download CTA -->
+  <div class="mb-12 flex justify-end">
+    <a
+      href="#"
+      aria-disabled="true"
+      title="Próximamente"
+      class="inline-flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-full text-xs font-bold hover:shadow-luma transition-all opacity-80 cursor-not-allowed"
+    >
+      <PhDownloadSimple size={16} weight="light" class="text-white" />
+      Descargar Pénsum PDF
+    </a>
+  </div>
+
+  <!-- Timeline -->
+  <div class="relative">
+    {cycles.map((cycle, ci) => (
+      <section aria-label={cycle.name} class="timeline-cycle">
+        <!-- Cycle header -->
+        <div class="timeline-cycle-header">
+          <span class="timeline-cycle-label">{cycle.name}</span>
+          <span class="timeline-cycle-count">{cycle.semesters.length} semestres</span>
+          <p class="timeline-cycle-desc">{cycle.description}</p>
+        </div>
+
+        <!-- Semester nodes -->
+        {cycle.semesters.map((sem, si) => (
+          <div class="timeline-node">
+            <div class="timeline-track">
+              <div class="timeline-dot"></div>
+              {!(ci === cycles.length - 1 && si === cycle.semesters.length - 1) && (
+                <div class="timeline-line"></div>
+              )}
+            </div>
+            <div class="timeline-content">
+              <h3 class="timeline-semester">Semestre {sem.num}</h3>
+              <ul class="timeline-courses">
+                {sem.courses.map(course => (
+                  <li>{course}</li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ))}
+      </section>
+    ))}
+  </div>
+
+  <!-- Disclaimer -->
+  <div class="timeline-disclaimer">
+    <div class="flex items-start gap-3">
+      <PhInfo size={18} weight="regular" class="text-primary mt-0.5 flex-shrink-0" />
+      <p class="text-sm text-slate-600">
+        <strong>Nota:</strong> Este pensum es referencial. Consulta siempre la versión oficial en la Coordinación Académica.
+      </p>
+    </div>
+  </div>
+
+</ContentLayout>
+
+<style>
+  /* Cycle spacing */
+  .timeline-cycle {
+    margin-bottom: 2.5rem;
+  }
+
+  .timeline-cycle:last-of-type {
+    margin-bottom: 0;
+  }
+
+  /* Cycle header */
+  .timeline-cycle-header {
+    margin-bottom: 1.5rem;
+    padding-left: calc(12px + 1.5rem);
+  }
+
+  .timeline-cycle-label {
+    display: block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    margin-bottom: 0.25rem;
+  }
+
+  .timeline-cycle-count {
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--color-ink-faint);
+    opacity: 0.5;
+    margin-left: 0.5rem;
+  }
+
+  .timeline-cycle-desc {
+    font-size: 0.875rem;
+    color: var(--color-ink-muted);
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* Node = one semester */
+  .timeline-node {
+    display: flex;
+    gap: 1.5rem;
+  }
+
+  /* Track = dot + line */
+  .timeline-track {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 12px;
+    flex-shrink: 0;
+    padding-top: 0.35rem;
+  }
+
+  .timeline-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    opacity: 0.2;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  .timeline-node:first-child .timeline-dot {
+    opacity: 0.5;
+    box-shadow: 0 0 0 4px rgba(0, 93, 170, 0.08);
+  }
+
+  .timeline-line {
+    width: 1.5px;
+    flex: 1;
+    min-height: 2rem;
+    background: linear-gradient(to bottom, rgba(0, 93, 170, 0.15), rgba(0, 93, 170, 0.05));
+  }
+
+  /* Content = semester label + courses */
+  .timeline-content {
+    padding-bottom: 1.75rem;
+    min-width: 0;
+  }
+
+  .timeline-node:last-child .timeline-content {
+    padding-bottom: 0;
+  }
+
+  .timeline-semester {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--color-ink);
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.01em;
+  }
+
+  .timeline-courses {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .timeline-courses li {
+    position: relative;
+    padding-left: 1rem;
+    font-size: 0.8125rem;
+    color: var(--color-ink-muted);
+    line-height: 1.65;
+    margin-bottom: 0.25rem;
+  }
+
+  .timeline-courses li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55rem;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    opacity: 0.25;
+  }
+
+  /* Disclaimer */
+  .timeline-disclaimer {
+    margin-top: 2.5rem;
+    padding: 1.25rem 1.5rem;
+    background: var(--color-primary);
+    background: color-mix(in oklch, var(--color-primary) 5%, transparent);
+    border-radius: var(--radius-luma);
+    border: 1px solid color-mix(in oklch, var(--color-primary) 10%, transparent);
+  }
+
+  @media (max-width: 768px) {
+    .timeline-cycle-header {
+      padding-left: calc(12px + 1.25rem);
+    }
+
+    .timeline-node {
+      gap: 1.25rem;
+    }
+
+    .timeline-courses li {
+      font-size: 0.8125rem;
+    }
+  }
+</style>

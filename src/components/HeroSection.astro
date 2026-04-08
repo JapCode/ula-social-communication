@@ -1,125 +1,120 @@
+---
+import { PhArrowRight, PhArrowDown } from "phosphor-icons-astro";
+---
+
 <section
-	class="layered-card z-10 relative overflow-hidden"
+	class="hero-editorial relative overflow-hidden"
 	id="inicio"
 	aria-labelledby="hero-title"
+	transition:animate="none"
 >
-	<!-- Atmospheric background -->
-	<div class="absolute inset-0 overflow-hidden pointer-events-none">
-		<div
-			class="hero-bg-circle absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full opacity-20"
-			style="background: radial-gradient(circle, rgba(0,93,170,0.12) 0%, transparent 70%);"
-		>
-		</div>
-		<div
-			class="hero-bg-circle absolute top-1/4 -left-40 w-80 h-80 rounded-full opacity-15"
-			style="background: radial-gradient(circle, rgba(232,115,74,0.08) 0%, transparent 70%); animation-delay: -5s;"
-		>
-		</div>
-		<div
-			class="hero-bg-circle absolute bottom-20 right-1/4 w-64 h-64 rounded-full opacity-10"
-			style="background: radial-gradient(circle, rgba(0,93,170,0.1) 0%, transparent 70%); animation-delay: -8s;"
-		>
-		</div>
-		<!-- Floating particles -->
-		<div
-			class="hero-bg-element absolute top-20 right-20 w-3 h-3 rounded-full bg-primary/30"
-		>
-		</div>
-		<div
-			class="hero-bg-element absolute bottom-32 left-10 w-2 h-2 rounded-full bg-accent/40"
-		>
-		</div>
-		<div
-			class="hero-bg-element absolute top-1/2 right-1/4 w-4 h-4 rounded-full bg-primary/20"
-		>
-		</div>
-		<div
-			class="hero-bg-element absolute top-1/3 left-1/3 w-1.5 h-1.5 rounded-full bg-accent/30"
-		>
-		</div>
-		<div
-			class="hero-floating absolute top-1/4 left-1/4 w-2 h-2 rounded-full bg-primary/50"
-			style="animation-delay: -1s;"
-		>
-		</div>
-		<div
-			class="hero-floating absolute bottom-1/4 right-10 w-3 h-3 rounded-full bg-primary/30"
-			style="animation-delay: -2s;"
-		>
-		</div>
-		<!-- Decorative line -->
-		<div
-			class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-px h-48 bg-gradient-to-b from-transparent via-primary/10 to-transparent"
-		>
-		</div>
+	<!-- Primary color background with subtle geometric accents -->
+	<div class="hero-bg absolute inset-0" aria-hidden="true">
+		<!-- Solid primary base -->
+		<div class="absolute inset-0 bg-primary"></div>
+		<!-- Subtle gradient depth -->
+		<div class="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary-deep"></div>
+		<!-- Geometric accent — large circle -->
+		<div class="hero-geo-circle hero-geo-circle--1 absolute -right-20 -top-20 w-[500px] h-[500px] md:w-[700px] md:h-[700px] rounded-full opacity-10" style="background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);"></div>
+		<!-- Geometric accent — small circle -->
+		<div class="hero-geo-circle hero-geo-circle--2 absolute -left-10 bottom-10 w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.07]" style="background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);"></div>
+		<!-- Diagonal accent line -->
+		<div class="hidden lg:block absolute right-1/4 top-0 bottom-0 w-px bg-white/5"></div>
+		<!-- Horizontal accent line -->
+		<div class="hidden lg:block absolute left-0 right-0 top-2/3 h-px bg-white/5"></div>
 	</div>
 
-	<div
-		class="card-content items-center text-center p-6 md:p-12 lg:p-16 central-glow relative z-10"
-	>
-		<div class="space-y-6 md:space-y-10 max-w-5xl mx-auto">
-			<!-- Eyebrow -->
-			<div class="reveal-slide">
-				<span
-					class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-ink-faint mb-2"
-					>Núcleo Universitario Rafael Rangel</span
+	<!-- Mobile: centered, content-rich layout | Desktop: editorial bottom-aligned -->
+	<div class="relative z-10 min-h-[60vh] md:min-h-screen flex flex-col justify-center md:items-end md:justify-end pt-28 pb-12 md:py-0 md:pb-16 lg:pb-24">
+		<div class="w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16">
+			<div class="hero-editorial-content text-center md:text-left">
+
+				<!-- Eyebrow — editorial style -->
+				<div class="flex items-center gap-4 mb-6 md:mb-8 justify-center md:justify-start">
+					<span class="block w-8 md:w-12 h-px bg-white/40"></span>
+					<span class="hero-eyebrow text-[9px] md:text-[11px] font-bold tracking-[0.35em] uppercase text-white/60">
+						Núcleo Universitario Rafael Rangel
+					</span>
+				</div>
+
+				<!-- Main title — massive, editorial -->
+				<h1
+					id="hero-title"
+					class="hero-title text-5xl sm:text-6xl md:text-8xl lg:text-9xl xl:text-[10rem] font-display font-bold tracking-tighter text-white leading-[0.85]"
 				>
-				<div class="w-12 h-px bg-primary/30 mx-auto mt-4"></div>
-			</div>
+					Comunicación<br />
+					<span class="text-white/40">Social</span>
+				</h1>
 
-			<!-- Main heading -->
-			<h1
-				id="hero-title"
-				class="text-4xl sm:text-5xl md:text-7xl lg:text-[9rem] font-display font-bold tracking-tight leading-[0.95] md:leading-[0.85] text-ink text-wrap balance"
-			>
-				Comunicación<br />
-				<span class="text-primary font-bold">Social</span>
-			</h1>
+				<!-- Value proposition — visible on mobile -->
+				<p class="hero-value-prop text-sm md:text-base lg:text-xl text-white/80 mt-4 md:mt-6 max-w-lg mx-auto md:mx-0 leading-relaxed">
+					Licenciatura en Comunicación Social — Formando profesionales críticos para el futuro de la comunicación digital.
+				</p>
 
-			<!-- Subtitle -->
-			<p
-				class="text-base md:text-lg lg:text-xl font-normal text-ink-muted max-w-2xl mx-auto leading-relaxed"
-			>
-				Explorando las nuevas fronteras del lenguaje y la narrativa
-				digital en el Núcleo Universitario Rafael Rangel.
-			</p>
+				<!-- CTA row -->
+				<div class="flex flex-col sm:flex-row items-center gap-4 mt-6 md:mt-8 justify-center md:justify-start">
+					<a
+						href="/admission/process"
+						class="hero-cta-primary inline-flex items-center gap-2 px-6 py-3 bg-white text-primary text-sm font-bold tracking-wider uppercase rounded-full hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
+					>
+						Cómo Inscribirse
+						<PhArrowRight
+							size={16}
+							weight="regular"
+							class="transition-transform duration-300"
+						/>
+					</a>
+					<a
+						href="#noticias"
+						class="hero-cta-secondary inline-flex items-center gap-2 text-white/70 text-sm font-bold tracking-wider uppercase hover:text-white transition-colors duration-300 group"
+					>
+						Explorar
+						<span class="w-6 h-px bg-white/40 transition-all duration-300 group-hover:w-10"></span>
+					</a>
+				</div>
 
-			<!-- CTA -->
-			<div class="hero-cta pt-4">
-				<a
-					href="#noticias"
-					class="btn-magnetic inline-flex items-center justify-center gap-2 bg-primary text-white px-8 py-4 rounded-full text-sm font-bold tracking-wider uppercase hover:shadow-xl hover:shadow-primary/30 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 w-full md:w-auto"
-				>
-					<span>Descubre más</span>
-					<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-						<path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
-					</svg>
-				</a>
+				<!-- Subtle scroll indicator — desktop only -->
+				<div class="hidden md:flex items-center gap-3 mt-12 lg:mt-16 text-white/30">
+					<PhArrowDown size={14} weight="light" />
+					<span class="text-[9px] font-bold tracking-[0.3em] uppercase">Scroll</span>
+				</div>
+
 			</div>
 		</div>
 	</div>
 </section>
 
 <style>
-	.hero-bg-circle {
-		will-change: transform, opacity;
+	.hero-editorial {
+		background-color: var(--color-primary);
+		min-height: 100vh;
 	}
 
-	.hero-bg-element {
-		will-change: transform, opacity;
+	.hero-bg {
+		opacity: 1;
 	}
 
-	.hero-floating {
-		animation: float 4s ease-in-out infinite;
+	/* Hero elements visible immediately */
+	.hero-eyebrow,
+	.hero-title,
+	.hero-value-prop,
+	.hero-cta-primary,
+	.hero-cta-secondary {
+		opacity: 1;
+		transform: none;
 	}
 
-	@keyframes float {
-		0%,
-		100% {
-			transform: translateY(0);
+	/* Mobile: override global min-height to prevent empty blue space */
+	@media (max-width: 767px) {
+		.hero-editorial {
+			min-height: auto;
 		}
-		50% {
-			transform: translateY(-15px);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.hero-editorial * {
+			animation: none !important;
+			transition: none !important;
 		}
 	}
 </style>

@@ -1,0 +1,99 @@
+---
+import ContentLayout from '@/layouts/ContentLayout.astro';
+
+const pageTitle = "Misión y Visión";
+const breadcrumb = [
+  { label: "Programa", href: "/program" }
+];
+
+const values = [
+  {
+    label: "Compromiso social",
+    description: "Vinculación con la comunidad y el desarrollo regional"
+  },
+  {
+    label: "Ética profesional",
+    description: "Integridad y responsabilidad en la práctica comunicacional"
+  },
+  {
+    label: "Excelencia académica",
+    description: "Formación rigurosa y actualizada en comunicación social"
+  },
+  {
+    label: "Inclusión y diversidad",
+    description: "Respeto a las múltiples voces y perspectivas culturales"
+  },
+  {
+    label: "Innovación",
+    description: "Adaptación creativa a los nuevos medios y tecnologías"
+  },
+  {
+    label: "Responsabilidad social",
+    description: "Contribución al bienestar colectivo a través de la comunicación"
+  }
+];
+---
+
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb}>
+  <div>
+
+    <!-- Misión — foundation, subtle background -->
+    <div class="p-8 md:p-10 bg-primary/5 rounded-luma mb-8">
+      <span class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-2">
+        Propósito
+      </span>
+      <h2 class="text-2xl md:text-3xl font-display font-bold tracking-tight text-slate-900 mb-5">
+        Misión
+      </h2>
+      <p class="text-base md:text-lg text-slate-600 leading-relaxed max-w-prose">
+        Formar profesionales de la comunicación social con excelencia académica, compromiso ético y sensibilidad social,
+        capaces de investigar, producir y gestionar mensajes comunicacionales en diversos contextos mediáticos, contribuyendo
+        al desarrollo integral de la región andina venezolana.
+      </p>
+    </div>
+
+    <!-- Visión — plain, forward-looking -->
+    <div class="mb-20">
+      <span class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-2">
+        Aspiración
+      </span>
+      <h2 class="text-2xl md:text-3xl font-display font-bold tracking-tight text-slate-900 mb-5">
+        Visión
+      </h2>
+      <p class="text-base md:text-lg text-slate-600 leading-relaxed max-w-prose">
+        Ser un programa de referencia nacional en la formación de comunicadores sociales, reconocido por su producción
+        académica, su vinculación con la comunidad y su contribución al democratización de la comunicación en el
+        estado Trujillo y la región andina.
+      </p>
+    </div>
+
+    <!-- Valores Institucionales — left-accent list, numbered -->
+    <div>
+      <div class="flex items-center gap-4 mb-12">
+        <span class="block w-8 h-px bg-primary/40"></span>
+        <h2 class="text-2xl md:text-3xl font-display font-semibold tracking-tight text-slate-900">
+          Valores Institucionales
+        </h2>
+      </div>
+
+      <div class="space-y-8">
+        {values.map((value, i) => (
+          <div class="flex items-start gap-6 pl-6 border-l-2 border-primary/20 hover:border-primary transition-colors duration-300">
+            <span class="text-xs font-mono font-bold text-slate-300 tabular-nums mt-0.5">
+              {String(i + 1).padStart(2, '0')}
+            </span>
+            <div>
+              <h3 class="text-lg font-display font-bold text-slate-900 tracking-tight mb-1">
+                {value.label}
+              </h3>
+              <p class="text-sm text-slate-500 leading-relaxed">
+                {value.description}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+
+  </div>
+</ContentLayout>

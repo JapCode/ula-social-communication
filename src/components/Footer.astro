@@ -1,52 +1,229 @@
-<footer class="py-16 md:py-24 bg-white relative z-50 px-4 md:px-8 border-t border-black/[0.04]">
-	<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-12" data-line-stagger="0.1">
-		<!-- Brand column -->
-		<div class="md:col-span-1 space-y-6 reveal-slide">
-			<div class="flex items-center gap-3">
-				<img src="/ula_logo.jpg" alt="ULA NURR" class="h-8 md:h-10 w-auto" width="40" height="40" />
-				<span class="font-display font-bold tracking-[0.15em] text-[10px] md:text-[11px] uppercase">Comunicación ULA</span>
+---
+import { PhInstagramLogo, PhTwitterLogo, PhYoutubeLogo } from 'phosphor-icons-astro';
+---
+
+<footer class="footer bg-white relative px-6 md:px-12 border-t border-slate-100/50" role="contentinfo" aria-label="Pie de página">
+	<div class="max-w-7xl mx-auto py-12 md:py-16">
+
+		<!-- 4 equal columns on desktop, 2×2 grid on mobile -->
+		<div class="footer-grid mb-10 md:mb-12 pb-10 md:pb-12 border-b border-slate-100/50">
+
+			<!-- Brand -->
+			<div class="footer-col">
+				<div class="flex items-center gap-3 mb-4">
+					<img src="/ula_logo.jpg" alt="ULA NURR" class="h-7 md:h-8 w-auto" />
+					<span class="font-display font-bold tracking-[0.15em] text-[10px] md:text-[11px] uppercase">Comunicación ULA</span>
+				</div>
+				<p class="text-slate-500 text-sm leading-relaxed">
+					Universidad de los Andes — Núcleo Universitario "Rafael Rangel".
+				</p>
+				<div class="flex items-center gap-2 mt-4">
+					<a href="https://www.instagram.com/comunicacionnurr/" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="Instagram">
+						<PhInstagramLogo size={16} weight="regular" />
+					</a>
+					<a href="https://x.com/ComunicacionNURR" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="X (Twitter)">
+						<PhTwitterLogo size={16} weight="regular" />
+					</a>
+					<a href="https://www.youtube.com/@ComunicacionNURR" target="_blank" rel="noopener noreferrer" class="footer-social-icon" aria-label="YouTube">
+						<PhYoutubeLogo size={16} weight="regular" />
+					</a>
+				</div>
 			</div>
-			<p class="text-ink-muted font-normal text-sm leading-relaxed">
-				Universidad de los Andes.<br/>Núcleo Universitario "Rafael Rangel".<br/>Trujillo, Venezuela.
+
+			<!-- Contacto -->
+			<div class="footer-col">
+				<h4 class="footer-heading">Contacto</h4>
+				<div class="space-y-2">
+					<p class="footer-contact">
+						<span class="footer-contact-label">Email</span>
+						<a href="mailto:comunicacion@nurr.ula.ve" class="footer-contact-link">comunicacion@nurr.ula.ve</a>
+					</p>
+					<p class="footer-contact">
+						<span class="footer-contact-label">Teléfono</span>
+						+58 272 221-2222
+					</p>
+					<p class="footer-contact">
+						<span class="footer-contact-label">Horario</span>
+						Lun–Vie 8:00 AM – 4:00 PM
+					</p>
+				</div>
+			</div>
+
+			<!-- Admisión — priority for prospective students -->
+			<div class="footer-links-col">
+				<h4 class="footer-heading">Admisión</h4>
+				<ul class="footer-links-list">
+					<li><a class="footer-link" href="/admission/process">Proceso de Admisión</a></li>
+					<li><a class="footer-link" href="/admission/requirements">Requisitos</a></li>
+					<li><a class="footer-link" href="/alumni/testimonials">Testimonios</a></li>
+					<li><a class="footer-link" href="/contact">Contacto</a></li>
+				</ul>
+			</div>
+
+			<!-- Académico -->
+			<div class="footer-links-col">
+				<h4 class="footer-heading">Académico</h4>
+				<ul class="footer-links-list">
+					<li><a class="footer-link" href="/academics/curriculum">Currículo</a></li>
+					<li><a class="footer-link" href="/academics/course-content">Contenido de Cursos</a></li>
+					<li><a class="footer-link" href="/student-life/calendar">Calendario</a></li>
+					<li><a class="footer-link" href="/academics/research">Investigación</a></li>
+				</ul>
+			</div>
+		</div>
+
+		<!-- Secondary links — single row, compact -->
+		<div class="footer-secondary-links">
+			<a class="footer-secondary-link" href="/program/mission">El Programa</a>
+			<a class="footer-secondary-link" href="/student-life/association">Vida Estudiantil</a>
+			<a class="footer-secondary-link" href="/portfolio/articles">NURR en Medios</a>
+			<a class="footer-secondary-link" href="/portfolio/magazine">Revista Digital</a>
+			<a class="footer-secondary-link" href="/alumni/continuing-education">Educación Continua</a>
+		</div>
+
+		<!-- Bottom bar -->
+		<div class="mt-8 pt-6 border-t border-slate-100/50">
+			<p class="text-center text-[10px] text-slate-400 tracking-wider">
+				&copy; 2026 ULA NURR – Comunicación Social. Todos los derechos reservados.
 			</p>
 		</div>
-		
-		<!-- Academia -->
-		<div class="space-y-5 md:space-y-6 reveal-slide">
-			<h4 class="text-[10px] md:text-[11px] font-bold tracking-widest uppercase text-ink">Academia</h4>
-			<ul class="space-y-3 md:space-y-4">
-				<li><a class="text-sm font-normal text-ink-muted hover:text-primary transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded inline-block" href="#">Pregrado</a></li>
-				<li><a class="text-sm font-normal text-ink-muted hover:text-primary transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded inline-block" href="#">Postgrado</a></li>
-				<li><a class="text-sm font-normal text-ink-muted hover:text-primary transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded inline-block" href="#">Diplomados</a></li>
-			</ul>
-		</div>
-		
-		<!-- Conecta -->
-		<div class="space-y-5 md:space-y-6 reveal-slide">
-			<h4 class="text-[10px] md:text-[11px] font-bold tracking-widest uppercase text-ink">Conecta</h4>
-			<ul class="space-y-3 md:space-y-4">
-				<li><a class="text-sm font-normal text-ink-muted hover:text-primary transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded inline-block" href="#">Instagram</a></li>
-				<li><a class="text-sm font-normal text-ink-muted hover:text-primary transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded inline-block" href="#">Twitter</a></li>
-				<li><a class="text-sm font-normal text-ink-muted hover:text-primary transition-colors duration-300 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 rounded inline-block" href="#">YouTube</a></li>
-			</ul>
-		</div>
-		
-		<!-- Soporte -->
-		<div class="space-y-5 md:space-y-6 reveal-slide">
-			<h4 class="text-[10px] md:text-[11px] font-bold tracking-widest uppercase text-ink">Soporte</h4>
-			<button class="w-full nav-pill px-4 md:px-6 py-3 md:py-3.5 rounded-full text-[10px] md:text-[11px] font-bold tracking-widest uppercase hover:bg-primary hover:text-white hover:border-primary transition-all duration-300 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2">
-				Secretaría Virtual
-			</button>
-			<p class="text-[10px] text-ink-muted font-normal leading-tight">
-				Lun–Vie 8:00 AM – 4:00 PM
-			</p>
-		</div>
-	</div>
-	
-	<!-- Bottom bar -->
-	<div class="max-w-7xl mx-auto mt-12 md:mt-16 pt-8 border-t border-black/[0.04]">
-		<p class="text-center text-[10px] text-ink-faint tracking-wider">
-			&copy; 2026 ULA NURR – Comunicación Social. Todos los derechos reservados.
-		</p>
 	</div>
 </footer>
+
+<style>
+	/* 4-column grid — 2×2 on mobile, 4 across on desktop */
+	.footer-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 2rem 2.5rem;
+	}
+
+	@media (min-width: 768px) {
+		.footer-grid {
+			grid-template-columns: repeat(4, 1fr);
+			gap: 1.5rem;
+		}
+	}
+
+	.footer-col {
+		display: flex;
+		flex-direction: column;
+	}
+
+	/* Link columns */
+	.footer-links-col {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.footer-links-list {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.footer-heading {
+		font-size: 10px;
+		font-weight: 700;
+		letter-spacing: 0.15em;
+		text-transform: uppercase;
+		color: var(--color-ink);
+		margin-bottom: 0.625rem;
+	}
+
+	.footer-link {
+		font-size: 0.8125rem;
+		font-weight: 400;
+		color: var(--color-ink-muted);
+		text-decoration: none;
+		transition: color 0.2s ease;
+		display: inline-block;
+		line-height: 1.4;
+	}
+
+	.footer-link:hover {
+		color: var(--color-primary);
+	}
+
+	.footer-link:focus-visible {
+		outline: 2px solid var(--color-primary);
+		outline-offset: 2px;
+		border-radius: 4px;
+	}
+
+	/* Contact info */
+	.footer-contact {
+		font-size: 0.8125rem;
+		font-weight: 400;
+		color: var(--color-ink);
+		line-height: 1.5;
+	}
+
+	.footer-contact-label {
+		display: block;
+		font-size: 0.6875rem;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: var(--color-ink-faint);
+	}
+
+	.footer-contact-link {
+		color: var(--color-ink);
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+
+	.footer-contact-link:hover {
+		color: var(--color-primary);
+	}
+
+	/* Social icons */
+	.footer-social-icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 32px;
+		height: 32px;
+		border-radius: 9999px;
+		border: 1px solid rgba(226, 232, 240, 0.5);
+		color: var(--color-ink-muted);
+		text-decoration: none;
+		transition: all 0.2s ease;
+	}
+
+	.footer-social-icon:hover {
+		color: var(--color-primary);
+		border-color: rgba(0, 93, 170, 0.2);
+		background: rgba(0, 93, 170, 0.04);
+	}
+
+	.footer-social-icon:focus-visible {
+		outline: 2px solid var(--color-primary);
+		outline-offset: 2px;
+	}
+
+	/* Secondary links row */
+	.footer-secondary-links {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 1.5rem;
+		justify-content: center;
+	}
+
+	.footer-secondary-link {
+		font-size: 0.75rem;
+		color: var(--color-ink-faint);
+		text-decoration: none;
+		transition: color 0.2s ease;
+	}
+
+	.footer-secondary-link:hover {
+		color: var(--color-primary);
+	}
+
+	.footer-secondary-link:focus-visible {
+		outline: 2px solid var(--color-primary);
+		outline-offset: 2px;
+		border-radius: 4px;
+	}
+</style>

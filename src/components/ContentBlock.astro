@@ -1,0 +1,45 @@
+---
+interface Props {
+  title?: string;
+  subtitle?: string;
+  eyebrow?: string;
+  variant?: "default" | "accent" | "info";
+}
+
+const { title, subtitle, eyebrow, variant = "default" } = Astro.props;
+
+const variantClasses = {
+  default: "bg-white border-slate-100/50",
+  accent: "bg-primary/5 border-primary/10",
+  info: "bg-surface border-slate-100/50",
+};
+
+const borderClass = variantClasses[variant];
+---
+
+<div class:list={["content-block bg-white border border-slate-100/50 rounded-luma p-8 md:p-10 shadow-luma", borderClass]}>
+  {eyebrow && (
+    <span class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-3">
+      {eyebrow}
+    </span>
+  )}
+  {title && (
+    <h2 class="text-xl md:text-2xl font-display font-bold tracking-tight text-slate-900">
+      {title}
+    </h2>
+  )}
+  {subtitle && (
+    <p class="mt-2 text-sm md:text-base text-slate-500 leading-relaxed">
+      {subtitle}
+    </p>
+  )}
+  {(title || eyebrow) && (
+    <div class="mt-5 flex items-center gap-3">
+      <div class="w-10 h-0.5 bg-primary rounded-full"></div>
+      <div class="w-1.5 h-0.5 bg-accent rounded-full opacity-60"></div>
+    </div>
+  )}
+  <div class="mt-6">
+    <slot />
+  </div>
+</div>

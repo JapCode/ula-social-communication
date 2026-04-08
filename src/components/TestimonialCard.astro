@@ -1,0 +1,180 @@
+---
+import { PhQuotes } from 'phosphor-icons-astro';
+
+interface Props {
+  quote: string;
+  author: string;
+  role: string;
+  year: number;
+  image?: any;
+  featured?: boolean;
+}
+
+const { quote, author, role, year, featured = false } = Astro.props;
+
+// Generate initials from author name
+const initials = author
+  .split(' ')
+  .filter((_, i, arr) => i === 0 || i === arr.length - 1)
+  .map(n => n[0])
+  .join('')
+  .toUpperCase()
+  .slice(0, 2);
+
+// Deterministic color based on author name — varied but cohesive
+const avatarColors = [
+  { bg: '#005daa', text: '#ffffff' },     // primary blue
+  { bg: '#003d6e', text: '#ffffff' },     // deep blue
+  { bg: '#e8734a', text: '#ffffff' },     // accent orange
+  { bg: '#3a8fd4', text: '#ffffff' },     // light blue
+  { bg: '#07294a', text: '#ffffff' },     // ink
+  { bg: '#f4a07b', text: '#07294a' },     // soft accent
+];
+
+const colorIndex = author.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) % avatarColors.length;
+const avatarColor = avatarColors[colorIndex];
+---
+
+<article class:list={['testimonial', featured ? 'testimonial--featured' : 'testimonial--regular']}>
+  <!-- Quote mark — editorial style -->
+  <div class="testimonial-quote-mark" aria-hidden="true">
+    <PhQuotes size={featured ? 40 : 24} weight="fill" class="text-primary/10" />
+  </div>
+
+  <!-- Quote text -->
+  <blockquote class="testimonial-quote">
+    <p>{quote}</p>
+  </blockquote>
+
+  <!-- Author info -->
+  <footer class="testimonial-author">
+    <div class="testimonial-avatar" style={`background-color: ${avatarColor.bg}; color: ${avatarColor.text};`}>
+      {initials}
+    </div>
+    <div class="testimonial-meta">
+      <cite class="testimonial-name">{author}</cite>
+      <span class="testimonial-role">{role}</span>
+      <span class="testimonial-year">Egresado {year}</span>
+    </div>
+  </footer>
+</article>
+
+<style>
+  /* Base testimonial */
+  .testimonial {
+    position: relative;
+    padding: 2rem;
+    background: var(--color-surface-elevated);
+    border-radius: var(--radius-luma);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .testimonial:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-luma);
+  }
+
+  .testimonial-quote-mark {
+    position: absolute;
+    top: 1.25rem;
+    right: 1.5rem;
+    opacity: 0.5;
+  }
+
+  .testimonial-quote {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+  }
+
+  .testimonial-quote p {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: var(--color-ink-muted);
+    font-style: italic;
+    margin: 0;
+  }
+
+  .testimonial-author {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgba(226, 232, 240, 0.4);
+  }
+
+  .testimonial-avatar {
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 9999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-display), sans-serif;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  .testimonial-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+  }
+
+  .testimonial-name {
+    font-family: var(--font-display), sans-serif;
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-style: normal;
+    color: var(--color-ink);
+    line-height: 1.3;
+  }
+
+  .testimonial-role {
+    font-size: 0.75rem;
+    color: var(--color-ink-faint);
+    line-height: 1.4;
+  }
+
+  .testimonial-year {
+    font-size: 0.6875rem;
+    color: var(--color-ink-faint);
+    letter-spacing: 0.05em;
+  }
+
+  /* Featured variant — editorial pull-quote style */
+  .testimonial--featured {
+    padding: 2.5rem 2.5rem 2rem;
+    border-left: 3px solid var(--color-primary);
+    background: linear-gradient(135deg, var(--color-surface-elevated) 0%, rgba(0, 93, 170, 0.02) 100%);
+  }
+
+  .testimonial--featured .testimonial-quote p {
+    font-size: 1.125rem;
+    line-height: 1.65;
+    color: var(--color-ink);
+    font-weight: 400;
+  }
+
+  .testimonial--featured .testimonial-quote-mark {
+    top: 1.5rem;
+    right: 2rem;
+  }
+
+  @media (max-width: 767px) {
+    .testimonial {
+      padding: 1.5rem;
+    }
+
+    .testimonial--featured {
+      padding: 1.75rem 1.5rem 1.5rem;
+    }
+
+    .testimonial--featured .testimonial-quote p {
+      font-size: 1rem;
+    }
+  }
+</style>
