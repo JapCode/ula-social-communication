@@ -63,28 +63,18 @@ const { title, loadAnimations = false } = Astro.props;
 			
 			/* Slide animations */
 			::view-transition-old(slide) {
-				animation: 0.4s ease-out both slide-to-left;
+				animation: 0.35s cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
 			}
 			::view-transition-new(slide) {
-				animation: 0.4s ease-out both slide-from-right;
+				animation: 0.45s cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
 			}
 			
-			/* Fade animations */
+			/* Fade animations — exit quick, enter smooth */
 			::view-transition-old(fade) {
-				animation: 0.3s ease-out both fade-out;
+				animation: 0.2s cubic-bezier(0.4, 0, 1, 1) both fade-out;
 			}
 			::view-transition-new(fade) {
-				animation: 0.3s ease-out both fade-in;
-			}
-			
-			/* Smooth page transitions */
-			::view-transition {
-				overflow: hidden;
-			}
-			
-			/* Page content wrapper for smooth transitions */
-			.page-content {
-				animation: fade-in 0.4s ease-out;
+				animation: 0.4s cubic-bezier(0.4, 0, 0.2, 1) both fade-in;
 			}
 		</style>
 	</head>
@@ -108,17 +98,32 @@ const { title, loadAnimations = false } = Astro.props;
 		) : (
 			<script>
 				// Lightweight CSS-only progress bar for non-home pages
-				const progressBar = document.querySelector('.progress-bar');
-				if (progressBar) {
-					const onScroll = () => {
+				// Re-attaches after view transitions via astro:after-swap
+				let _progressHandler = null;
+
+				function setupProgressBar() {
+					const progressBar = document.querySelector('.progress-bar');
+					if (!progressBar) return;
+
+					// Remove previous handler to prevent duplicates
+					if (_progressHandler) {
+						window.removeEventListener('scroll', _progressHandler);
+					}
+
+					_progressHandler = () => {
 						const scrollTop = window.scrollY;
 						const docHeight = document.documentElement.scrollHeight - window.innerHeight;
 						const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
 						progressBar.style.transform = `scaleX(${progress / 100})`;
 					};
-					window.addEventListener('scroll', onScroll, { passive: true });
-					onScroll();
+
+					window.addEventListener('scroll', _progressHandler, { passive: true });
+					_progressHandler();
 				}
+
+				// Run on first load and after every view transition
+				setupProgressBar();
+				document.addEventListener('astro:after-swap', setupProgressBar);
 			</script>
 		)}
 	</body>

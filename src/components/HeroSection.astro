@@ -6,7 +6,6 @@ import { PhArrowRight, PhArrowDown } from "phosphor-icons-astro";
 	class="hero-editorial relative overflow-hidden"
 	id="inicio"
 	aria-labelledby="hero-title"
-	transition:animate="none"
 >
 	<!-- Primary color background with subtle geometric accents -->
 	<div class="hero-bg absolute inset-0" aria-hidden="true">
@@ -25,12 +24,12 @@ import { PhArrowRight, PhArrowDown } from "phosphor-icons-astro";
 	</div>
 
 	<!-- Mobile: centered, content-rich layout | Desktop: editorial bottom-aligned -->
-	<div class="relative z-10 min-h-[60vh] md:min-h-screen flex flex-col justify-center md:items-end md:justify-end pt-28 pb-12 md:py-0 md:pb-16 lg:pb-24">
+	<div class="relative z-10 min-h-[60vh] md:min-h-[80vh] lg:min-h-screen flex flex-col justify-center lg:items-end lg:justify-end xs:pt-16 pt-28 pb-12 lg:py-0 lg:pb-16 xl:pb-24">
 		<div class="w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16">
-			<div class="hero-editorial-content text-center md:text-left">
+			<div class="hero-editorial-content text-center lg:text-left">
 
 				<!-- Eyebrow — editorial style -->
-				<div class="flex items-center gap-4 mb-6 md:mb-8 justify-center md:justify-start">
+				<div class="flex items-center gap-4 mb-6 md:mb-8 justify-center lg:justify-start">
 					<span class="block w-8 md:w-12 h-px bg-white/40"></span>
 					<span class="hero-eyebrow text-[9px] md:text-[11px] font-bold tracking-[0.35em] uppercase text-white/60">
 						Núcleo Universitario Rafael Rangel
@@ -40,22 +39,22 @@ import { PhArrowRight, PhArrowDown } from "phosphor-icons-astro";
 				<!-- Main title — massive, editorial -->
 				<h1
 					id="hero-title"
-					class="hero-title text-5xl sm:text-6xl md:text-8xl lg:text-9xl xl:text-[10rem] font-display font-bold tracking-tighter text-white leading-[0.85]"
+					class="hero-title xs:text-4xl text-5xl sm:text-6xl md:text-7xl lg:text-9xl xl:text-[10rem] font-display font-bold tracking-tighter text-white leading-[0.85]"
 				>
 					Comunicación<br />
 					<span class="text-white/40">Social</span>
 				</h1>
 
 				<!-- Value proposition — visible on mobile -->
-				<p class="hero-value-prop text-sm md:text-base lg:text-xl text-white/80 mt-4 md:mt-6 max-w-lg mx-auto md:mx-0 leading-relaxed">
+				<p class="hero-value-prop text-sm md:text-base lg:text-xl text-white/80 mt-4 md:mt-6 max-w-lg mx-auto lg:mx-0 leading-relaxed">
 					Licenciatura en Comunicación Social — Formando profesionales críticos para el futuro de la comunicación digital.
 				</p>
 
 				<!-- CTA row -->
-				<div class="flex flex-col sm:flex-row items-center gap-4 mt-6 md:mt-8 justify-center md:justify-start">
+				<div class="flex flex-col sm:flex-row items-center gap-4 mt-6 md:mt-8 justify-center lg:justify-start">
 					<a
 						href="/admission/process"
-						class="hero-cta-primary inline-flex items-center gap-2 px-6 py-3 bg-white text-primary text-sm font-bold tracking-wider uppercase rounded-full hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
+						class="hero-cta-primary xs:w-full sm:w-auto inline-flex items-center gap-2 px-6 py-3 bg-white text-primary text-sm font-bold tracking-wider uppercase rounded-full hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
 					>
 						Cómo Inscribirse
 						<PhArrowRight
@@ -66,7 +65,7 @@ import { PhArrowRight, PhArrowDown } from "phosphor-icons-astro";
 					</a>
 					<a
 						href="#noticias"
-						class="hero-cta-secondary inline-flex items-center gap-2 text-white/70 text-sm font-bold tracking-wider uppercase hover:text-white transition-colors duration-300 group"
+						class="hero-cta-secondary xs:w-full sm:w-auto inline-flex items-center gap-2 text-white/70 text-sm font-bold tracking-wider uppercase hover:text-white transition-colors duration-300 group"
 					>
 						Explorar
 						<span class="w-6 h-px bg-white/40 transition-all duration-300 group-hover:w-10"></span>
@@ -74,7 +73,7 @@ import { PhArrowRight, PhArrowDown } from "phosphor-icons-astro";
 				</div>
 
 				<!-- Subtle scroll indicator — desktop only -->
-				<div class="hidden md:flex items-center gap-3 mt-12 lg:mt-16 text-white/30">
+				<div class="hidden lg:flex items-center gap-3 mt-12 lg:mt-16 text-white/30">
 					<PhArrowDown size={14} weight="light" />
 					<span class="text-[9px] font-bold tracking-[0.3em] uppercase">Scroll</span>
 				</div>
@@ -104,10 +103,37 @@ import { PhArrowRight, PhArrowDown } from "phosphor-icons-astro";
 		transform: none;
 	}
 
-	/* Mobile: override global min-height to prevent empty blue space */
+	/* Mobile: let section height follow content (container handles min-height) */
 	@media (max-width: 767px) {
 		.hero-editorial {
 			min-height: auto;
+		}
+	}
+
+	/* Scale down geometric circles on very small phones */
+	@media (max-width: 480px) {
+		.hero-geo-circle--1 {
+			width: 280px;
+			height: 280px;
+			right: -80px;
+			top: -60px;
+		}
+		.hero-geo-circle--2 {
+			width: 180px;
+			height: 180px;
+			left: -50px;
+		}
+	}
+
+	/* Moderate circle size on tablet to keep them proportional */
+	@media (min-width: 768px) and (max-width: 1023px) {
+		.hero-geo-circle--1 {
+			width: 400px;
+			height: 400px;
+		}
+		.hero-geo-circle--2 {
+			width: 240px;
+			height: 240px;
 		}
 	}
 

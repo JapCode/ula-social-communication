@@ -191,11 +191,12 @@ const isActive = (href: string) => {
 ---
 
 <nav
-  class="fixed top-3 left-1/2 -translate-x-1/2 z-[100] w-[95%] md:w-[90%] max-w-7xl"
+  transition:persist
+  class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-[92%] md:w-[88%] lg:w-[85%] max-w-7xl"
   aria-label="Navegación principal"
 >
   <div
-    class="floating-nav bg-[var(--color-surface-elevated)] border border-[rgba(226,232,240,0.5)] shadow-luma rounded-full px-4 md:px-8 py-2.5 md:py-3 flex items-center justify-between"
+    class="floating-nav bg-white/80 backdrop-blur-xl border border-white/20 shadow-[0_2px_20px_-6px_rgba(0,0,0,0.06)] rounded-full px-4 md:px-6 lg:px-8 py-2 md:py-2.5 flex items-center justify-between"
   >
     <!-- Logo -->
     <a href="/" class="flex items-center gap-2 md:gap-3">
@@ -206,18 +207,16 @@ const isActive = (href: string) => {
         width="48"
         height="48"
       />
-      <span
-        class="font-bold tracking-[0.15em] text-[10px] md:text-[12px] uppercase hidden xs:inline text-[var(--color-ink)]"
-        >ULA NURR</span
-      >
     </a>
 
     <!-- Desktop Navigation -->
-    <div class="hidden lg:flex items-center gap-6">
+    <div class="hidden lg:flex items-center gap-5" data-desktop-nav>
       <a
         class:list={[
           "text-[10px] md:text-[12px] font-bold tracking-[0.15em] uppercase transition-colors duration-300 relative group py-1.5 px-2.5",
-          isActive("/") ? "text-primary" : "text-[var(--color-ink-muted)] hover:text-primary",
+          isActive("/")
+            ? "text-primary"
+            : "text-[var(--color-ink-muted)] hover:text-primary",
         ]}
         href="/"
         aria-current={isActive("/") ? "page" : undefined}
@@ -245,24 +244,32 @@ const isActive = (href: string) => {
         aria-label="Buscar"
         onclick="openSearch()"
       >
-        <PhMagnifyingGlass size={18} weight="light" class="text-[var(--color-ink-muted)]" />
+        <PhMagnifyingGlass
+          size={18}
+          weight="light"
+          class="text-[var(--color-ink-muted)]"
+        />
       </button>
 
       <a
         href="/contact"
-        class="bg-primary text-white text-[10px] md:text-[11px] font-bold tracking-[0.15em] uppercase px-3 md:px-4 py-1.5 md:py-2 rounded-full border border-white/20 hover:border-white/40 hover:shadow-luma hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 inline-block"
+        class="bg-primary text-white text-[10px] md:text-[11px] font-semibold tracking-[0.12em] uppercase px-4 md:px-5 py-1.5 md:py-2 rounded-full shadow-sm hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 inline-block"
       >
         Contacto
       </a>
 
       <button
-        class="md:hidden p-1.5 rounded-full hover:bg-[rgba(248,250,252,0.8)] transition-colors duration-300 min-w-[36px] min-h-[36px] flex items-center justify-center"
+        class="lg:hidden p-1.5 rounded-full hover:bg-[rgba(248,250,252,0.8)] transition-colors duration-300 min-w-[36px] min-h-[36px] flex items-center justify-center"
         id="mobile-menu-btn"
         aria-label="Abrir menú"
         aria-expanded="false"
         aria-controls="mobile-menu"
       >
-        <PhList size={20} weight="duotone" class="text-[var(--color-ink-muted)]" />
+        <PhList
+          size={20}
+          weight="duotone"
+          class="text-[var(--color-ink-muted)]"
+        />
       </button>
     </div>
   </div>
@@ -288,7 +295,8 @@ const isActive = (href: string) => {
 
     <div class="p-6 h-full overflow-y-auto pb-12">
       <div class="flex items-center justify-between mb-6">
-        <span class="font-bold tracking-[0.15em] text-[11px] uppercase text-[var(--color-ink)]"
+        <span
+          class="font-bold tracking-[0.15em] text-[11px] uppercase text-[var(--color-ink)]"
           >Menú</span
         >
         <button
@@ -296,38 +304,132 @@ const isActive = (href: string) => {
           class="p-2 rounded-full hover:bg-[rgba(248,250,252,0.8)] transition-colors duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center"
           aria-label="Cerrar menú"
         >
-          <PhX size={20} weight="duotone" class="text-[var(--color-ink-muted)]" />
+          <PhX
+            size={20}
+            weight="duotone"
+            class="text-[var(--color-ink-muted)]"
+          />
         </button>
       </div>
 
       <nav class="space-y-1" aria-label="Menú móvil">
         <!-- Quick Actions — priority links for first-time users -->
         <div class="mb-4 pb-4 border-b border-slate-100/50">
-          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 px-3">Acciones rápidas</p>
+          <p
+            class="text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-3 px-3"
+          >
+            Acciones rápidas
+          </p>
           <div class="grid grid-cols-2 gap-2">
-            <a href="/admission/process" class="quick-action-card flex flex-col items-center gap-2 p-4 bg-primary/5 rounded-xl hover:bg-primary/10 active:bg-primary/15 transition-colors">
-              <span class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-primary"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" x2="19" y1="8" y2="14"/><line x1="22" x2="16" y1="11" y2="11"/></svg>
+            <a
+              href="/admission/process"
+              class="quick-action-card flex flex-col items-center gap-2 p-4 bg-primary/5 rounded-xl hover:bg-primary/10 active:bg-primary/15 transition-colors"
+            >
+              <span
+                class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="w-5 h-5 text-primary"
+                  ><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"
+                  ></path><circle cx="9" cy="7" r="4"></circle><line
+                    x1="19"
+                    x2="19"
+                    y1="8"
+                    y2="14"></line><line x1="22" x2="16" y1="11" y2="11"
+                  ></line></svg
+                >
               </span>
-              <span class="text-[11px] font-bold text-slate-900 text-center leading-tight">Inscripciones</span>
+              <span
+                class="text-[11px] font-bold text-slate-900 text-center leading-tight"
+                >Inscripciones</span
+              >
             </a>
-            <a href="/contact" class="quick-action-card flex flex-col items-center gap-2 p-4 bg-primary/5 rounded-xl hover:bg-primary/10 active:bg-primary/15 transition-colors">
-              <span class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-primary"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/></svg>
+            <a
+              href="/contact"
+              class="quick-action-card flex flex-col items-center gap-2 p-4 bg-primary/5 rounded-xl hover:bg-primary/10 active:bg-primary/15 transition-colors"
+            >
+              <span
+                class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="w-5 h-5 text-primary"
+                  ><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg
+                >
               </span>
-              <span class="text-[11px] font-bold text-slate-900 text-center leading-tight">Contacto</span>
+              <span
+                class="text-[11px] font-bold text-slate-900 text-center leading-tight"
+                >Contacto</span
+              >
             </a>
-            <a href="/academics/curriculum" class="quick-action-card flex flex-col items-center gap-2 p-4 bg-primary/5 rounded-xl hover:bg-primary/10 active:bg-primary/15 transition-colors">
-              <span class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-primary"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <a
+              href="/academics/curriculum"
+              class="quick-action-card flex flex-col items-center gap-2 p-4 bg-primary/5 rounded-xl hover:bg-primary/10 active:bg-primary/15 transition-colors"
+            >
+              <span
+                class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="w-5 h-5 text-primary"
+                  ><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"
+                  ></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"
+                  ></path></svg
+                >
               </span>
-              <span class="text-[11px] font-bold text-slate-900 text-center leading-tight">Pénsum</span>
+              <span
+                class="text-[11px] font-bold text-slate-900 text-center leading-tight"
+                >Pénsum</span
+              >
             </a>
-            <a href="/student-life/events" class="quick-action-card flex flex-col items-center gap-2 p-4 bg-primary/5 rounded-xl hover:bg-primary/10 active:bg-primary/15 transition-colors">
-              <span class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5 text-primary"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+            <a
+              href="/student-life/events"
+              class="quick-action-card flex flex-col items-center gap-2 p-4 bg-primary/5 rounded-xl hover:bg-primary/10 active:bg-primary/15 transition-colors"
+            >
+              <span
+                class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="w-5 h-5 text-primary"
+                  ><rect width="18" height="18" x="3" y="4" rx="2" ry="2"
+                  ></rect><line x1="16" x2="16" y1="2" y2="6"></line><line
+                    x1="8"
+                    x2="8"
+                    y1="2"
+                    y2="6"></line><line x1="3" x2="21" y1="10" y2="10"
+                  ></line></svg
+                >
               </span>
-              <span class="text-[11px] font-bold text-slate-900 text-center leading-tight">Eventos</span>
+              <span
+                class="text-[11px] font-bold text-slate-900 text-center leading-tight"
+                >Eventos</span
+              >
             </a>
           </div>
         </div>
@@ -559,126 +661,212 @@ const isActive = (href: string) => {
 </div>
 
 <script>
-  document.addEventListener('astro:page-load', () => {
-    const menuBtn = document.getElementById("mobile-menu-btn");
-  const menuClose = document.getElementById("mobile-menu-close");
-  const mobileMenu = document.getElementById("mobile-menu");
-  const menuPanel = document.getElementById("mobile-menu-panel");
-
-  // Collect all focusable elements within the mobile menu panel
-  function getFocusableElements() {
-    if (!menuPanel) return [];
-    return Array.from(
-      menuPanel.querySelectorAll<HTMLElement>(
-        'a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])'
-      )
-    );
+  /**
+   * Updates active nav indicators after view transitions.
+   * The nav uses transition:persist, so the DOM stays alive but server-rendered
+   * classes from the new page never enter. This script corrects indicators on
+   * astro:after-swap by fully managing both active AND inactive Tailwind classes.
+   */
+  if (!window.__navIndicatorInit) {
+    window.__navIndicatorInit = true;
+    document.addEventListener('astro:after-swap', updateNavIndicators);
   }
 
-  // Focus trap handler
-  function trapFocus(e: KeyboardEvent) {
-    if (e.key !== "Tab") return;
-    const focusable = getFocusableElements();
-    if (focusable.length === 0) return;
+  // Run on initial page load (astro:after-swap doesn't fire for initial load)
+  queueMicrotask(updateNavIndicators);
 
-    const firstFocusable = focusable[0];
-    const lastFocusable = focusable[focusable.length - 1];
+  function updateNavIndicators() {
+    const desktop = document.querySelector('[data-desktop-nav]');
+    if (!desktop) return;
 
-    if (e.shiftKey) {
-      // Shift+Tab: if on first element, wrap to last
-      if (document.activeElement === firstFocusable) {
-        e.preventDefault();
-        lastFocusable.focus();
-      }
-    } else {
-      // Tab: if on last element, wrap to first
-      if (document.activeElement === lastFocusable) {
-        e.preventDefault();
-        firstFocusable.focus();
-      }
+    const path = window.location.pathname;
+    const isActive = (href) => href === '/' ? path === '/' : path.startsWith(href);
+
+    /* ---------- "Inicio" link ---------- */
+    const inicio = desktop.querySelector('a[href="/"]');
+    if (inicio) {
+      const active = isActive('/');
+      swapClasses(inicio, active, 'text-primary', ['text-primary'], ['text-[var(--color-ink-muted)]', 'hover:text-primary']);
+      inicio.setAttribute('aria-current', active ? 'page' : '');
+      manageUnderline(inicio, '.relative', active, '-bottom-1');
     }
-  }
 
-  function openMenu() {
-    if (!mobileMenu || !menuPanel) return;
-    mobileMenu.classList.remove("hidden");
-    mobileMenu.setAttribute("aria-hidden", "false");
-    menuBtn?.setAttribute("aria-expanded", "true");
-    // Bottom sheet - translate up
-    setTimeout(() => menuPanel.classList.remove("translate-y-full"), 10);
-    document.body.style.overflow = "hidden";
-    // Focus trap - focus first interactive element
-    setTimeout(() => {
-      menuClose?.focus();
-      document.addEventListener("keydown", trapFocus);
-    }, 350);
-  }
+    /* ---------- Dropdown triggers ---------- */
+    desktop.querySelectorAll('[data-dropdown-trigger]').forEach((btn) => {
+      const panel = btn.closest('[data-dropdown]')
+        ?.querySelector('[data-dropdown-panel]');
+      if (!panel) return;
 
-  function closeMenu() {
-    if (!menuPanel || !mobileMenu) return;
-    // Bottom sheet - translate down
-    menuPanel.classList.add("translate-y-full");
-    document.removeEventListener("keydown", trapFocus);
-    setTimeout(() => {
-      mobileMenu.classList.add("hidden");
-      mobileMenu.setAttribute("aria-hidden", "true");
-      menuBtn?.setAttribute("aria-expanded", "false");
-    }, 300);
-    document.body.style.overflow = "";
-    menuBtn?.focus();
-  }
+      const active = Array.from(panel.querySelectorAll('a[href]'))
+        .some((a) => isActive(a.getAttribute('href')));
 
-  menuBtn?.addEventListener("click", openMenu);
-  menuClose?.addEventListener("click", closeMenu);
-  mobileMenu?.addEventListener("click", (e) => {
-    if (e.target === mobileMenu) closeMenu();
-  });
+      swapClasses(btn, active, 'text-primary', ['text-primary'], ['text-ink-muted', 'hover:text-primary']);
+      btn.setAttribute('aria-expanded', active ? 'true' : 'false');
+      manageUnderline(btn, '.relative', active, '-bottom-0.5');
+    });
 
-  // Mobile accordion with CSS class-based animation (no inline style.animation)
-  document.querySelectorAll(".mobile-nav-toggle").forEach((toggle) => {
-    toggle.addEventListener("click", () => {
-      const group = toggle.getAttribute("data-group");
-      const submenu = document.querySelector<HTMLElement>(
-        `[data-submenu="${group}"]`
-      );
-      const icon = toggle.querySelector<SVGElement>("[data-icon]");
-      const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+    /* ---------- Dropdown panel items ---------- */
+    desktop.querySelectorAll('[data-dropdown-panel] a[href]').forEach((link) => {
+      const href = link.getAttribute('href');
+      if (!href) return;
+      const active = isActive(href);
 
-      if (submenu) {
-        // Toggle aria-expanded
-        toggle.setAttribute("aria-expanded", (!isExpanded).toString());
+      swapClasses(link, active, 'link', ['bg-primary/5', 'text-primary'], ['hover:bg-[rgba(248,250,252,0.8)]']);
 
-        // Toggle icon rotation
-        icon?.classList.toggle("rotate-180");
+      const icon = link.querySelector('.flex-shrink-0');
+      if (icon) {
+        swapClasses(icon, active, 'icon', ['text-primary'], ['text-primary/60', 'group-hover/item:text-primary']);
+      }
 
-        // Toggle submenu with CSS class-based animation
-        if (submenu.classList.contains("hidden")) {
-          submenu.classList.remove("hidden");
-          submenu.classList.add("submenu-open");
-        } else {
-          submenu.classList.remove("submenu-open");
-          // Wait for animation to finish before hiding
-          setTimeout(() => {
-            if (!submenu.classList.contains("submenu-open")) {
-              submenu.classList.add("hidden");
-            }
-          }, 200);
-        }
+      const label = link.querySelector('.text-sm.font-medium');
+      if (label) {
+        swapClasses(label, active, 'label', ['text-primary'], ['text-[var(--color-ink)]', 'group-hover/item:text-primary']);
       }
     });
-  });
+  }
 
-  // Close menu on escape key
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !mobileMenu?.classList.contains("hidden")) {
-      closeMenu();
+  /** Removes both active and inactive classes, then adds the correct set. */
+  function swapClasses(el, active, group, activeClasses, inactiveClasses) {
+    el.classList.remove(...activeClasses, ...inactiveClasses);
+    el.classList.add(...(active ? activeClasses : inactiveClasses));
+  }
+
+  /** Adds/removes an underline indicator dot inside the container. */
+  function manageUnderline(container, childSelector, active, bottomClass) {
+    const child = container.querySelector(childSelector);
+    if (!child) return;
+    let dot = child.querySelector('.bg-primary.rounded-full');
+    if (active && !dot) {
+      dot = document.createElement('span');
+      dot.className = `absolute ${bottomClass} left-0 right-0 h-0.5 bg-primary rounded-full`;
+      child.appendChild(dot);
+    } else if (!active && dot) {
+      dot.remove();
     }
-  });
+  }
+</script>
 
-  // Prevent panel click from closing menu
-  menuPanel?.addEventListener("click", (e) => {
-    e.stopPropagation();
-  });
+<script>
+  document.addEventListener("astro:page-load", () => {
+    const menuBtn = document.getElementById("mobile-menu-btn");
+    const menuClose = document.getElementById("mobile-menu-close");
+    const mobileMenu = document.getElementById("mobile-menu");
+    const menuPanel = document.getElementById("mobile-menu-panel");
+
+    // Collect all focusable elements within the mobile menu panel
+    function getFocusableElements() {
+      if (!menuPanel) return [];
+      return Array.from(
+        menuPanel.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input, textarea, select, [tabindex]:not([tabindex="-1"])',
+        ),
+      );
+    }
+
+    // Focus trap handler
+    function trapFocus(e: KeyboardEvent) {
+      if (e.key !== "Tab") return;
+      const focusable = getFocusableElements();
+      if (focusable.length === 0) return;
+
+      const firstFocusable = focusable[0];
+      const lastFocusable = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        // Shift+Tab: if on first element, wrap to last
+        if (document.activeElement === firstFocusable) {
+          e.preventDefault();
+          lastFocusable.focus();
+        }
+      } else {
+        // Tab: if on last element, wrap to first
+        if (document.activeElement === lastFocusable) {
+          e.preventDefault();
+          firstFocusable.focus();
+        }
+      }
+    }
+
+    function openMenu() {
+      if (!mobileMenu || !menuPanel) return;
+      mobileMenu.classList.remove("hidden");
+      mobileMenu.setAttribute("aria-hidden", "false");
+      menuBtn?.setAttribute("aria-expanded", "true");
+      // Bottom sheet - translate up
+      setTimeout(() => menuPanel.classList.remove("translate-y-full"), 10);
+      document.body.style.overflow = "hidden";
+      // Focus trap - focus first interactive element
+      setTimeout(() => {
+        menuClose?.focus();
+        document.addEventListener("keydown", trapFocus);
+      }, 350);
+    }
+
+    function closeMenu() {
+      if (!menuPanel || !mobileMenu) return;
+      // Bottom sheet - translate down
+      menuPanel.classList.add("translate-y-full");
+      document.removeEventListener("keydown", trapFocus);
+      setTimeout(() => {
+        mobileMenu.classList.add("hidden");
+        mobileMenu.setAttribute("aria-hidden", "true");
+        menuBtn?.setAttribute("aria-expanded", "false");
+      }, 300);
+      document.body.style.overflow = "";
+      menuBtn?.focus();
+    }
+
+    menuBtn?.addEventListener("click", openMenu);
+    menuClose?.addEventListener("click", closeMenu);
+    mobileMenu?.addEventListener("click", (e) => {
+      if (e.target === mobileMenu) closeMenu();
+    });
+
+    // Mobile accordion with CSS class-based animation (no inline style.animation)
+    document.querySelectorAll(".mobile-nav-toggle").forEach((toggle) => {
+      toggle.addEventListener("click", () => {
+        const group = toggle.getAttribute("data-group");
+        const submenu = document.querySelector<HTMLElement>(
+          `[data-submenu="${group}"]`,
+        );
+        const icon = toggle.querySelector<SVGElement>("[data-icon]");
+        const isExpanded = toggle.getAttribute("aria-expanded") === "true";
+
+        if (submenu) {
+          // Toggle aria-expanded
+          toggle.setAttribute("aria-expanded", (!isExpanded).toString());
+
+          // Toggle icon rotation
+          icon?.classList.toggle("rotate-180");
+
+          // Toggle submenu with CSS class-based animation
+          if (submenu.classList.contains("hidden")) {
+            submenu.classList.remove("hidden");
+            submenu.classList.add("submenu-open");
+          } else {
+            submenu.classList.remove("submenu-open");
+            // Wait for animation to finish before hiding
+            setTimeout(() => {
+              if (!submenu.classList.contains("submenu-open")) {
+                submenu.classList.add("hidden");
+              }
+            }, 200);
+          }
+        }
+      });
+    });
+
+    // Close menu on escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !mobileMenu?.classList.contains("hidden")) {
+        closeMenu();
+      }
+    });
+
+    // Prevent panel click from closing menu
+    menuPanel?.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
   });
 </script>
 

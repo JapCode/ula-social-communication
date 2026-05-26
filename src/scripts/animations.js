@@ -171,11 +171,12 @@ function initAll() {
 }
 
 // Initialize on first load
-initAll();
+setTimeout(initAll, 100);
 
 // Handle View Transitions - reinitialize on page navigation
 document.addEventListener('astro:page-load', () => {
-  setTimeout(initAll, 50);
+  // Delayed re-init to let view transitions and nav indicator settle first
+  setTimeout(initAll, 150);
 });
 
 // Cleanup before page swap
@@ -190,5 +191,6 @@ document.addEventListener('astro:before-swap', () => {
 
 // Fallback for browsers without view transitions
 document.addEventListener('astro:after-swap', () => {
-  setTimeout(initAll, 50);
+  // Delayed re-init to let nav indicator classes settle first
+  setTimeout(initAll, 200);
 });
