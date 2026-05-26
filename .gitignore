@@ -31,3 +31,9 @@ skills-lock.json
 .opencode/
 AGENTS.md
 LUMA_STYLES.md
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example
