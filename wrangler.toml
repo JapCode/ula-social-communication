@@ -1,9 +1,0 @@
-# https://developers.cloudflare.com/pages/functions/wrangler-configuration/
-pages_build_output_dir = "dist"
-functions_directory    = "src/functions"
-compatibility_date     = "2026-06-12"
-
-# Environment variables — set actual values in Cloudflare Dashboard:
-#   GITHUB_CLIENT_ID     — from your GitHub OAuth App
-#   GITHUB_CLIENT_SECRET — from your GitHub OAuth App
-# Do NOT commit secrets here.
