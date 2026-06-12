@@ -14,6 +14,8 @@ La convergencia de medios ha transformado radicalmente la forma en que contamos 
 
 Las plataformas digitales han democratizado la producción de contenido, pero también han planteado nuevos desafíos éticos y narrativos que los comunicadores sociales deben abordar con rigor académico.
 
+
+
 ## Hallazgos principales
 
 Nuestro equipo de investigación ha identificado tres tendencias clave en la producción transmedia latinoamericana que redefinen la relación entre emisor y receptor.
