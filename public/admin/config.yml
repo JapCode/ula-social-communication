@@ -1,7 +1,7 @@
 backend:
   name: github
   repo: JapCode/ula-social-communication
-  branch: main
+  branch: master
   base_url: https://ula-social-communication.pages.dev
   auth_endpoint: /api/auth
 
