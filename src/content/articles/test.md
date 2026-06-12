@@ -1,7 +1,7 @@
 ---
 title: test
 date: 2026-05-26
-author: juanito guanabana
+author: "juanito "
 category: investigacion
 excerpt: a test fot the decap
 coverImage: /images/uploads/16570362211682616913.jpg
