@@ -2,55 +2,32 @@
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import ContentBlock from '@/components/ContentBlock.astro';
 import SectionCard from '@/components/SectionCard.astro';
+import { getEntry } from 'astro:content';
 
-const pageTitle = "Nuestro Programa";
-const pageSubtitle = "Conoce la identidad, misión y personas que hacen posible la Comunicación Social en el NURR";
+const pageEntry = await getEntry('pages', 'program-index');
+const { title, subtitle, items = [] } = pageEntry?.data ?? {};
+const body = pageEntry?.data?.body ?? pageEntry?.body ?? "";
+
+const pageTitle = title ?? "Nuestro Programa";
+const pageSubtitle = subtitle ?? "Conoce la identidad, misión y personas que hacen posible la Comunicación Social en el NURR";
 ---
 
-<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Institucionalidad">
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Institucionalidad" sectionTheme="academic">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-    <SectionCard 
-      title="Misión y Visión" 
-      description="El propósito del programa en el contexto Trujillo"
-      icon="eye"
-      href="/program/mission"
-    />
-    <SectionCard 
-      title="Perfil del Egresado" 
-      description="Competencias y habilidades de nuestros graduados"
-      icon="school"
-      href="/program/graduate-profile"
-    />
-    <SectionCard 
-      title="Historia" 
-      description="Orígenes y evolución del programa en el campus"
-      icon="books"
-      href="/program/history"
-    />
-    <SectionCard 
-      title="Autoridades" 
-      description="Directores, coordinadores y personal administrativo"
-      icon="gear"
-      href="/program/authorities"
-    />
-    <SectionCard 
-      title="Faculty" 
-      description="Directorio de profesores activos y eméritos"
-      icon="groups"
-      href="/program/faculty"
-    />
+    {items.slice(0, 6).map(item => (
+      <SectionCard 
+        title={item.title ?? ""}
+        description={item.description ?? ""}
+        icon="eye"
+        href={item.href ?? "#"}
+      />
+    ))}
   </div>
   
   <div class="mt-16">
     <ContentBlock title="Sobre el Programa" eyebrow="Información">
       <p class="text-slate-500 leading-relaxed">
-        La carrera de Comunicación Social en el Núcleo Universitario Rafael Rangel (NURR) de la Universidad de los Andes 
-        forma profesionales integrales capaces de analizar, producir y gestionar mensajes comunicacionales en diversos medios 
-        y plataformas digitales.
-      </p>
-      <p class="text-slate-500 leading-relaxed mt-4">
-        Nuestro compromiso es con la formación de comunicadores críticos, éticos y творческих, preparados para 
-        enfrentar los desafíos del entorno mediático contemporáneo con responsabilidad social.
+        {body || "La carrera de Comunicación Social en el Núcleo Universitario Rafael Rangel (NURR) de la Universidad de los Andes forma profesionales integrales capaces de analizar, producir y gestionar mensajes comunicacionales en diversos medios y plataformas digitales."}
       </p>
     </ContentBlock>
   </div>

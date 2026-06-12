@@ -5,6 +5,18 @@ import {
   PhHeart,
   PhCalendar,
   PhCalendarCheck,
+  PhUserPlus,
+  PhClipboardText,
+  PhTreeStructure,
+  PhBookOpen,
+  PhFlask,
+  PhBriefcase,
+  PhEye,
+  PhGraduationCap,
+  PhBooks,
+  PhGear,
+  PhQuotes,
+  PhArrowRight,
   type Icon,
 } from 'phosphor-icons-astro';
 
@@ -27,12 +39,23 @@ const iconMap: Record<string, typeof PhUsersThree> = {
   heart: PhHeart,
   calendar_month: PhCalendar,
   event: PhCalendarCheck,
+  "user-plus": PhUserPlus,
+  assignment: PhClipboardText,
+  "tree-structure": PhTreeStructure,
+  "book-open": PhBookOpen,
+  science: PhFlask,
+  work: PhBriefcase,
+  eye: PhEye,
+  school: PhGraduationCap,
+  books: PhBooks,
+  gear: PhGear,
+  quote: PhQuotes,
 };
 
 const IconComponent = icon ? iconMap[icon] : null;
 ---
 
-<a href={href} class="group block bg-white border border-slate-100/50 rounded-luma p-6 md:p-8 transition-all duration-300 hover:shadow-luma hover:border-slate-100 hover:-translate-y-1">
+<a href={href} class="group block bg-white border border-tinted rounded-luma p-6 md:p-8 transition-all duration-300 hover:shadow-luma hover:border-tinted-strong hover:-translate-y-1">
   <div class="flex items-start gap-4">
     {IconComponent && (
       <div class={`flex-shrink-0 w-12 h-12 ${bgClass} rounded-full flex items-center justify-center`}>
@@ -40,7 +63,7 @@ const IconComponent = icon ? iconMap[icon] : null;
       </div>
     )}
     <div class="min-w-0">
-      <h3 class="text-sm md:text-base font-bold text-slate-900 tracking-tight group-hover:text-primary transition-colors">
+      <h3 class="text-sm md:text-base font-bold text-ink tracking-tight group-hover:text-primary transition-colors leading-snug">
         {title}
       </h3>
       {description && (

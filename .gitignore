@@ -1,5 +1,9 @@
 # build output
 dist/
+
+# copied from node_modules during build
+public/admin/decap-cms.js
+
 # generated types
 .astro/
 

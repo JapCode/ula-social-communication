@@ -9,22 +9,22 @@ interface Props {
 const { title, subtitle, eyebrow, variant = "default" } = Astro.props;
 
 const variantClasses = {
-  default: "bg-white border-slate-100/50",
+  default: "bg-white",
   accent: "bg-primary/5 border-primary/10",
-  info: "bg-surface border-slate-100/50",
+  info: "bg-surface",
 };
 
 const borderClass = variantClasses[variant];
 ---
 
-<div class:list={["content-block bg-white border border-slate-100/50 rounded-luma p-8 md:p-10 shadow-luma", borderClass]}>
+<div class:list={["content-block bg-white border border-tinted rounded-luma p-8 md:p-10 relative", borderClass]}>
   {eyebrow && (
     <span class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-3">
       {eyebrow}
     </span>
   )}
   {title && (
-    <h2 class="text-xl md:text-2xl font-display font-bold tracking-tight text-slate-900">
+    <h2 class="text-xl md:text-2xl font-display font-bold text-ink tracking-tight leading-[1.1]">
       {title}
     </h2>
   )}

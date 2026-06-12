@@ -1,5 +1,12 @@
 ---
+import type { InferEntrySchema } from "astro:content";
 import { PhArrowRight, PhArrowDown } from "phosphor-icons-astro";
+
+export interface Props {
+  hero: InferEntrySchema<"pages">["hero"];
+}
+
+const { hero } = Astro.props;
 ---
 
 <section
@@ -28,46 +35,47 @@ import { PhArrowRight, PhArrowDown } from "phosphor-icons-astro";
 		<div class="w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16">
 			<div class="hero-editorial-content text-center lg:text-left">
 
-				<!-- Eyebrow — editorial style -->
+				<!-- Eyebrow — editorial magazine style -->
 				<div class="flex items-center gap-4 mb-6 md:mb-8 justify-center lg:justify-start">
-					<span class="block w-8 md:w-12 h-px bg-white/40"></span>
-					<span class="hero-eyebrow text-[9px] md:text-[11px] font-bold tracking-[0.35em] uppercase text-white/60">
-						Núcleo Universitario Rafael Rangel
+					<span class="block w-8 md:w-16 h-px bg-white/30"></span>
+					<span class="hero-eyebrow text-[9px] md:text-[10px] font-bold tracking-[0.4em] uppercase text-white/50">
+						{hero.eyebrow}
 					</span>
+					<span class="block w-4 md:w-8 h-px bg-white/20"></span>
 				</div>
 
-				<!-- Main title — massive, editorial -->
+				<!-- Main title — editorial, dramatic scale -->
 				<h1
 					id="hero-title"
-					class="hero-title xs:text-4xl text-5xl sm:text-6xl md:text-7xl lg:text-9xl xl:text-[10rem] font-display font-bold tracking-tighter text-white leading-[0.85]"
+					class="hero-title text-5xl sm:text-6xl md:text-7xl lg:text-9xl xl:text-[10rem] font-display font-bold text-white leading-[0.82] tracking-tighter font-display-hero"
 				>
-					Comunicación<br />
-					<span class="text-white/40">Social</span>
+					{hero.title_line1}<br />
+					<span class="text-white/35 font-normal italic font-display-hero">{hero.title_line2}</span>
 				</h1>
 
-				<!-- Value proposition — visible on mobile -->
-				<p class="hero-value-prop text-sm md:text-base lg:text-xl text-white/80 mt-4 md:mt-6 max-w-lg mx-auto lg:mx-0 leading-relaxed">
-					Licenciatura en Comunicación Social — Formando profesionales críticos para el futuro de la comunicación digital.
+				<!-- Value proposition — body font for editorial contrast -->
+				<p class="hero-value-prop text-sm md:text-base lg:text-lg text-white/75 mt-4 md:mt-6 max-w-prose mx-auto lg:mx-0 leading-relaxed font-body">
+					{hero.description}
 				</p>
 
 				<!-- CTA row -->
 				<div class="flex flex-col sm:flex-row items-center gap-4 mt-6 md:mt-8 justify-center lg:justify-start">
 					<a
-						href="/admission/process"
-						class="hero-cta-primary xs:w-full sm:w-auto inline-flex items-center gap-2 px-6 py-3 bg-white text-primary text-sm font-bold tracking-wider uppercase rounded-full hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
+						href={hero.cta_link}
+						class="hero-cta-primary xs:w-full sm:w-auto inline-flex items-center gap-2 px-6 py-3 bg-[#F89728] text-white text-sm font-bold tracking-wider uppercase rounded-full shadow-md hover:bg-[#E08820] hover:shadow-lg hover:-translate-y-0.5 active:bg-[#C87818] active:translate-y-0 transition-all duration-300"
 					>
-						Cómo Inscribirse
+						{hero.cta_text}
 						<PhArrowRight
 							size={16}
-							weight="regular"
-							class="transition-transform duration-300"
+							weight="bold"
+							class="transition-transform duration-300 group-hover:translate-x-0.5"
 						/>
 					</a>
 					<a
-						href="#noticias"
+						href={hero.secondary_link}
 						class="hero-cta-secondary xs:w-full sm:w-auto inline-flex items-center gap-2 text-white/70 text-sm font-bold tracking-wider uppercase hover:text-white transition-colors duration-300 group"
 					>
-						Explorar
+						{hero.secondary_text}
 						<span class="w-6 h-px bg-white/40 transition-all duration-300 group-hover:w-10"></span>
 					</a>
 				</div>
@@ -93,15 +101,7 @@ import { PhArrowRight, PhArrowDown } from "phosphor-icons-astro";
 		opacity: 1;
 	}
 
-	/* Hero elements visible immediately */
-	.hero-eyebrow,
-	.hero-title,
-	.hero-value-prop,
-	.hero-cta-primary,
-	.hero-cta-secondary {
-		opacity: 1;
-		transform: none;
-	}
+	/* Hero elements visible immediately (no fade-in delay) */
 
 	/* Mobile: let section height follow content (container handles min-height) */
 	@media (max-width: 767px) {

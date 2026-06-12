@@ -9,83 +9,42 @@ import {
   PhQuestion,
   PhArrowRight,
 } from "phosphor-icons-astro";
+import { getEntry } from 'astro:content';
 
-const pageTitle = "Proceso de Admisión";
-const pageSubtitle =
-  "Pasos y fechas para realizar tu inscripción en Comunicación Social";
+const pageEntry = await getEntry('pages', 'admission-process');
+const { title, subtitle, items = [] } = pageEntry?.data ?? {};
+const body = pageEntry?.data?.body ?? pageEntry?.body ?? "";
 
-// ============================================================
-// CMS-ready data structure — swap with CMS query later
-// ============================================================
+const pageTitle = title ?? "Proceso de Admisión";
+const pageSubtitle = subtitle ?? "Pasos y fechas para realizar tu inscripción en Comunicación Social";
+const introText = body || "El proceso de admisión se realiza dos veces al año, correspondiente al inicio de cada semestre académico. A continuación las fechas y pasos que debes seguir.";
 
-const introText =
-  "El proceso de admisión se realiza dos veces al año, correspondiente al inicio de cada semestre académico. A continuación las fechas y pasos que debes seguir.";
-
-type Step = {
-  title: string;
-  description: string;
-  date: string;
-  icon: string;
-  emphasis?: "critical" | "standard";
-};
-
-const steps: Step[] = [
-  {
-    title: "Preinscripción Online",
-    description:
-      "Llena el formulario de preinscripción en el portal de la ULA. Debes crear una cuenta y seleccionar la carrera de Comunicación Social en el NURR (Núcleo Universitario Rafael Rangel).",
-    date: "Enero / Julio",
-    icon: "clipboard-text",
-    emphasis: "standard",
-  },
-  {
-    title: "Validación de Documentos",
-    description:
-      "Presenta los documentos requeridos en las oficinas del NURR para validación. Recibirás una constancia de inscripción provisional.",
-    date: "Febrero / Agosto",
-    icon: "files",
-    emphasis: "standard",
-  },
-  {
-    title: "Prueba de Admisión",
-    description:
-      "Presentas las pruebas de ingreso establecidas por la Universidad. Esta incluye pruebas de aptitud académica y razonamiento verbal.",
-    date: "Marzo / Septiembre",
-    icon: "pencil-simple-line",
-    emphasis: "critical",
-  },
-  {
-    title: "Publicación de Resultados",
-    description:
-      "Se publican los resultados de admitidos. Los estudiantes seleccionados deben confirmar su lugar realizando el pago de la matrícula.",
-    date: "Abril / Octubre",
-    icon: "megaphone",
-    emphasis: "standard",
-  },
-  {
-    title: "Inducción y Matrícula",
-    description:
-      "Asistes a la jornada de inducción donde conocerás las instalaciones, horarios y proceso de selección de unidades curriculares.",
-    date: "Agosto / Enero",
-    icon: "student",
-    emphasis: "standard",
-  },
-];
-
-// ============================================================
-// Icon component map — add new icons here as CMS content grows
-// ============================================================
-
-const iconMap: Record<string, typeof PhClipboardText> = {
+// Icon lookup — map icon name strings to Phosphor components
+const iconLookup: Record<string, typeof PhClipboardText> = {
   "clipboard-text": PhClipboardText,
   files: PhFiles,
   "pencil-simple-line": PhPencilSimpleLine,
   megaphone: PhMegaphone,
   student: PhStudent,
 };
+
+// Fallback icons by index for backward compat with older content
+const fallbackIcons: (typeof PhClipboardText)[] = [
+  PhClipboardText, PhFiles, PhPencilSimpleLine, PhMegaphone, PhStudent,
+];
+
+const steps = items.map((item, i) => ({
+  title: item.title ?? "",
+  description: item.description ?? "",
+  date: item.detail ?? "",
+  icon: (item.icon && iconLookup[item.icon]) || fallbackIcons[i] || PhClipboardText,
+  emphasis: (item.emphasis ?? (i === 2)) ? "critical" : "standard",
+} as const));
+
+const breadcrumb = [{ label: "Admisión" }];
 ---
 
-<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Admisión">
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} breadcrumb={breadcrumb} eyebrow="Admisión" sectionTheme="admission">
   <div class="py-8 md:py-12">
     <!-- Intro -->
     <div class="mb-10 md:mb-14 max-w-2xl reveal-intro">
@@ -126,6 +85,7 @@ const iconMap: Record<string, typeof PhClipboardText> = {
         steps.map((step, index) => {
           const isCritical = step.emphasis === "critical";
           const isLast = index === steps.length - 1;
+          const Icon = step.icon;
           return (
             <article
               class:list={[
@@ -174,16 +134,19 @@ const iconMap: Record<string, typeof PhClipboardText> = {
                 <div class="flex flex-col md:flex-row md:items-start md:justify-between md:gap-8">
                   {/* Content */}
                   <div class="flex-1 mb-3 md:mb-0 pr-16 md:pr-24">
-                    <h2
-                      class:list={[
-                        "step-title text-lg md:text-xl font-medium tracking-tight mb-1.5",
-                        isCritical
-                          ? "text-slate-900"
-                          : "text-slate-700",
-                      ]}
-                    >
-                      {step.title}
-                    </h2>
+                    <div class="flex items-center gap-2 mb-2">
+                      <Icon size={18} weight="light" class={isCritical ? "text-primary" : "text-slate-400"} />
+                      <h2
+                        class:list={[
+                          "step-title text-lg md:text-xl font-medium tracking-tight",
+                          isCritical
+                            ? "text-slate-900"
+                            : "text-slate-700",
+                        ]}
+                      >
+                        {step.title}
+                      </h2>
+                    </div>
                     <p
                       class:list={[
                         "step-desc leading-relaxed max-w-xl",

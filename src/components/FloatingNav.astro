@@ -9,7 +9,7 @@ import {
 
 <nav class="reveal fixed left-4 md:left-8 top-1/2 -translate-y-1/2 z-[110] flex-col gap-2 hidden md:flex" aria-label="Navegación principal" id="side-nav">
 	<!-- Connecting line -->
-	<div class="absolute left-1/2 -translate-x-1/2 top-2 bottom-2 w-px bg-slate-100/50" aria-hidden="true"></div>
+	<div class="absolute left-1/2 -translate-x-1/2 top-2 bottom-2 w-px bg-[var(--color-border)]" aria-hidden="true"></div>
 	
 	<!-- Active indicator dot -->
 	<div class="active-dot absolute -left-1 w-1 h-1 rounded-full bg-primary transition-all duration-500 ease-out" aria-hidden="true"></div>
@@ -22,7 +22,7 @@ import {
 		<span class="nav-tooltip absolute left-full ml-3 px-3 py-1.5 bg-ink text-white text-[10px] font-bold tracking-wider uppercase rounded-luma opacity-0 -translate-x-2 transition-all duration-300 pointer-events-none whitespace-nowrap group-hover:opacity-100 group-hover:translate-x-0">Accesos</span>
 		<PhSquaresFour size={18} weight="regular" aria-hidden="true" />
 	</a>
-	<div class="w-px h-6 bg-slate-100/50 mx-auto my-1" aria-hidden="true"></div>
+	<div class="w-px h-6 bg-[var(--color-border)] mx-auto my-1" aria-hidden="true"></div>
 	<a class="nav-pill p-4 rounded-full flex items-center justify-center group relative" href="#noticias" data-section="noticias" title="Noticias" aria-label="Ir a noticias">
 		<span class="nav-tooltip absolute left-full ml-3 px-3 py-1.5 bg-ink text-white text-[10px] font-bold tracking-wider uppercase rounded-luma opacity-0 -translate-x-2 transition-all duration-300 pointer-events-none whitespace-nowrap group-hover:opacity-100 group-hover:translate-x-0">Noticias</span>
 		<PhNewspaper size={18} weight="regular" aria-hidden="true" />

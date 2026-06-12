@@ -2,69 +2,73 @@
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import {
   PhPencilSimple,
-  PhTrendUp,
   PhMegaphone,
   PhVideo,
   PhGlobe,
+  PhTrendUp,
+  PhCamera,
+  PhMicrophone,
+  PhNewspaperClipping,
+  PhUsers,
+  PhChatText,
+  PhPresentationChart,
+  PhBookOpen,
+  PhBroadcast,
+  PhDeviceMobile,
+  PhMagnifyingGlass,
+  PhLightbulb,
+  PhStar,
   PhArrowRight,
 } from 'phosphor-icons-astro';
+import { getEntry } from 'astro:content';
 
-const pageTitle = "Perfil del Egresado";
+const pageEntry = await getEntry('pages', 'program-graduate-profile');
+const { title, items = [], headings = [] } = pageEntry?.data ?? {};
+const body = pageEntry?.data?.body ?? pageEntry?.body ?? "";
+
+const pageTitle = title ?? "Perfil del Egresado";
+const introText = body || "Formamos comunicadores capaces de interpretar la realidad, construir narrativas y transformar la sociedad a través de la palabra, la imagen y el pensamiento crítico.";
+
+// Icon map: each competence selects its icon in the CMS
+const iconMap: Record<string, typeof PhPencilSimple> = {
+  pencil: PhPencilSimple,
+  megaphone: PhMegaphone,
+  video: PhVideo,
+  globe: PhGlobe,
+  trend: PhTrendUp,
+  camera: PhCamera,
+  microphone: PhMicrophone,
+  newspaper: PhNewspaperClipping,
+  users: PhUsers,
+  chat: PhChatText,
+  presentation: PhPresentationChart,
+  book: PhBookOpen,
+  broadcast: PhBroadcast,
+  cellphone: PhDeviceMobile,
+  search: PhMagnifyingGlass,
+  lightbulb: PhLightbulb,
+  star: PhStar,
+};
+
+const competencias = items.map((item, i) => ({
+  number: String(i + 1).padStart(2, '0'),
+  title: item.title ?? "",
+  description: item.description ?? "",
+  Icon: iconMap[item.icon] || PhStar,
+}));
+
+// Fields from headings
+const primariosHeading = headings[0];
+const secundariosHeading = headings[1];
+const camposPrimarios = primariosHeading?.items ?? [];
+const camposSecundarios = secundariosHeading?.items ?? [];
+
 const breadcrumb = [
   { label: "Programa", href: "/program" }
 ];
-
-const competencias = [
-  {
-    number: "01",
-    title: "Producción Comunicacional",
-    description: "Contenido para medios impresos, digitales, audiovisuales y sonoros — aplicando técnicas narrativas y géneros periodísticos con criterio profesional.",
-    icon: PhPencilSimple,
-  },
-  {
-    number: "02",
-    title: "Investigación Comunicacional",
-    description: "Diseño y ejecución de proyectos de investigación en comunicación, con metodologías cuantitativas y cualitativas rigurosas.",
-    icon: PhTrendUp,
-  },
-  {
-    number: "03",
-    title: "Comunicación Organizacional",
-    description: "Gestión de comunicación interna y externa, relaciones públicas y estrategia corporativa para organizaciones de todo tipo.",
-    icon: PhMegaphone,
-  },
-  {
-    number: "04",
-    title: "Producción Audiovisual",
-    description: "Técnicas de producción para cine, televisión, video y formatos digitales multimedia — de la idea al producto final.",
-    icon: PhVideo,
-  },
-  {
-    number: "05",
-    title: "Comunicación Digital",
-    description: "Estrategias para entornos digitales: gestión de redes sociales, contenido web y narrativas transmedia.",
-    icon: PhGlobe,
-  },
-];
-
-const camposPrimarios = [
-  "Medios de Comunicación",
-  "Producción Audiovisual",
-  "Comunicación Digital",
-  "Agencias de Publicidad",
-];
-
-const camposSecundarios = [
-  "Relaciones Públicas",
-  "Departamentos de Comunicación",
-  "Comunicación Organizacional",
-  "Docencia e Investigación",
-  "Comunicación Comunitaria",
-  "Organizaciones Sociales",
-];
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb}>
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic">
   <section class="graduate-profile-page">
 
     <!-- Aspirational opening -->
@@ -73,7 +77,7 @@ const camposSecundarios = [
         <span class="gp-opening__line"></span>
       </div>
       <p class="gp-opening__text">
-        Formamos comunicadores capaces de interpretar la realidad, construir narrativas y transformar la sociedad a través de la palabra, la imagen y el pensamiento crítico.
+        {introText}
       </p>
     </div>
 
@@ -94,7 +98,7 @@ const camposSecundarios = [
             <div class="gp-competency__number">{comp.number}</div>
             <div class="gp-competency__content">
               <div class="gp-competency__header">
-                <comp.icon size={i === 0 ? 22 : 18} weight={i === 0 ? "duotone" : "light"} class="gp-competency__icon" />
+                <comp.Icon size={i === 0 ? 22 : 18} weight={i === 0 ? "duotone" : "light"} class="gp-competency__icon" />
                 <h3 class="gp-competency__title">{comp.title}</h3>
               </div>
               <p class="gp-competency__desc">{comp.description}</p>
@@ -117,7 +121,7 @@ const camposSecundarios = [
 
       <div class="gp-fields__grid">
         <div class="gp-fields__group gp-fields__group--primary">
-          <h3 class="gp-fields__group-title">Áreas Principales</h3>
+          <h3 class="gp-fields__group-title">{primariosHeading?.title || "Áreas Principales"}</h3>
           <div class="gp-fields__items">
             {camposPrimarios.map(field => (
               <div class="gp-field gp-field--primary">
@@ -128,7 +132,7 @@ const camposSecundarios = [
           </div>
         </div>
         <div class="gp-fields__group gp-fields__group--secondary">
-          <h3 class="gp-fields__group-title">Áreas Complementarias</h3>
+          <h3 class="gp-fields__group-title">{secundariosHeading?.title || "Áreas Complementarias"}</h3>
           <div class="gp-fields__items">
             {camposSecundarios.map(field => (
               <div class="gp-field gp-field--secondary">

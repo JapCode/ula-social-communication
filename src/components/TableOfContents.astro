@@ -18,7 +18,7 @@ const { headings = [] } = Astro.props;
       aria-label="Tabla de contenidos"
     >
       <div class="sticky top-28">
-        <div class="bg-white border border-slate-100/50 rounded-luma p-6 shadow-luma">
+        <div class="bg-white border border-tinted rounded-luma p-6 shadow-luma">
           <!-- TOC Header -->
           <div class="flex items-center gap-2 mb-5">
             <PhListBullets size={16} weight="regular" class="text-primary" />
@@ -56,7 +56,7 @@ const { headings = [] } = Astro.props;
 {
   headings.length > 0 && (
     <div class="lg:hidden mb-8">
-      <details class="toc-mobile bg-white border border-slate-100/50 rounded-luma shadow-luma">
+      <details class="toc-mobile bg-white border border-tinted rounded-luma shadow-luma">
         <summary class="flex items-center justify-between gap-3 p-5 cursor-pointer list-none">
           <div class="flex items-center gap-2">
             <PhListBullets size={16} weight="regular" class="text-primary" />
@@ -68,7 +68,7 @@ const { headings = [] } = Astro.props;
             class="text-slate-400 transition-transform duration-300 toc-chevron"
           />
         </summary>
-        <div class="px-5 pb-5 border-t border-slate-100/50">
+        <div class="px-5 pb-5 border-t border-tinted">
           <nav aria-label="Tabla de contenidos móvil" class="pt-4">
             <ul class="space-y-1">
               {headings.map((heading) => (

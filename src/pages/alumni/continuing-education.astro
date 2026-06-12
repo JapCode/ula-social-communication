@@ -6,59 +6,37 @@ import {
   PhMegaphone,
   PhCamera,
   PhClock,
-  PhCalendar,
-  PhBell,
   PhEnvelopeSimple,
   PhArrowRight,
   PhCaretRight,
 } from 'phosphor-icons-astro';
+import { getEntry } from 'astro:content';
 
-const pageTitle = "Formación Continua";
-const pageSubtitle = "Cursos, talleres y programas de actualización para egresados";
+const pageEntry = await getEntry('pages', 'alumni-continuing-education');
+const { title, subtitle, items = [] } = pageEntry?.data ?? {};
+const body = pageEntry?.data?.body ?? pageEntry?.body ?? "";
 
-interface Course {
-  title: string;
-  description: string;
-  hours: string;
-  status: string;
-  icon: typeof PhNewspaper;
-  href: string;
-}
+const pageTitle = title ?? "Formación Continua";
+const pageSubtitle = subtitle ?? "Cursos, talleres y programas de actualización para egresados";
 
-const courses: Course[] = [
-  {
-    title: "Taller de Periodismo Digital",
-    description: "Técnicas y herramientas del periodismo digital: redacción para web, gestión de contenidos en redes sociales y narrativa multimedia.",
-    hours: "40 horas",
-    status: "Próximamente",
-    icon: PhNewspaper,
-    href: "#",
-  },
-  {
-    title: "Producción Audiovisual Avanzada",
-    description: "Preproducción, producción y postproducción de video con software profesional. Edición, color grading y exportación para múltiples plataformas.",
-    hours: "60 horas",
-    status: "Próximamente",
-    icon: PhVideo,
-    href: "#",
-  },
-  {
-    title: "Comunicación Estratégica",
-    description: "Diseño y ejecución de estrategias de comunicación organizacional, gestión de crisis y relaciones con públicos clave.",
-    hours: "45 horas",
-    status: "Próximamente",
-    icon: PhMegaphone,
-    href: "#",
-  },
-  {
-    title: "Fotografía Periodística",
-    description: "Captura, edición y distribución de fotografía para medios de comunicación. Composición, iluminación y narrativa visual.",
-    hours: "35 horas",
-    status: "Próximamente",
-    icon: PhCamera,
-    href: "#",
-  },
-];
+// Icon lookup — map icon name strings to Phosphor components
+const iconLookup: Record<string, typeof PhNewspaper> = {
+  newspaper: PhNewspaper,
+  video: PhVideo,
+  megaphone: PhMegaphone,
+  camera: PhCamera,
+};
+
+// Fallback icons by index for backward compat
+const fallbackIcons: (typeof PhNewspaper)[] = [PhNewspaper, PhVideo, PhMegaphone, PhCamera];
+
+const courses = items.map((item, i) => ({
+  icon: (item.icon && iconLookup[item.icon]) || fallbackIcons[i] || PhNewspaper,
+  title: item.title ?? "",
+  description: item.description ?? "",
+  hours: item.detail ?? "",
+  href: item.href ?? "#",
+}));
 ---
 
 <ContentLayout
@@ -68,13 +46,12 @@ const courses: Course[] = [
   breadcrumb={[
     { label: "Egresados", href: "/alumni" }
   ]}
+  sectionTheme="admission"
 >
   <!-- Intro — editorial, not boxed -->
   <div class="ce-intro">
     <p>
-      La Escuela de Comunicación Social ofrece programas diseñados para actualizar y profundizar
-      los conocimientos de nuestros egresados y profesionales del área. Cada programa combina
-      teoría y práctica con enfoque en las demandas actuales del campo comunicacional.
+      {body || "La Escuela de Comunicación Social ofrece programas diseñados para actualizar y profundizar los conocimientos de nuestros egresados y profesionales del área. Cada programa combina teoría y práctica con enfoque en las demandas actuales del campo comunicacional."}
     </p>
   </div>
 
@@ -92,10 +69,6 @@ const courses: Course[] = [
             <span class="ce-card-meta-item">
               <PhClock size={14} weight="regular" />
               {course.hours}
-            </span>
-            <span class="ce-card-meta-item">
-              <PhCalendar size={14} weight="regular" />
-              {course.status}
             </span>
           </div>
           <span class="ce-card-cta">

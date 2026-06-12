@@ -38,7 +38,7 @@ const articleHref = href || (slug ? `/portfolio/articles/${slug}` : '#');
         <!-- Image -->
         <div class="featured-card-image md:w-2/5 flex-shrink-0">
           {image ? (
-            <img src={image} alt="" class="w-full h-full object-cover" loading="lazy" />
+            <img src={image} alt={`Portada del artículo: ${title}`} class="w-full h-full object-cover" loading="lazy" />
           ) : (
             <div class="w-full h-full flex items-center justify-center bg-primary/5">
               <PhNewspaper size={48} weight="light" class="text-primary/20" />
@@ -70,8 +70,8 @@ const articleHref = href || (slug ? `/portfolio/articles/${slug}` : '#');
     <a href={articleHref} class="group compact-card block bg-surface-elevated transition-all duration-300 hover:shadow-luma">
       <!-- Image -->
       <div class="compact-card-image">
-        {image ? (
-          <img src={image} alt="" class="w-full h-full object-cover" loading="lazy" />
+          {image ? (
+            <img src={image} alt={`Portada del artículo: ${title}`} class="w-full h-full object-cover" loading="lazy" />
         ) : (
           <div class="w-full h-full flex items-center justify-center bg-primary/5">
             <PhNewspaper size={32} weight="light" class="text-primary/20" />

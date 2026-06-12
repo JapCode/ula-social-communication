@@ -1,73 +1,78 @@
 ---
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import { PhHeart, PhEnvelopeSimple, PhArrowRight } from 'phosphor-icons-astro';
+import { getEntry } from 'astro:content';
 
-const pageTitle = "Servicio Comunitario";
+const pageEntry = await getEntry('pages', 'student-life-community');
+
+if (!pageEntry) {
+  throw new Error('Community page entry not found');
+}
+
+const { title, body, descriptionItems, requirements, cta, alert } = pageEntry.data;
+
 const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb}>
+<ContentLayout title={title} breadcrumb={breadcrumb} sectionTheme="student-life">
   <div class="max-w-3xl py-4 md:py-8">
 
     <!-- Intro -->
-    <div class="mb-10 md:mb-14">
-      <p class="text-slate-500 leading-relaxed text-lg">
-        El servicio comunitario es un requisito de graduación donde los estudiantes de Comunicación Social contribuyen con proyectos de comunicación en comunidades vulnerables.
-      </p>
-    </div>
+    {body && (
+      <div class="mb-10 md:mb-14">
+        <p class="text-slate-500 leading-relaxed text-lg">{body}</p>
+      </div>
+    )}
 
     <!-- What it is -->
-    <div class="mb-10">
-      <h2 class="text-lg font-bold text-slate-900 mb-4">¿En qué consiste?</h2>
-      <div class="space-y-3 text-slate-500 leading-relaxed">
-        <p>Los estudiantes desarrollan proyectos de comunicación al servicio de comunidades con necesidades específicas: producción audiovisual, radio comunitaria, diseño de campañas informativas y formación en medios.</p>
-        <p>El proyecto se realiza bajo la tutoría de un docente y requiere la presentación de un informe final que documenta el proceso y los resultados.</p>
+    {descriptionItems && descriptionItems.length > 0 && (
+      <div class="mb-10">
+        <h2 class="text-lg font-bold text-slate-900 mb-4">¿En qué consiste?</h2>
+        <div class="space-y-3 text-slate-500 leading-relaxed">
+          {descriptionItems.map((text: string) => <p>{text}</p>)}
+        </div>
       </div>
-    </div>
+    )}
 
     <!-- Requirements -->
-    <div class="mb-10">
-      <h2 class="text-lg font-bold text-slate-900 mb-4">Requisitos</h2>
-      <ul class="space-y-2 text-slate-500 leading-relaxed list-disc pl-5">
-        <li>Haber aprobado al menos el 50% de las materias del pénsum</li>
-        <li>Presentar una propuesta de proyecto ante la coordinación</li>
-        <li>Contar con un docente tutor asignado</li>
-        <li>Cumplir con las horas mínimas establecidas por la universidad</li>
-      </ul>
-    </div>
+    {requirements && requirements.length > 0 && (
+      <div class="mb-10">
+        <h2 class="text-lg font-bold text-slate-900 mb-4">Requisitos</h2>
+        <ul class="space-y-2 text-slate-500 leading-relaxed list-disc pl-5">
+          {requirements.map((text: string) => <li>{text}</li>)}
+        </ul>
+      </div>
+    )}
 
     <!-- CTA -->
-    <div class="mb-10">
-      <h2 class="text-lg font-bold text-slate-900 mb-4">¿Querés iniciar tu proyecto?</h2>
-      <p class="text-slate-500 leading-relaxed mb-6">
-        Consultá con la coordinación los lineamientos vigentes y los plazos de inscripción para el período de servicio comunitario.
-      </p>
-      <div class="flex flex-wrap gap-3">
-        <a href="/contact" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded-full hover:shadow-luma hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300">
-          <PhEnvelopeSimple size={14} weight="light" />
-          Contactar Coordinación
-          <PhArrowRight size={14} weight="regular" />
-        </a>
+    {cta && (
+      <div class="mb-10">
+        <h2 class="text-lg font-bold text-slate-900 mb-4">{cta.title}</h2>
+        {cta.body && <p class="text-slate-500 leading-relaxed mb-6">{cta.body}</p>}
+        <div class="flex flex-wrap gap-3">
+          <a href="/contact" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded-full hover:shadow-luma hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300">
+            <PhEnvelopeSimple size={14} weight="light" />
+            {cta.label ?? 'Contactar Coordinación'}
+            <PhArrowRight size={14} weight="regular" />
+          </a>
+        </div>
       </div>
-    </div>
+    )}
 
-    <!-- Info card -->
-    <div class="p-6 md:p-8 rounded-xl bg-slate-50/80 border border-slate-100">
-      <div class="flex items-start gap-4">
-        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center">
-          <PhHeart size={20} weight="light" class="text-primary" />
-        </div>
-        <div class="flex-1 min-w-0">
-          <h3 class="text-base font-medium text-slate-700 mb-1">
-            Información en actualización
-          </h3>
-          <p class="text-slate-400 leading-relaxed text-sm">
-            Estamos ampliando la información sobre proyectos activos, comunidades beneficiadas y experiencias de estudiantes. 
-            Volvé pronto para ver las novedades.
-          </p>
+    <!-- Alert / info card -->
+    {alert && (
+      <div class="p-6 md:p-8 rounded-xl bg-slate-50/80 border border-slate-100">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center">
+            <PhHeart size={20} weight="light" class="text-primary" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-medium text-slate-700 mb-1">{alert.title}</h3>
+            <p class="text-slate-400 leading-relaxed text-sm">{alert.body}</p>
+          </div>
         </div>
       </div>
-    </div>
+    )}
 
   </div>
 </ContentLayout>

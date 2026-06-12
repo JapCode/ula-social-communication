@@ -1,30 +1,41 @@
 ---
+import { getEntry } from "astro:content";
 import Layout from "../layouts/Layout.astro";
-import FloatingNav from "../components/FloatingNav.astro";
 import TopNav from "../components/TopNav.astro";
 import HeroSection from "../components/HeroSection.astro";
 import NewsSection from "../components/NewsSection.astro";
 import VideoSection from "../components/VideoSection.astro";
 import QuickAccessSection from "../components/QuickAccessSection.astro";
 import Footer from "../components/Footer.astro";
+import BackToTop from "../components/BackToTop.astro";
 import WhatsAppButton from "../components/WhatsAppButton.astro";
 import SearchModal from "../components/SearchModal.astro";
 import "../styles/global.css";
+
+const page = await getEntry("pages", "home");
+if (!page) {
+  throw new Error(
+    '[index.astro] Entry "pages/home" not found. Make sure src/content/pages/home.md exists and the content store is synced. Run "pnpm run build" to regenerate.'
+  );
+}
+const { hero, quickAccess, news, video, footer } = page.data;
 ---
 
-<Layout title="Comunicación Social ULA NURR | Discovery" loadAnimations>
-	<!-- <FloatingNav /> -->
+		<Layout title="Comunicación Social ULA NURR | Discovery">
 	<TopNav />
 	<main id="main-content" class="relative" role="main">
-		<HeroSection />
-		<QuickAccessSection />
-		<NewsSection />
-		<VideoSection />
+		<HeroSection hero={hero} />
+		<QuickAccessSection quickAccess={quickAccess} />
+		<NewsSection news={news} />
+		<VideoSection video={video} />
 	</main>
-	<Footer />
+	<Footer footer={footer} />
 	<WhatsAppButton />
+	<BackToTop />
 	<SearchModal />
 </Layout>
+
+<!-- GSAP/Lenis animations removed — CSS-native hover/scroll effects used instead. Saved ~55KB gzipped. -->
 
 <style is:global>
 	#inicio,

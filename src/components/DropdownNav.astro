@@ -20,21 +20,9 @@ import {
   PhTrendUp,
   PhUserPlus,
 } from "phosphor-icons-astro";
+import type { DropdownSection } from "@/data/navigation";
 
-// Get current path for active state
 const currentPath = Astro.url.pathname;
-
-interface DropdownItem {
-  label: string;
-  href: string;
-  description?: string;
-  icon?: string;
-}
-
-interface DropdownSection {
-  heading?: string;
-  items: DropdownItem[];
-}
 
 interface Props {
   label: string;
@@ -43,7 +31,7 @@ interface Props {
 
 const { label, sections } = Astro.props;
 
-// Icon component mapping
+// Icon component mapping (runtime lookup)
 const iconMap: Record<string, any> = {
   eye: PhEye,
   "graduation-cap": PhGraduationCap,
@@ -101,17 +89,17 @@ const hasActiveItem = sections.some((section) =>
     />
   </button>
 
-  <!-- Dropdown panel -->
+  <!-- Dropdown panel with scale+fade entry animation -->
   <div
-    class="absolute top-full left-1/2 -translate-x-1/2 opacity-0 invisible group-hover/dropdown:opacity-100 group-hover/dropdown:visible group-focus-within/dropdown:opacity-100 group-focus-within/dropdown:visible transition-all duration-250 ease-out z-[200] dropdown-panel"
-    style="transform-origin: top center;"
+    class="absolute top-full left-1/2 -translate-x-1/2 opacity-0 invisible group-hover/dropdown:opacity-100 group-hover/dropdown:visible group-focus-within/dropdown:opacity-100 group-focus-within/dropdown:visible transition-all duration-200 ease-out dropdown-panel"
+    style="transform-origin: top center; transform: scale(0.95) translateX(-50%);"
     aria-label={label}
     data-dropdown-panel
   >
     <!-- Transparent bridge to prevent hover gap -->
     <div class="absolute -top-3 left-0 right-0 h-3" aria-hidden="true"></div>
     <div
-      class="bg-[var(--color-surface-elevated)] border border-[rgba(226,232,240,0.5)] shadow-luma rounded-luma p-3 min-w-[300px] pt-3"
+      class="bg-[var(--color-surface-elevated)] border border-tinted shadow-luma rounded-luma p-3 min-w-[300px] pt-3"
     >
       {
         sections.map((section, sectionIndex) => (
@@ -182,79 +170,110 @@ const hasActiveItem = sections.some((section) =>
 
 <script>
   document.addEventListener('astro:page-load', () => {
-    // Keyboard accessibility for dropdown menus
-  document.querySelectorAll('[data-dropdown]').forEach((dropdown) => {
-    const trigger = dropdown.querySelector<HTMLButtonElement>('[data-dropdown-trigger]');
-    const panel = dropdown.querySelector<HTMLElement>('[data-dropdown-panel]');
-    const chevron = dropdown.querySelector<SVGElement>('[data-dropdown-chevron]');
-    if (!trigger || !panel) return;
+    // Keyboard accessibility + hover intent for dropdown menus
+    document.querySelectorAll('[data-dropdown]').forEach((dropdown) => {
+      const trigger = dropdown.querySelector<HTMLButtonElement>('[data-dropdown-trigger]');
+      const panel = dropdown.querySelector<HTMLElement>('[data-dropdown-panel]');
+      const chevron = dropdown.querySelector<SVGElement>('[data-dropdown-chevron]');
+      if (!trigger || !panel) return;
 
-    const getItems = () => Array.from(panel.querySelectorAll<HTMLAnchorElement>('a[href]'));
+      let closeTimeout: ReturnType<typeof setTimeout> | null = null;
 
-    function openDropdown() {
-      trigger.setAttribute('aria-expanded', 'true');
-      chevron?.classList.add('rotate-180');
-    }
+      const getItems = () => Array.from(panel.querySelectorAll<HTMLAnchorElement>('a[href]'));
 
-    function closeDropdown() {
-      trigger.setAttribute('aria-expanded', 'false');
-      chevron?.classList.remove('rotate-180');
-    }
-
-    // Toggle aria-expanded on focus
-    trigger.addEventListener('focus', openDropdown);
-
-    // Close on blur (when focus leaves the entire dropdown group)
-    dropdown.addEventListener('focusout', (e) => {
-      const relatedTarget = e.relatedTarget as Node | null;
-      if (!dropdown.contains(relatedTarget)) {
-        closeDropdown();
-      }
-    });
-
-    // Click toggle for touch devices
-    trigger.addEventListener('click', (e) => {
-      e.preventDefault();
-      const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
-      if (isExpanded) {
-        closeDropdown();
-      } else {
-        openDropdown();
-      }
-    });
-
-    // Arrow key navigation from trigger
-    trigger.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        const items = getItems();
-        if (items.length > 0) {
-          openDropdown();
-          items[0].focus();
+      function openDropdown() {
+        if (closeTimeout) {
+          clearTimeout(closeTimeout);
+          closeTimeout = null;
         }
+        trigger.setAttribute('aria-expanded', 'true');
+        chevron?.classList.add('rotate-180');
+        // Reset transform to scale(1) for entry animation
+        panel.style.transform = 'scale(1) translateX(-50%)';
       }
-    });
 
-    // Arrow key navigation within dropdown items
-    panel.addEventListener('keydown', (e) => {
-      const items = getItems();
-      const currentIndex = items.indexOf(document.activeElement as HTMLAnchorElement);
-
-      if (e.key === 'ArrowDown') {
-        e.preventDefault();
-        const next = items[(currentIndex + 1) % items.length];
-        next?.focus();
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault();
-        const prev = items[(currentIndex - 1 + items.length) % items.length];
-        prev?.focus();
-      } else if (e.key === 'Escape') {
-        e.preventDefault();
-        closeDropdown();
-        trigger.focus();
+      function closeDropdown() {
+        trigger.setAttribute('aria-expanded', 'false');
+        chevron?.classList.remove('rotate-180');
+        // Scale back down
+        panel.style.transform = 'scale(0.95) translateX(-50%)';
       }
-      // Tab naturally flows through items — no handler needed
+
+      function closeWithDelay() {
+        if (closeTimeout) clearTimeout(closeTimeout);
+        closeTimeout = setTimeout(() => {
+          // Only close if focus isn't inside the dropdown
+          if (!dropdown.contains(document.activeElement)) {
+            closeDropdown();
+          }
+        }, 200);
+      }
+
+      // ── Hover intent: open on mouseenter, close with delay on mouseleave ──
+      dropdown.addEventListener('mouseenter', openDropdown);
+      dropdown.addEventListener('mouseleave', closeWithDelay);
+
+      // ── Click toggle for touch devices ──
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        const isExpanded = trigger.getAttribute('aria-expanded') === 'true';
+        if (isExpanded) {
+          closeDropdown();
+        } else {
+          openDropdown();
+        }
+      });
+
+      // ── Focus: open when trigger is focused ──
+      trigger.addEventListener('focus', openDropdown);
+
+      // ── Close on blur when focus leaves the entire dropdown ──
+      dropdown.addEventListener('focusout', (e) => {
+        const relatedTarget = e.relatedTarget as Node | null;
+        if (!dropdown.contains(relatedTarget)) {
+          closeDropdown();
+        }
+      });
+
+      // ── Arrow key navigation from trigger ──
+      trigger.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          const items = getItems();
+          if (items.length > 0) {
+            openDropdown();
+            items[0].focus();
+          }
+        }
+      });
+
+      // ── Arrow key navigation within dropdown items ──
+      panel.addEventListener('keydown', (e) => {
+        const items = getItems();
+        const currentIndex = items.indexOf(document.activeElement as HTMLAnchorElement);
+
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          const next = items[(currentIndex + 1) % items.length];
+          next?.focus();
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          const prev = items[(currentIndex - 1 + items.length) % items.length];
+          prev?.focus();
+        } else if (e.key === 'Escape') {
+          e.preventDefault();
+          closeDropdown();
+          trigger.focus();
+        }
+        // Tab naturally flows through items — no handler needed
+      });
     });
-  });
   });
 </script>
+
+<style>
+  /* Ensure the scale(1) transition works smoothly on first open */
+  .dropdown-panel {
+    transition-property: opacity, visibility, transform !important;
+  }
+</style>

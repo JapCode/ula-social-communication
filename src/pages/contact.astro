@@ -6,60 +6,51 @@ import {
   PhMapPin,
   PhInstagramLogo,
   PhYoutubeLogo,
-  PhTwitterLogo,
+  PhXLogo,
   PhArrowRight,
 } from "phosphor-icons-astro";
+import { getEntry } from 'astro:content';
 
-const pageTitle = "Contacto";
-const pageSubtitle =
-  "Canales de comunicación con la Escuela de Comunicación Social del NURR";
+const pageEntry = await getEntry('pages', 'contact');
+const { title, subtitle, items = [] } = pageEntry?.data ?? {};
+
+const pageTitle = title ?? "Contacto";
+const pageSubtitle = subtitle ?? "Canales de comunicación con la Escuela de Comunicación Social del NURR";
+
+// Icon lookup — map icon name strings to Phosphor components
+const iconLookup: Record<string, any> = {
+  envelope: PhEnvelope,
+  phone: PhPhone,
+  "map-pin": PhMapPin,
+  "instagram-logo": PhInstagramLogo,
+  "x-logo": PhXLogo,
+  "youtube-logo": PhYoutubeLogo,
+};
+
+// Fallback icons by type (contact vs social) for backward compat
+const contactFallback = [PhEnvelope, PhPhone, PhMapPin];
+const socialFallback = [PhInstagramLogo, PhXLogo, PhYoutubeLogo];
+
+// First 3 items = contact methods, rest = social links
+const contactMethods = items.slice(0, 3).map((item, i) => ({
+  icon: (item.icon && iconLookup[item.icon]) || contactFallback[i] || PhEnvelope,
+  label: item.title ?? "",
+  value: item.description ?? "",
+  href: item.href ?? "#",
+  detail: item.detail ?? "",
+  external: item.href?.startsWith("http") ?? false,
+}));
+
+const socialLinks = items.slice(3).map((item, i) => ({
+  icon: (item.icon && iconLookup[item.icon]) || socialFallback[i] || PhInstagramLogo,
+  label: item.title ?? "",
+  href: item.href ?? "#",
+}));
+
 const breadcrumb = [{ label: "Inicio", href: "/" }];
-
-const contactMethods = [
-  {
-    icon: PhEnvelope,
-    label: "Correo electrónico",
-    value: "comunicacion@nurr.ula.ve",
-    href: "mailto:comunicacion@nurr.ula.ve",
-    detail: "Respondemos en 2–3 días hábiles",
-  },
-  {
-    icon: PhPhone,
-    label: "Teléfono",
-    value: "+58 272 221-2222",
-    href: "tel:+582722212222",
-    detail: "Lunes a Viernes, 8:00 AM – 4:00 PM",
-  },
-  {
-    icon: PhMapPin,
-    label: "Ubicación",
-    value: "Núcleo Universitario Rafael Rangel",
-    href: "https://maps.app.goo.gl/?q=N%C3%BAcleo+Universitario+Rafael+Rangel+Trujillo",
-    detail: "Trujillo, Estado Trujillo, Venezuela",
-    external: true,
-  },
-];
-
-const socialLinks = [
-  {
-    icon: PhInstagramLogo,
-    label: "Instagram",
-    href: "https://www.instagram.com/comunicacionnurr/",
-  },
-  {
-    icon: PhTwitterLogo,
-    label: "X (Twitter)",
-    href: "https://x.com/ComunicacionNURR",
-  },
-  {
-    icon: PhYoutubeLogo,
-    label: "YouTube",
-    href: "https://www.youtube.com/@ComunicacionNURR",
-  },
-];
 ---
 
-<ContentLayout title={pageTitle} subtitle={pageSubtitle} breadcrumb={breadcrumb} narrow={true}>
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} breadcrumb={breadcrumb} narrow={true} sectionTheme="admission">
   <div class="contact-grid">
 
     <!-- Contact Methods -->

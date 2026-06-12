@@ -27,6 +27,13 @@ const formattedDate = new Date(article.data.date).toLocaleDateString('es-VE', {
   year: 'numeric',
 });
 
+// Normalize image paths from Decap CMS (handles both relative and absolute paths)
+function normalizeImagePath(path: string | undefined | null): string | undefined {
+  if (!path) return undefined;
+  if (path.startsWith('/') || path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `/images/uploads/${path}`;
+}
+
 const pageTitle = article.data.title;
 const pageSubtitle = `${article.data.author} · ${formattedDate}`;
 ---
@@ -37,6 +44,7 @@ const pageSubtitle = `${article.data.author} · ${formattedDate}`;
   eyebrow={categoryLabels[article.data.category] || article.data.category}
   breadcrumb={[{ label: 'Portafolio', href: '/portfolio' }, { label: 'Artículos', href: '/portfolio/articles' }]}
   narrow
+  sectionTheme="portfolio"
 >
   <!-- Article Meta -->
   <div class="article-meta mb-8 flex flex-wrap items-center gap-4 text-sm text-slate-400">
@@ -54,9 +62,9 @@ const pageSubtitle = `${article.data.author} · ${formattedDate}`;
   </div>
 
   <!-- Cover Image -->
-  {article.data.coverImage && (
+  {normalizeImagePath(article.data.coverImage) && (
     <div class="mb-6">
-      <img src={article.data.coverImage} alt="" class="w-full rounded-[var(--radius-luma)]" />
+      <img src={normalizeImagePath(article.data.coverImage)} alt={`Portada del artículo: ${article.data.title}`} class="w-full rounded-[var(--radius-luma)]" />
     </div>
   )}
 
@@ -66,7 +74,7 @@ const pageSubtitle = `${article.data.author} · ${formattedDate}`;
   </article>
 
   <!-- Back to articles -->
-  <div class="mt-12 pt-8 border-t border-slate-100/50">
+  <div class="mt-12 pt-8 border-t border-tinted">
     <a href="/portfolio/articles" class="inline-flex items-center gap-2 text-primary text-sm font-semibold hover:underline group">
       <PhArrowLeft size={16} weight="regular" class="transition-transform duration-300 group-hover:-translate-x-1" />
       Volver a Artículos

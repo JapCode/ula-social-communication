@@ -1,69 +1,48 @@
 ---
 import ContentLayout from '@/layouts/ContentLayout.astro';
+import { getEntry } from 'astro:content';
 
-const pageTitle = "Misión y Visión";
+const pageEntry = await getEntry('pages', 'program-mission');
+const { title, headings = [], items = [] } = pageEntry?.data ?? {};
+
+const pageTitle = title ?? "Misión y Visión";
+const missionHeading = headings[0] ?? { title: "Misión", description: "", eyebrow: "Propósito" };
+const visionHeading = headings[1] ?? { title: "Visión", description: "", eyebrow: "Aspiración" };
+const values = items;
+
 const breadcrumb = [
   { label: "Programa", href: "/program" }
 ];
-
-const values = [
-  {
-    label: "Compromiso social",
-    description: "Vinculación con la comunidad y el desarrollo regional"
-  },
-  {
-    label: "Ética profesional",
-    description: "Integridad y responsabilidad en la práctica comunicacional"
-  },
-  {
-    label: "Excelencia académica",
-    description: "Formación rigurosa y actualizada en comunicación social"
-  },
-  {
-    label: "Inclusión y diversidad",
-    description: "Respeto a las múltiples voces y perspectivas culturales"
-  },
-  {
-    label: "Innovación",
-    description: "Adaptación creativa a los nuevos medios y tecnologías"
-  },
-  {
-    label: "Responsabilidad social",
-    description: "Contribución al bienestar colectivo a través de la comunicación"
-  }
-];
+const missionText = missionHeading.description || "Formar profesionales de la comunicación social con excelencia académica, compromiso ético y sensibilidad social, capaces de investigar, producir y gestionar mensajes comunicacionales en diversos contextos mediáticos, contribuyendo al desarrollo integral de la región andina venezolana.";
+const visionText = visionHeading.description || "Ser un programa de referencia nacional en la formación de comunicadores sociales, reconocido por su producción académica, su vinculación con la comunidad y su contribución al democratización de la comunicación en el estado Trujillo y la región andina.";
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb}>
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic">
   <div>
 
     <!-- Misión — foundation, subtle background -->
     <div class="p-8 md:p-10 bg-primary/5 rounded-luma mb-8">
       <span class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-2">
-        Propósito
+        {missionHeading.eyebrow || "Propósito"}
       </span>
-      <h2 class="text-2xl md:text-3xl font-display font-bold tracking-tight text-slate-900 mb-5">
-        Misión
+      <h2 class="text-2xl md:text-3xl font-display font-bold text-ink tracking-tight mb-5 leading-[1.1]">
+        {missionHeading.title}
       </h2>
       <p class="text-base md:text-lg text-slate-600 leading-relaxed max-w-prose">
-        Formar profesionales de la comunicación social con excelencia académica, compromiso ético y sensibilidad social,
-        capaces de investigar, producir y gestionar mensajes comunicacionales en diversos contextos mediáticos, contribuyendo
-        al desarrollo integral de la región andina venezolana.
+        {missionText}
       </p>
     </div>
 
     <!-- Visión — plain, forward-looking -->
     <div class="mb-20">
       <span class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-2">
-        Aspiración
+        {visionHeading.eyebrow || "Aspiración"}
       </span>
-      <h2 class="text-2xl md:text-3xl font-display font-bold tracking-tight text-slate-900 mb-5">
-        Visión
+      <h2 class="text-2xl md:text-3xl font-display font-bold text-ink tracking-tight mb-5 leading-[1.1]">
+        {visionHeading.title}
       </h2>
       <p class="text-base md:text-lg text-slate-600 leading-relaxed max-w-prose">
-        Ser un programa de referencia nacional en la formación de comunicadores sociales, reconocido por su producción
-        académica, su vinculación con la comunidad y su contribución al democratización de la comunicación en el
-        estado Trujillo y la región andina.
+        {visionText}
       </p>
     </div>
 
@@ -84,7 +63,7 @@ const values = [
             </span>
             <div>
               <h3 class="text-lg font-display font-bold text-slate-900 tracking-tight mb-1">
-                {value.label}
+                {value.title}
               </h3>
               <p class="text-sm text-slate-500 leading-relaxed">
                 {value.description}

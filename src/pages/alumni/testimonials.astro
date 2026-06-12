@@ -2,12 +2,16 @@
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import TestimonialCard from '@/components/TestimonialCard.astro';
 import { PhQuotes, PhEnvelopeSimple, PhArrowRight } from 'phosphor-icons-astro';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 
 const testimonials = await getCollection('testimonials');
 
-const pageTitle = "Testimonios de Egresados";
-const pageSubtitle = "Voces de quienes transformaron su formación en impacto real";
+const pageEntry = await getEntry('pages', 'alumni-testimonials');
+const { title, subtitle, body: introBody } = pageEntry?.data ?? {};
+
+const pageTitle = title ?? "Testimonios de Egresados";
+const pageSubtitle = subtitle ?? "Voces de quienes transformaron su formación en impacto real";
+const introText = introBody ?? "La Escuela de Comunicación Social del NURR ha formado profesionales que hoy ejercen con rigor y compromiso en medios, instituciones y organizaciones. Estas son sus historias.";
 ---
 
 <ContentLayout 
@@ -17,13 +21,11 @@ const pageSubtitle = "Voces de quienes transformaron su formación en impacto re
   breadcrumb={[
     { label: "Egresados", href: "/alumni" }
   ]}
+  sectionTheme="admission"
 >
   <!-- Intro — inline, not boxed -->
   <div class="testimonial-intro">
-    <p>
-      La Escuela de Comunicación Social del NURR ha formado profesionales que hoy ejercen con rigor 
-      y compromiso en medios, instituciones y organizaciones. Estas son sus historias.
-    </p>
+    <p>{introText}</p>
   </div>
 
   {testimonials.length > 0 ? (

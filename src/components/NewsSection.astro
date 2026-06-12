@@ -1,5 +1,38 @@
 ---
+import type { InferEntrySchema } from "astro:content";
 import { PhArrowRight } from "phosphor-icons-astro";
+
+export interface Props {
+  news: InferEntrySchema<"pages">["news"];
+}
+
+const { news } = Astro.props;
+
+/**
+ * Converts a date string (YYYY-MM-DD) to a relative time string in Spanish.
+ * Calculated at build time — best for static sites with regular deploys.
+ */
+function timeAgo(dateStr: string): string {
+  const date = new Date(dateStr + "T00:00:00");
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 0) return "Próximamente";
+  if (diffDays === 0) return "Hoy";
+  if (diffDays === 1) return "Ayer";
+  if (diffDays < 7) return `Hace ${diffDays} días`;
+  if (diffDays < 30) {
+    const weeks = Math.floor(diffDays / 7);
+    return `Hace ${weeks} ${weeks === 1 ? "semana" : "semanas"}`;
+  }
+  if (diffDays < 365) {
+    const months = Math.floor(diffDays / 30);
+    return `Hace ${months} ${months === 1 ? "mes" : "meses"}`;
+  }
+  const years = Math.floor(diffDays / 365);
+  return `Hace ${years} ${years === 1 ? "año" : "años"}`;
+}
 ---
 
 <!-- News section — split card layout with image -->
@@ -9,10 +42,8 @@ import { PhArrowRight } from "phosphor-icons-astro";
 			<!-- Image side -->
 			<div class="news-card-image">
 				<img
-					alt="Estudiantes de Comunicación Social en actividad académica"
-					src="/images/brooke-cagle-g1Kr4Ozfoac-unsplash.jpg"
-					srcset="/images/brooke-cagle-g1Kr4Ozfoac-unsplash.jpg 480w, /images/brooke-cagle-g1Kr4Ozfoac-unsplash.jpg 800w, /images/brooke-cagle-g1Kr4Ozfoac-unsplash.jpg 1200w"
-					sizes="(max-width: 768px) 100vw, 55vw"
+					alt={news.image_alt}
+					src={news.image}
 					loading="lazy"
 					width="800"
 					height="600"
@@ -22,39 +53,37 @@ import { PhArrowRight } from "phosphor-icons-astro";
 			<!-- Text side -->
 			<div class="news-card-content">
 				<!-- Tag -->
-				<span class="news-tag">Actualidad</span>
+				<span class="news-tag">{news.tag}</span>
 
 				<!-- Category -->
 				<span
 					class="text-[10px] font-bold tracking-[0.4em] uppercase text-slate-400 block"
 				>
-					Investigación
+					{news.category}
 				</span>
 
-				<!-- Title -->
+				<!-- Title — editorial headline -->
 				<h2
 					id="news-title"
-					class="text-2xl md:text-3xl lg:text-4xl font-display font-semibold tracking-tight text-slate-900 text-wrap balance leading-tight"
+					class="text-2xl md:text-4xl font-display font-bold text-ink tracking-tight text-wrap balance leading-[1.05]"
 				>
-					Nuevas narrativas transmedia en el entorno digital
+					{news.title}
 				</h2>
 
 				<!-- Description -->
 				<p
 					class="text-sm md:text-base text-slate-500 font-normal leading-relaxed"
 				>
-					Un recorrido por las últimas investigaciones de nuestra
-					facultad sobre el impacto de la tecnología en el
-					periodismo moderno.
+					{news.description}
 				</p>
 
 				<!-- Link -->
 				<div class="pt-2">
 					<a
-						href="/portfolio/articles"
+						href={news.link_href}
 						class="inline-flex items-center gap-2 text-sm font-bold text-primary hover:text-primary-deep transition-colors duration-300 group"
 					>
-						<span>Leer artículo</span>
+						<span>{news.link_text}</span>
 						<PhArrowRight
 							size={16}
 							weight="regular"
@@ -68,29 +97,15 @@ import { PhArrowRight } from "phosphor-icons-astro";
 
 		<!-- Secondary articles -->
 		<div class="news-secondary">
-			<a href="/portfolio/articles" class="news-secondary-item group">
-				<span class="text-[9px] font-bold tracking-[0.25em] uppercase text-primary/70 block mb-1">Comunicación</span>
-				<h3 class="text-base font-display font-semibold text-slate-900 group-hover:text-primary transition-colors duration-300 leading-snug">
-					Periodismo digital y el futuro de la información local
-				</h3>
-				<span class="text-xs text-slate-400 mt-1 block">Hace 3 días</span>
-			</a>
-
-			<a href="/student-life/events" class="news-secondary-item group">
-				<span class="text-[9px] font-bold tracking-[0.25em] uppercase text-primary/70 block mb-1">Eventos</span>
-				<h3 class="text-base font-display font-semibold text-slate-900 group-hover:text-primary transition-colors duration-300 leading-snug">
-					Foro: Inteligencia Artificial en la comunicación pública
-				</h3>
-				<span class="text-xs text-slate-400 mt-1 block">Hace 1 semana</span>
-			</a>
-
-			<a href="/student-life/community" class="news-secondary-item group">
-				<span class="text-[9px] font-bold tracking-[0.25em] uppercase text-primary/70 block mb-1">Comunidad</span>
-				<h3 class="text-base font-display font-semibold text-slate-900 group-hover:text-primary transition-colors duration-300 leading-snug">
-					Comunicación comunitaria: voces desde el territorio
-				</h3>
-				<span class="text-xs text-slate-400 mt-1 block">Hace 2 semanas</span>
-			</a>
+			{news.secondary.map((item) => (
+				<a href={item.href} class="news-secondary-item group">
+					<span class="text-[9px] font-bold tracking-[0.25em] uppercase text-primary/70 block mb-2">{item.category}</span>
+					<h3 class="text-base md:text-lg font-display font-bold text-ink group-hover:text-primary transition-colors duration-300 leading-snug tracking-tight">
+						{item.title}
+					</h3>
+					<time class="text-xs text-slate-400 mt-1 block" datetime={item.date}>{timeAgo(item.date)}</time>
+				</a>
+			))}
 		</div>
 	</div>
 </section>

@@ -1,232 +1,315 @@
 ---
-import {
-  PhMagnifyingGlass,
-  PhX,
-  PhCalendarBlank,
-  PhUsers,
-  PhUserPlus,
-  PhBookOpen,
-  PhGraduationCap,
-  PhChatCircleText,
-  PhArrowRight,
-} from "phosphor-icons-astro";
+import { getCollection } from 'astro:content';
+import { PhX, PhMagnifyingGlass } from 'phosphor-icons-astro';
+
+const faculty = await getCollection('faculty');
+const events = await getCollection('events');
+const articles = await getCollection('articles');
+const pages = await getCollection('pages');
+const staff = await getCollection('staff');
+const courses = await getCollection('courses');
+const testimonials = await getCollection('testimonials');
+
+// ── Convert pageId to actual site URL ─────────────────────
+function pageUrl(pageId: string): string {
+  if (pageId === 'home') return '/';
+  const parts = pageId.split('-');
+  if (parts.length > 1 && parts[parts.length - 1] === 'index') {
+    return '/' + parts.slice(0, -1).join('/') + '/';
+  }
+  if (pageId === 'student-life-events-listing') return '/student-life/events';
+  return '/' + parts.join('/');
+}
+
+// ── Build search index ─────────────────────────────────────
+type SearchEntry = {
+  title: string;
+  subtitle: string;
+  href: string;
+  keywords: string[];
+};
+
+const searchIndex: SearchEntry[] = [
+  // ── Faculty ──
+  ...faculty.map(f => ({
+    title: f.data.name,
+    subtitle: f.data.title,
+    href: '/program/faculty',
+    keywords: ['docente', 'profesor', f.data.name, f.data.title, f.data.specialization, f.data.email || '', f.data.bio || ''].filter(Boolean),
+  })),
+
+  // ── Events ──
+  ...events.map(e => ({
+    title: e.data.title,
+    subtitle: [e.data.type, e.data.location].filter(Boolean).join(' · '),
+    href: `/student-life/events/${e.id}`,
+    keywords: ['evento', e.data.title, e.data.description, e.data.location, e.data.type],
+  })),
+
+  // ── Articles ──
+  ...articles.map(a => ({
+    title: a.data.title,
+    subtitle: `${a.data.author} · ${a.data.category}`,
+    href: `/portfolio/articles/${a.id}`,
+    keywords: ['artículo', a.data.title, a.data.author, a.data.category, a.data.excerpt],
+  })),
+
+  // ── Pages (title pages) ──
+  ...pages.filter(p => p.data.pageType !== 'home').map(p => ({
+    title: p.data.title,
+    subtitle: '',
+    href: pageUrl(p.data.pageId),
+    keywords: [p.data.pageId, 'página', p.data.title, (p.data as any).subtitle || '', (p.data as any).body || ''].filter(Boolean),
+  })),
+
+  // ── Staff (authorities) ──
+  ...staff.map(s => ({
+    title: s.data.name,
+    subtitle: s.data.role,
+    href: '/program/authorities',
+    keywords: ['autoridad', 'personal', s.data.name, s.data.role, s.data.department, s.data.email || ''],
+  })),
+
+  // ── Courses ──
+  ...courses.map(c => ({
+    title: c.data.name,
+    subtitle: `${c.data.code} · ${c.data.semester}° semestre · ${c.data.credits} UC`,
+    href: '/academics/course-content',
+    keywords: ['curso', 'materia', c.data.name, c.data.code, c.data.description, `${c.data.semester} semestre`],
+  })),
+
+  // ── Testimonials ──
+  ...testimonials.map(t => ({
+    title: t.data.name,
+    subtitle: t.data.currentRole,
+    href: '/alumni/testimonials',
+    keywords: ['testimonio', 'egresado', t.data.name, t.data.currentRole, t.data.quote],
+  })),
+];
 ---
 
-<!-- Search Modal -->
 <div id="search-modal" class="fixed inset-0 z-[200] hidden" role="dialog" aria-modal="true" aria-label="Buscar contenido">
-	<!-- Backdrop -->
-	<div class="absolute inset-0 bg-slate-900/30" id="search-backdrop"></div>
-	
-	<!-- Modal panel -->
-	<div class="absolute inset-x-4 top-20 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-xl bg-white rounded-luma shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="search-panel">
-		<!-- Search input area -->
-		<div class="flex items-center gap-3 px-6 py-5 border-b border-slate-100/50">
-			<PhMagnifyingGlass size={18} weight="regular" class="text-slate-300 flex-shrink-0" aria-hidden="true" />
-			<input
-				type="search"
-				id="search-input"
-				class="w-full bg-transparent text-slate-900 text-sm font-normal placeholder:text-slate-400 outline-none"
-				placeholder="Buscar horarios, pénsum, recursos…"
-				autocomplete="off"
-				spellcheck="false"
-				aria-label="Buscar contenido"
-			/>
-			<kbd class="hidden md:inline-flex items-center px-2 py-0.5 bg-slate-100/50 rounded-luma text-[10px] font-bold text-slate-400">ESC</kbd>
-			<button id="search-close" class="p-1.5 rounded-full hover:bg-slate-50 transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center" aria-label="Cerrar búsqueda">
-				<PhX size={16} weight="regular" class="text-ink-muted" aria-hidden="true" />
-			</button>
-		</div>
-		
-		<!-- Results area -->
-		<div id="search-results" class="max-h-80 overflow-y-auto overscroll-y-contain">
-			<!-- Results injected by JS -->
-		</div>
-		
-		<!-- Empty state (hidden by default) -->
-		<div id="search-empty" class="hidden py-12 text-center">
-			<PhMagnifyingGlass size={32} weight="regular" class="text-slate-300 mx-auto mb-3" aria-hidden="true" />
-			<p class="text-sm text-slate-500 font-normal">No se encontraron resultados</p>
-			<p class="text-xs text-slate-400 mt-3 mb-4">Prueba buscando:</p>
-			<div class="flex flex-wrap justify-center gap-2">
-				<a href="/student-life/calendar" class="search-suggestion px-3 py-1.5 bg-slate-50 rounded-full text-xs text-primary hover:bg-primary/10 transition-colors">Horarios</a>
-				<a href="/academics/curriculum" class="search-suggestion px-3 py-1.5 bg-slate-50 rounded-full text-xs text-primary hover:bg-primary/10 transition-colors">Pénsum</a>
-				<a href="/admission/process" class="search-suggestion px-3 py-1.5 bg-slate-50 rounded-full text-xs text-primary hover:bg-primary/10 transition-colors">Inscripciones</a>
-				<a href="/academics/course-content" class="search-suggestion px-3 py-1.5 bg-slate-50 rounded-full text-xs text-primary hover:bg-primary/10 transition-colors">Biblioteca</a>
-			</div>
-		</div>
-		
-		<!-- Initial state -->
-		<div id="search-initial" class="py-10 text-center">
-			<p class="text-xs text-slate-400 font-normal">Escribe para buscar horarios, pénsum, recursos y más</p>
-		</div>
-	</div>
+  <!-- Backdrop -->
+  <div class="absolute inset-0 bg-slate-900/30" id="search-backdrop"></div>
+
+  <!-- Modal panel -->
+  <div class="absolute inset-x-4 top-20 md:inset-x-auto md:left-1/2 md:-translate-x-1/2 md:w-full md:max-w-xl bg-white rounded-luma shadow-2xl overflow-hidden transform scale-95 opacity-0 transition-all duration-300" id="search-panel">
+    <!-- Search input area -->
+    <div class="flex items-center gap-3 px-6 py-5 border-b border-tinted">
+      <PhMagnifyingGlass size={18} weight="regular" class="text-slate-300 flex-shrink-0" aria-hidden="true" />
+      <input
+        type="search"
+        id="search-input"
+        class="w-full bg-transparent text-slate-900 text-sm font-normal placeholder:text-slate-400 outline-none"
+        placeholder="Buscar docentes, cursos, eventos, artículos…"
+        autocomplete="off"
+        spellcheck="false"
+        aria-label="Buscar contenido"
+      />
+      <kbd class="hidden md:inline-flex items-center px-2 py-0.5 bg-[var(--color-border)] rounded-luma text-[10px] font-bold text-slate-400">ESC</kbd>
+      <button id="search-close" class="p-1.5 rounded-full hover:bg-slate-50 transition-colors min-w-[32px] min-h-[32px] flex items-center justify-center" aria-label="Cerrar búsqueda">
+        <PhX size={16} weight="regular" class="text-ink-muted" aria-hidden="true" />
+      </button>
+    </div>
+
+    <!-- Results area -->
+    <div id="search-results" class="max-h-80 overflow-y-auto overscroll-y-contain">
+      <!-- Results injected by JS -->
+    </div>
+
+    <!-- Empty state (hidden by default) -->
+    <div id="search-empty" class="hidden py-12 text-center">
+      <PhMagnifyingGlass size={32} weight="regular" class="text-slate-300 mx-auto mb-3" aria-hidden="true" />
+      <p class="text-sm text-slate-500 font-normal">No se encontraron resultados</p>
+      <p class="text-xs text-slate-400 mt-3 mb-4">Prueba buscando:</p>
+      <div class="flex flex-wrap justify-center gap-2">
+        <a href="/student-life/events" class="search-suggestion px-3 py-1.5 bg-slate-50 rounded-full text-xs text-primary hover:bg-primary/10 transition-colors">Eventos</a>
+        <a href="/academics/curriculum" class="search-suggestion px-3 py-1.5 bg-slate-50 rounded-full text-xs text-primary hover:bg-primary/10 transition-colors">Pénsum</a>
+        <a href="/admission/process" class="search-suggestion px-3 py-1.5 bg-slate-50 rounded-full text-xs text-primary hover:bg-primary/10 transition-colors">Inscripciones</a>
+        <a href="/program/faculty" class="search-suggestion px-3 py-1.5 bg-slate-50 rounded-full text-xs text-primary hover:bg-primary/10 transition-colors">Docentes</a>
+      </div>
+    </div>
+
+    <!-- Initial state -->
+    <div id="search-initial" class="py-10 text-center">
+      <p class="text-xs text-slate-400 font-normal">Escribe para buscar docentes, cursos, eventos y más</p>
+    </div>
+  </div>
 </div>
 
-<script>
+<script define:vars={{ searchIndex }}>
   document.addEventListener('astro:page-load', () => {
-    const searchData = [
-		{ title: "Horarios - Comunicación Social", category: "Horarios", href: "/student-life/calendar", keywords: ["horario", "clases", "cronograma", "horas", "semana"] },
-		{ title: "Pénsum - Malla Curricular", category: "Pénsum", href: "/academics/curriculum", keywords: ["malla", "materias", "pénsum", "plan", "estudios", "currículo"] },
-		{ title: "Inscripciones - Nuevos Ingresos", category: "Inscripciones", href: "/admission/process", keywords: ["inscripción", "ingreso", "registro", "nuevo", "admisión"] },
-		{ title: "Biblioteca Digital", category: "Biblioteca", href: "/academics/course-content", keywords: ["biblioteca", "libros", "recursos", "archivos", "digital"] },
-		{ title: "Calendario Académico", category: "Academia", href: "/student-life/calendar", keywords: ["calendario", "fechas", "período", "semestre", "vacaciones"] },
-		{ title: "Contacto", category: "Soporte", href: "/contact", keywords: ["secretaría", "contacto", "teléfono", "correo"] },
-	];
 
-	const categoryIcons: Record<string, string> = {
-		"Horarios": '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="16" y="40" width="224" height="176" rx="16"/><line x1="16" y1="104" x2="240" y2="104"/><line x1="64" y1="16" x2="64" y2="64"/><line x1="192" y1="16" x2="192" y2="64"/></svg>',
-		"Pénsum": '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M168 204v-20a20 20 0 0 0-20-20H64a20 20 0 0 0-20 20v20"/><circle cx="104" cy="84" r="36"/><path d="M212 204v-20a20 20 0 0 0-16-19.6"/><path d="M168 52a20 20 0 0 1 0 38.4"/></svg>',
-		"Inscripciones": '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M168 204v-20a20 20 0 0 0-20-20H64a20 20 0 0 0-20 20v20"/><circle cx="104" cy="84" r="36"/><line x1="192" y1="80" x2="192" y2="144"/><line x1="160" y1="112" x2="224" y2="112"/></svg>',
-		"Biblioteca": '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M64 200V48a16 16 0 0 1 16-16h128v192H80a16 16 0 0 1-16-16z"/><path d="M192 200H80a16 16 0 0 1 0-32h112"/></svg>',
-		"Academia": '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M64 88l64-40 64 40"/><path d="M192 120l32 16v80a16 16 0 0 1-16 16H48a16 16 0 0 1-16-16v-80l32-16"/><path d="M144 232v-32a16 16 0 0 0-32 0v32"/><path d="M192 64v136"/><path d="M64 64v136"/></svg>',
-		"Soporte": '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M216 168a16 16 0 0 1-16 16H80l-48 48V48a16 16 0 0 1 16-16h152a16 16 0 0 1 16 16z"/></svg>',
-	};
+    // Category → inline SVG icon map (Phosphor-style, 16px)
+    const iconSVG = {
+      default: '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M192 96v112a16 16 0 0 1-16 16H80a16 16 0 0 1-16-16V96"/><path d="M64 64h128v32H64z"/><path d="M88 64V48a8 8 0 0 1 8-8h64a8 8 0 0 1 8 8v16"/></svg>',
+      'Docentes': '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="88" cy="108" r="40"/><path d="M168 172a40 40 0 0 0-80 0"/><path d="M208 148v40"/><path d="M188 168h40"/><circle cx="172" cy="100" r="28"/><path d="M208 172a28 28 0 0 0-56 0"/></svg>',
+      'Eventos': '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="32" y="40" width="192" height="192" rx="16"/><line x1="32" y1="96" x2="224" y2="96"/><line x1="80" y1="24" x2="80" y2="64"/><line x1="176" y1="24" x2="176" y2="64"/><circle cx="124" cy="152" r="8" fill="currentColor"/></svg>',
+      'Artículos': '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M32 64a16 16 0 0 1 16-16h160a16 16 0 0 1 16 16v160H48a16 16 0 0 1-16-16Z"/><path d="M48 208h176"/><line x1="88" y1="96" x2="168" y2="96"/><line x1="88" y1="128" x2="136" y2="128"/></svg>',
+      'Información': '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="128" cy="128" r="96"/><line x1="128" y1="112" x2="128" y2="176"/><circle cx="128" cy="80" r="8" fill="currentColor"/></svg>',
+      'Personal': '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M216 208v-20a40 40 0 0 0-40-40h-8"/><path d="M96 148h-8a40 40 0 0 0-40 40v20"/><circle cx="128" cy="100" r="40"/></svg>',
+      'Cursos': '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M32 64a16 16 0 0 1 16-16h160a16 16 0 0 1 16 16v160H48a16 16 0 0 1-16-16Z"/><path d="M48 208h176"/><line x1="88" y1="96" x2="168" y2="96"/><line x1="88" y1="128" x2="136" y2="128"/></svg>',
+      'Testimonios': '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M216 168a16 16 0 0 1-16 16H80l-48 48V48a16 16 0 0 1 16-16h152a16 16 0 0 1 16 16z"/><circle cx="128" cy="104" r="8" fill="currentColor"/><circle cx="160" cy="104" r="8" fill="currentColor"/><circle cx="96" cy="104" r="8" fill="currentColor"/></svg>',
+    };
 
-	const modal = document.getElementById('search-modal');
-	const panel = document.getElementById('search-panel');
-	const backdrop = document.getElementById('search-backdrop');
-	const input = document.getElementById('search-input');
-	const results = document.getElementById('search-results');
-	const empty = document.getElementById('search-empty');
-	const initial = document.getElementById('search-initial');
-	const closeBtn = document.getElementById('search-close');
-	
-	let debounceTimer: ReturnType<typeof setTimeout>;
-	let selectedIndex = -1;
+    // ── Auto-detect category based on href path ──
+    function detectCategory(href) {
+      if (href === '/program/faculty') return 'Docentes';
+      if (href.startsWith('/student-life/events')) return 'Eventos';
+      if (href.startsWith('/portfolio/articles')) return 'Artículos';
+      if (href.startsWith('/program/authorities')) return 'Personal';
+      if (href.startsWith('/academics/course-content')) return 'Cursos';
+      if (href.startsWith('/alumni/testimonials')) return 'Testimonios';
+      if (href.startsWith('/student-life') || href.startsWith('/academics') || href.startsWith('/admission') || href.startsWith('/portfolio') || href.startsWith('/program') || href.startsWith('/alumni') || href === '/contact') return 'Información';
+      return 'Información';
+    }
 
-	function openSearch() {
-		if (!modal || !panel) return;
-		modal.classList.remove('hidden');
-		modal.setAttribute('aria-hidden', 'false');
-		setTimeout(() => {
-			panel.classList.remove('scale-95', 'opacity-0');
-			panel.classList.add('scale-100', 'opacity-100');
-		}, 10);
-		document.body.style.overflow = 'hidden';
-		setTimeout(() => input?.focus(), 300);
-	}
+    const modal = document.getElementById('search-modal');
+    const panel = document.getElementById('search-panel');
+    const backdrop = document.getElementById('search-backdrop');
+    const input = document.getElementById('search-input');
+    const results = document.getElementById('search-results');
+    const empty = document.getElementById('search-empty');
+    const initial = document.getElementById('search-initial');
+    const closeBtn = document.getElementById('search-close');
 
-	function closeSearch() {
-		if (!modal || !panel) return;
-		panel.classList.add('scale-95', 'opacity-0');
-		panel.classList.remove('scale-100', 'opacity-100');
-		setTimeout(() => {
-			modal.classList.add('hidden');
-			modal.setAttribute('aria-hidden', 'true');
-			input && (input.value = '');
-			results && (results.innerHTML = '');
-			empty?.classList.add('hidden');
-			initial?.classList.remove('hidden');
-			selectedIndex = -1;
-		}, 300);
-		document.body.style.overflow = '';
-	}
+    let debounceTimer;
+    let selectedIndex = -1;
 
-	function renderResults(items: typeof searchData) {
-		if (!results) return;
-		results.innerHTML = items.map((item, i) => `
-			<a href="${item.href}" class="search-result-item flex items-center gap-3 px-6 py-4 hover:bg-primary/[0.04] transition-colors duration-200 group ${i === 0 ? 'is-selected' : ''}" data-index="${i}">
-				<span class="flex-shrink-0 w-8 h-8 rounded-luma bg-primary/[0.08] flex items-center justify-center text-primary">
-					${categoryIcons[item.category] || ''}
-				</span>
-				<div class="min-w-0 flex-1">
-					<p class="text-sm font-medium text-slate-900 truncate">${item.title}</p>
-					<p class="text-[11px] text-slate-400 font-normal">${item.category}</p>
-				</div>
-				<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 256 256" fill="none" stroke="currentColor" stroke-width="16" stroke-linecap="round" stroke-linejoin="round" class="text-slate-300 flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" aria-hidden="true">
-					<path d="M88 48l80 80-80 80"/><line x1="48" y1="128" x2="168" y2="128"/>
-				</svg>
-			</a>
-		`).join('');
-	}
+    function openSearch() {
+      if (!modal || !panel) return;
+      modal.classList.remove('hidden');
+      modal.setAttribute('aria-hidden', 'false');
+      setTimeout(() => {
+        panel.classList.remove('scale-95', 'opacity-0');
+        panel.classList.add('scale-100', 'opacity-100');
+      }, 10);
+      document.body.style.overflow = 'hidden';
+      setTimeout(() => input?.focus(), 300);
+    }
 
-	function filterResults(query: string) {
-		const q = query.toLowerCase().trim();
-		if (!q) {
-			results && (results.innerHTML = '');
-			empty?.classList.add('hidden');
-			initial?.classList.remove('hidden');
-			return;
-		}
+    function closeSearch() {
+      if (!modal || !panel) return;
+      panel.classList.add('scale-95', 'opacity-0');
+      panel.classList.remove('scale-100', 'opacity-100');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.setAttribute('aria-hidden', 'true');
+        input && (input.value = '');
+        results && (results.innerHTML = '');
+        empty?.classList.add('hidden');
+        initial?.classList.remove('hidden');
+        selectedIndex = -1;
+      }, 300);
+      document.body.style.overflow = '';
+    }
 
-		initial?.classList.add('hidden');
-		
-		const filtered = searchData.filter(item =>
-			item.title.toLowerCase().includes(q) ||
-			item.category.toLowerCase().includes(q) ||
-			item.keywords.some(k => k.includes(q))
-		);
+    function renderResults(items) {
+      if (!results) return;
+      results.innerHTML = items.map((item, i) => {
+        const cat = detectCategory(item.href);
+        const icon = iconSVG[cat] || iconSVG.default;
+        return `
+          <a href="${item.href}" class="search-result-item flex items-center gap-3 px-6 py-4 hover:bg-primary/[0.04] transition-colors duration-200 group ${i === 0 ? 'is-selected' : ''}" data-index="${i}">
+            <span class="flex-shrink-0 w-8 h-8 rounded-luma bg-primary/[0.08] flex items-center justify-center text-primary">
+              ${icon}
+            </span>
+            <div class="min-w-0 flex-1">
+              <p class="text-sm font-medium text-slate-900 truncate">${item.title}</p>
+              <p class="text-[11px] text-slate-400 font-normal">${item.subtitle || cat}</p>
+            </div>
+          </a>
+        `;
+      }).join('');
+    }
 
-		if (filtered.length === 0) {
-			empty?.classList.remove('hidden');
-			results && (results.innerHTML = '');
-		} else {
-			empty?.classList.add('hidden');
-			renderResults(filtered);
-		}
-	}
+    function filterResults(query) {
+      const q = query.toLowerCase().trim();
+      if (!q) {
+        results && (results.innerHTML = '');
+        empty?.classList.add('hidden');
+        initial?.classList.remove('hidden');
+        return;
+      }
 
-	// Event listeners
-	input?.addEventListener('input', (e) => {
-		clearTimeout(debounceTimer);
-		debounceTimer = setTimeout(() => {
-			filterResults((e.target as HTMLInputElement).value);
-		}, 200);
-	});
+      initial?.classList.add('hidden');
 
-	input?.addEventListener('keydown', (e) => {
-		const items = results?.querySelectorAll('.search-result-item');
-		if (!items) return;
+      const filtered = searchIndex.filter(item =>
+        item.keywords.some(k => k.toLowerCase().includes(q)) ||
+        item.title.toLowerCase().includes(q) ||
+        item.subtitle.toLowerCase().includes(q)
+      );
 
-		if (e.key === 'ArrowDown') {
-			e.preventDefault();
-			selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
-			updateSelection(items);
-		} else if (e.key === 'ArrowUp') {
-			e.preventDefault();
-			selectedIndex = Math.max(selectedIndex - 1, 0);
-			updateSelection(items);
-		} else if (e.key === 'Enter' && selectedIndex >= 0) {
-			e.preventDefault();
-			(items[selectedIndex] as HTMLAnchorElement).click();
-		}
-	});
+      if (filtered.length === 0) {
+        empty?.classList.remove('hidden');
+        results && (results.innerHTML = '');
+      } else {
+        empty?.classList.add('hidden');
+        renderResults(filtered);
+      }
+    }
 
-	function updateSelection(items: NodeListOf<Element>) {
-		items.forEach((item, i) => {
-			item.classList.toggle('is-selected', i === selectedIndex);
-			item.classList.toggle('bg-primary/[0.04]', i === selectedIndex);
-		});
-	}
+    // Event listeners
+    input?.addEventListener('input', (e) => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => {
+        filterResults((e.target).value);
+      }, 200);
+    });
 
-	closeBtn?.addEventListener('click', closeSearch);
-	backdrop?.addEventListener('click', closeSearch);
+    input?.addEventListener('keydown', (e) => {
+      const items = results?.querySelectorAll('.search-result-item');
+      if (!items) return;
 
-	document.addEventListener('keydown', (e) => {
-		if (e.key === 'Escape' && !modal?.classList.contains('hidden')) {
-			closeSearch();
-		}
-	});
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+        updateSelection(items);
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        selectedIndex = Math.max(selectedIndex - 1, 0);
+        updateSelection(items);
+      } else if (e.key === 'Enter' && selectedIndex >= 0) {
+        e.preventDefault();
+        (items[selectedIndex]).click();
+      }
+    });
 
-	// Expose openSearch globally for the search button
-	(window as any).openSearch = openSearch;
+    function updateSelection(items) {
+      items.forEach((item, i) => {
+        item.classList.toggle('is-selected', i === selectedIndex);
+        item.classList.toggle('bg-primary/[0.04]', i === selectedIndex);
+      });
+    }
+
+    closeBtn?.addEventListener('click', closeSearch);
+    backdrop?.addEventListener('click', closeSearch);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !modal?.classList.contains('hidden')) {
+        closeSearch();
+      }
+    });
+
+    // Expose openSearch globally for the nav search button
+    window.openSearch = openSearch;
   });
 </script>
 
 <style>
-	#search-modal {
-		overscroll-behavior: contain;
-	}
-	
-	.search-result-item.is-selected {
-		background: rgba(0, 93, 170, 0.04);
-	}
-	
-	@media (max-width: 768px) {
-		#search-panel {
-			inset: 0;
-			border-radius: 0;
-			max-width: 100%;
-		}
-	}
+  #search-modal {
+    overscroll-behavior: contain;
+  }
+
+  .search-result-item.is-selected {
+    background: rgba(0, 93, 170, 0.04);
+  }
+
+  @media (max-width: 768px) {
+    #search-panel {
+      inset: 0;
+      border-radius: 0;
+      max-width: 100%;
+    }
+  }
 </style>

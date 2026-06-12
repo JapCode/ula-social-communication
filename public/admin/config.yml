@@ -1,0 +1,764 @@
+backend:
+  name: github
+  repo: JapCode/ula-social-communication
+  branch: main
+  base_url: https://ula-social-comunication.pages.dev
+  auth_endpoint: /api/auth
+
+local_backend: true
+
+media_folder: public/images/uploads
+public_folder: /images/uploads
+
+site_url: https://ula-social-comunication.pages.dev
+display_url: https://ula-social-comunication.pages.dev
+
+locale: es
+
+slug:
+  encoding: unicode
+  clean_accents: false
+
+x-page: &page
+  folder: src/content/pages
+  create: false
+  delete: false
+  path: '{{slug}}'
+  slug: '{{slug}}'
+  extension: .md
+  format: frontmatter
+  identifier_field: title
+  summary: '{{title}}'
+  sortable_fields: [title]
+  media_folder: ../../../public/images/uploads
+  public_folder: /images/uploads
+
+# ════════════════════════════════════════════════════════════
+collections:
+  # ── Artículos ─────────────────────────────────────────────
+  - name: articles
+    label: Artículos
+    label_singular: Artículo
+    folder: src/content/articles
+    create: true
+    delete: true
+    path: '{{slug}}'
+    slug: '{{slug}}'
+    extension: .md
+    format: frontmatter
+    identifier_field: title
+    summary: '{{title}} — {{author}}'
+    sortable_fields: [date, title]
+    media_folder: ../../public/images/uploads
+    public_folder: /images/uploads
+    view_filters:
+      - label: Investigación
+        field: category
+        pattern: investigacion
+      - label: Actualidad
+        field: category
+        pattern: actualidad
+      - label: Opinión
+        field: category
+        pattern: opinion
+      - label: Crónica
+        field: category
+        pattern: cronica
+    fields:
+      - {label: Título, name: title, widget: string}
+      - {label: Fecha, name: date, widget: datetime, format: YYYY-MM-DD}
+      - {label: Autor, name: author, widget: string}
+      - label: Categoría
+        name: category
+        widget: select
+        options:
+          - {label: Investigación, value: investigacion}
+          - {label: Actualidad, value: actualidad}
+          - {label: Opinión, value: opinion}
+          - {label: Crónica, value: cronica}
+      - {label: Extracto, name: excerpt, widget: text}
+      - {label: Imagen de Portada, name: coverImage, widget: image, required: false}
+      - {label: Contenido, name: body, widget: markdown}
+
+  # ── Eventos ───────────────────────────────────────────────
+  - name: events
+    label: Eventos
+    label_singular: Evento
+    folder: src/content/events
+    create: true
+    delete: true
+    path: '{{slug}}'
+    slug: '{{slug}}'
+    extension: .md
+    format: frontmatter
+    identifier_field: title
+    summary: '{{title}} — {{location}}'
+    sortable_fields: [date]
+    media_folder: ../../public/images/uploads
+    public_folder: /images/uploads
+    fields:
+      - {label: Título, name: title, widget: string}
+      - {label: Fecha, name: date, widget: datetime, format: YYYY-MM-DD}
+      - {label: Fecha de Fin, name: endDate, widget: datetime, format: YYYY-MM-DD, required: false}
+      - {label: Ubicación, name: location, widget: string}
+      - label: Tipo
+        name: type
+        widget: select
+        options:
+          - {label: Foro, value: foro}
+          - {label: Taller, value: taller}
+          - {label: Charla, value: charla}
+          - {label: Semana, value: semana}
+          - {label: Académico, value: academico}
+          - {label: Cultural, value: cultural}
+      - {label: Descripción, name: description, widget: text}
+      - {label: Imagen, name: coverImage, widget: image, required: false}
+      - {label: Contenido, name: body, widget: markdown, required: false}
+
+  # ── Profesores ────────────────────────────────────────────
+  - name: faculty
+    label: Profesores
+    label_singular: Profesor
+    folder: src/content/faculty
+    create: true
+    delete: true
+    path: '{{slug}}'
+    slug: '{{slug}}'
+    extension: .md
+    format: frontmatter
+    identifier_field: name
+    summary: '{{name}} — {{specialization}}'
+    media_folder: ../../public/images/uploads
+    public_folder: /images/uploads
+    fields:
+      - {label: Nombre, name: name, widget: string}
+      - {label: Título Académico, name: title, widget: string}
+      - {label: Especialización, name: specialization, widget: string}
+      - {label: Correo Electrónico, name: email, widget: string, required: false, pattern: ['^[\\w.@-]+$', 'Correo inválido']}
+      - {label: Biografía, name: bio, widget: text, required: false}
+      - {label: Foto, name: photo, widget: image, required: false}
+      - label: Estado
+        name: status
+        widget: select
+        default: active
+        options:
+          - {label: Activo, value: active}
+          - {label: Jubilado, value: retired}
+
+  # ── Personal Directivo ────────────────────────────────────
+  - name: staff
+    label: Personal Directivo
+    label_singular: Directivo
+    folder: src/content/staff
+    create: true
+    delete: true
+    path: '{{slug}}'
+    slug: '{{slug}}'
+    extension: .md
+    format: frontmatter
+    identifier_field: name
+    summary: '{{name}} — {{role}}'
+    media_folder: ../../public/images/uploads
+    public_folder: /images/uploads
+    fields:
+      - {label: Nombre, name: name, widget: string}
+      - {label: Cargo, name: role, widget: string}
+      - {label: Departamento, name: department, widget: string}
+      - {label: Correo Electrónico, name: email, widget: string, required: false}
+      - {label: Teléfono, name: phone, widget: string, required: false}
+      - {label: Foto, name: photo, widget: image, required: false}
+
+  # ── Testimonios ───────────────────────────────────────────
+  - name: testimonials
+    label: Testimonios
+    label_singular: Testimonio
+    folder: src/content/testimonials
+    create: true
+    delete: true
+    path: '{{slug}}'
+    slug: '{{slug}}'
+    extension: .md
+    format: frontmatter
+    identifier_field: name
+    summary: '{{name}} — {{currentRole}}'
+    media_folder: ../../public/images/uploads
+    public_folder: /images/uploads
+    fields:
+      - {label: Nombre, name: name, widget: string}
+      - {label: Año de Graduación, name: graduationYear, widget: number, value_type: int, min: 1980, max: 2030}
+      - {label: Cargo Actual, name: currentRole, widget: string}
+      - {label: Testimonio, name: quote, widget: text}
+      - {label: Foto, name: photo, widget: image, required: false}
+
+  # ── Cursos ────────────────────────────────────────────────
+  - name: courses
+    label: Cursos
+    label_singular: Curso
+    folder: src/content/courses
+    create: true
+    delete: true
+    path: '{{slug}}'
+    slug: '{{slug}}'
+    extension: .md
+    format: frontmatter
+    identifier_field: code
+    summary: '{{code}} — {{name}}'
+    sortable_fields: [code, semester]
+    fields:
+      - {label: Código, name: code, widget: string}
+      - {label: Nombre, name: name, widget: string}
+      - {label: Semestre, name: semester, widget: number, value_type: int, min: 1, max: 10}
+      - {label: Créditos, name: credits, widget: number, value_type: int, min: 1, max: 12}
+      - {label: Descripción, name: description, widget: text}
+      - {label: URL de PDF, name: pdfUrl, widget: string, required: false}
+
+  # ════════════════════════════════════════════════════════════
+  # Páginas — one collection per page, filtered by pageId
+  # Each editor sees exactly one entry — no ambiguity.
+  # ════════════════════════════════════════════════════════════
+  - name: page-home
+    label: "Página — Inicio"
+    <<: *page
+    filter: {field: pageId, value: home}
+    fields:
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "home"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "home"}
+      - {label: "Título (admin)", name: "title", widget: "string", hint: "Solo visible en el panel de administración"}
+      - label: "Hero — Sección Principal"
+        name: hero
+        widget: object
+        collapsed: true
+        fields:
+          - {label: "Etiqueta superior", name: "eyebrow", widget: "string", hint: "Ej: Núcleo Universitario Rafael Rangel"}
+          - {label: "Línea 1 del título", name: "title_line1", widget: "string"}
+          - {label: "Línea 2 del título", name: "title_line2", widget: "string"}
+          - {label: "Descripción", name: "description", widget: "text"}
+          - {label: "Texto del botón principal", name: "cta_text", widget: "string", hint: "Ej: Cómo Inscribirse"}
+          - {label: "Enlace del botón principal", name: "cta_link", widget: "string", hint: "Ej: /admission/process"}
+          - {label: "Texto del botón secundario", name: "secondary_text", widget: "string", required: false, hint: "Ej: Explorar"}
+          - {label: "Enlace del botón secundario", name: "secondary_link", widget: "string", required: false, hint: "Ej: #noticias"}
+      - label: "Accesos Rápidos"
+        name: quickAccess
+        widget: object
+        collapsed: true
+        fields:
+          - {label: "Título de la sección", name: "title", widget: "string", hint: "Ej: Accesos Rápidos"}
+          - label: "Elementos (máx. 4)"
+            name: items
+            widget: list
+            collapsed: true
+            summary: "{{fields.title}} → {{fields.href}}"
+            fields:
+              - {label: "Título", name: "title", widget: "string", hint: "Ej: Inscripciones, Eventos"}
+              - {label: "Subtítulo (móvil)", name: "subtitle", widget: "string", hint: "Texto corto, ej: Nuevos ingresos"}
+              - {label: "Subtítulo (escritorio)", name: "subtitle_desktop", widget: "string", hint: "Texto descriptivo más largo"}
+              - {label: "Enlace", name: "href", widget: "string", hint: "Ej: /admission/process"}
+              - {label: "Etiqueta ARIA", name: "aria_label", widget: "string", hint: "Para accesibilidad, ej: Inscripciones - Nuevos ingresos"}
+      - label: "Noticias — Sección Destacada"
+        name: news
+        widget: object
+        collapsed: true
+        fields:
+          - {label: "Etiqueta", name: "tag", widget: "string", hint: "Ej: Actualidad"}
+          - {label: "Categoría", name: "category", widget: "string", hint: "Ej: Investigación"}
+          - {label: "Título principal", name: "title", widget: "string"}
+          - {label: "Descripción", name: "description", widget: "text"}
+          - {label: "Imagen destacada", name: "image", widget: "image", hint: "Imagen principal de la sección"}
+          - {label: "Texto alternativo de la imagen", name: "image_alt", widget: "string"}
+          - {label: "Texto del enlace", name: "link_text", widget: "string", hint: "Ej: Leer artículo"}
+          - {label: "Enlace de la imagen", name: "link_href", widget: "string", hint: "Ej: /portfolio/articles"}
+          - label: "Noticias secundarias (hasta 3)"
+            name: secondary
+            widget: list
+            collapsed: true
+            summary: "{{fields.category}} — {{fields.title}}"
+            fields:
+              - {label: "Categoría", name: "category", widget: "string", hint: "Ej: Eventos, Comunidad"}
+              - {label: "Título", name: "title", widget: "string"}
+              - {label: "Fecha", name: "date", widget: "datetime", format: "YYYY-MM-DD"}
+              - {label: "Enlace", name: "href", widget: "string", hint: "Ej: /student-life/events"}
+      - label: "Video — Sección Experiencia"
+        name: video
+        widget: object
+        collapsed: true
+        fields:
+          - {label: "Etiqueta superior", name: "eyebrow", widget: "string", hint: "Ej: Experiencia ULA"}
+          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Insignia", name: "badge", widget: "string", hint: "Ej: Destacado"}
+          - {label: "ID de YouTube", name: "video_id", widget: "string", hint: "Ej: G_JfKOjwzwo"}
+          - {label: "Duración", name: "duration", widget: "string", hint: "Ej: 3:24"}
+          - {label: "Descripción", name: "description", widget: "text"}
+      - label: "Footer — Pie de Página"
+        name: footer
+        widget: object
+        collapsed: true
+        fields:
+          - {label: "Correo electrónico", name: "email", widget: "string", hint: "Ej: comunicacion@nurr.ula.ve"}
+          - {label: "Teléfono", name: "phone", widget: "string", hint: "Ej: +58 272 221-2222"}
+          - {label: "Horario", name: "schedule", widget: "string", hint: "Ej: Lun–Vie 8:00 AM – 4:00 PM"}
+          - {label: "Instagram (URL)", name: "social_instagram", widget: "string", required: false}
+          - {label: "Twitter / X (URL)", name: "social_twitter", widget: "string", required: false}
+          - {label: "YouTube (URL)", name: "social_youtube", widget: "string", required: false}
+  - name: page-contact
+    label: "Página — Contacto"
+    <<: *page
+    filter: {field: pageId, value: contact}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "minimal"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "contact"}
+      - {label: "Subtítulo", name: "subtitle", widget: "string", required: false}
+      - label: "Contactos y Redes Sociales"
+        name: items
+        widget: list
+        summary: '{{fields.title}}'
+        hint: "Los primeros 3 se muestran como métodos de contacto, el resto como enlaces a redes sociales"
+        fields:
+          - {label: "Título", name: "title", widget: "string", hint: "Ej: Correo electrónico, Instagram"}
+          - {label: "Valor", name: "description", widget: "string", hint: "Ej: comunicacion@nurr.ula.ve"}
+          - {label: "Detalle", name: "detail", widget: "string", required: false, hint: "Información adicional"}
+          - {label: "Icono", name: "icon", widget: "select", required: false, options: ["envelope", "phone", "map-pin", "instagram-logo", "twitter-logo", "youtube-logo"], hint: "Ícono que representa el contacto"}
+          - {label: "Enlace", name: "href", widget: "string", required: false, hint: "URL o mailto: / tel:"}
+  - name: page-history
+    label: "Página — Historia"
+    <<: *page
+    filter: {field: pageId, value: program-history}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "body-items-stats"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "program-history"}
+      - {label: "Cuerpo", name: "body", widget: "text", hint: "Texto principal"}
+      - label: "Elementos"
+        name: items
+        widget: list
+        collapsed: true
+        summary: '{{fields.title}}'
+        hint: "Hitos históricos"
+        fields:
+          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Descripción", name: "description", widget: "text", required: false}
+          - {label: "Detalle", name: "detail", widget: "string", required: false, hint: "Ej: fecha, año"}
+      - label: "Estadísticas"
+        name: stats
+        widget: list
+        collapsed: true
+        hint: "Cifras destacadas"
+        fields:
+          - {label: "Valor", name: "value", widget: "string", hint: "Ej: 500+"}
+          - {label: "Etiqueta", name: "label", widget: "string", hint: "Ej: egresados"}
+  - name: page-graduate-profile
+    label: "Página — Perfil del Egresado"
+    <<: *page
+    filter: {field: pageId, value: program-graduate-profile}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "body-items-headings"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "program-graduate-profile"}
+      - {label: "Cuerpo", name: "body", widget: "text", hint: "Texto principal"}
+      - label: "Elementos"
+        name: items
+        widget: list
+        collapsed: true
+        summary: '{{fields.title}}'
+        hint: "Competencias del egresado"
+        fields:
+          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Descripción", name: "description", widget: "text", required: false}
+          - label: "Icono"
+            name: icon
+            widget: select
+            required: false
+            options:
+              - {label: "Lápiz (Redacción)", value: pencil}
+              - {label: "Megáfono (Organizacional)", value: megaphone}
+              - {label: "Video (Audiovisual)", value: video}
+              - {label: "Globo (Digital)", value: globe}
+              - {label: "Tendencia (Investigación)", value: trend}
+              - {label: "Cámara (Fotografía)", value: camera}
+              - {label: "Micrófono (Radio)", value: microphone}
+              - {label: "Periódico (Prensa)", value: newspaper}
+              - {label: "Usuarios (Comunitario)", value: users}
+              - {label: "Chat (Redes Sociales)", value: chat}
+              - {label: "Presentación (Corporativo)", value: presentation}
+              - {label: "Libro (Académico)", value: book}
+              - {label: "Transmisión (TV)", value: broadcast}
+              - {label: "Celular (Móvil)", value: cellphone}
+              - {label: "Lupa (Investigación)", value: search}
+              - {label: "Foco (Innovación)", value: lightbulb}
+              - {label: "Estrella (Excelencia)", value: star}
+      - label: "Secciones"
+        name: headings
+        widget: list
+        collapsed: true
+        summary: '{{fields.title}}'
+        hint: "Campos de acción profesional"
+        fields:
+          - {label: "Título", name: "title", widget: "string", hint: "Ej: Áreas Principales"}
+          - label: "Elementos"
+            name: items
+            widget: list
+            required: false
+            collapsed: true
+            field: {label: "Nombre", name: "item", widget: "string"}
+  - name: page-internships
+    label: "Página — Pasantías"
+    <<: *page
+    filter: {field: pageId, value: academics-internships}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "internships"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "academics-internships"}
+      - {label: "Texto introductorio", name: "body", widget: "text", hint: "Aparece bajo el título, antes de los requisitos"}
+      - label: "Requisitos"
+        name: requirements
+        widget: list
+        collapsed: true
+        hint: "Cada requisito es un texto corto. Se muestran con un ícono de verificación."
+        field: {label: "Requisito", name: "requirement", widget: "string"}
+      - label: "Modalidades"
+        name: modalities
+        widget: list
+        collapsed: true
+        summary: '{{fields.title}}'
+        hint: "Tipos de pasantía disponibles (tarjetas con ícono)"
+        fields:
+          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Descripción", name: "description", widget: "text", required: false}
+          - label: "Ícono"
+            name: icon
+            widget: select
+            required: false
+            default: Briefcase
+            options:
+              - {label: "Maletín", value: Briefcase}
+              - {label: "Corazón", value: Heart}
+              - {label: "Birrete", value: GraduationCap}
+              - {label: "Edificios", value: Buildings}
+              - {label: "Manos", value: HandsClapping}
+              - {label: "Usuarios", value: UsersThree}
+              - {label: "Planeta", value: Globe}
+              - {label: "Hoja", value: Leaf}
+              - {label: "Estrella", value: Star}
+              - {label: "Cohete", value: Rocket}
+              - {label: "Bombillo", value: Lightbulb}
+              - {label: "Libro", value: BookOpen}
+      - {label: "URL del Formulario", name: "formUrl", widget: "string", required: false, hint: "Enlace para descargar el formato de solicitud"}
+      - label: "Contacto — Coordinación de Pasantías"
+        name: contact
+        widget: object
+        collapsed: true
+        fields:
+          - {label: "Nombre del coordinador", name: "name", widget: "string"}
+          - {label: "Cargo", name: "role", widget: "string", required: false}
+          - {label: "Correo electrónico", name: "email", widget: "string", required: false}
+          - {label: "Teléfono", name: "phone", widget: "string", required: false}
+          - {label: "Oficina", name: "office", widget: "string", required: false}
+  - name: page-association
+    label: "Página — Asociación de Estudiantes"
+    <<: *page
+    filter: {field: pageId, value: student-life-association}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "association"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "student-life-association"}
+      - {label: "Texto introductorio", name: "body", widget: "text", required: false, hint: "Descripción breve de la Asociación"}
+      - label: "Actividades — ¿Qué hace la Asociación?"
+        name: activities
+        widget: list
+        hint: "Cada actividad se muestra como un párrafo con viñeta"
+        field: {label: "Actividad", name: "activity", widget: "string"}
+      - {label: "Texto de participación", name: "participationText", widget: "text", required: false, hint: "Instrucciones sobre cómo participar (¿Cómo participar?)"}
+      - label: "Aviso informativo"
+        name: alert
+        hint: "Tarjeta opcional que se muestra al final de la página"
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Texto", name: "body", widget: "text"}
+  - name: page-groups
+    label: "Página — Grupos y Talleres"
+    <<: *page
+    filter: {field: pageId, value: student-life-groups}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "groups"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "student-life-groups"}
+      - {label: "Texto introductorio", name: "body", widget: "text", required: false, hint: "Descripción breve de los grupos y talleres"}
+      - label: "Grupos"
+        name: groups
+        widget: list
+        collapsed: true
+        summary: '{{fields.title}}'
+        hint: "Grupos estudiantiles activos"
+        fields:
+          - {label: "Nombre del grupo", name: "title", widget: "string"}
+          - {label: "Descripción", name: "description", widget: "text", required: false}
+          - {label: "Detalle", name: "detail", widget: "string", required: false, hint: "Ej: Encuentros semanales · Cupo limitado"}
+          - label: "Ícono"
+            name: icon
+            widget: select
+            required: false
+            default: Users
+            options:
+              - {label: "Usuarios", value: Users}
+              - {label: "Cine", value: FilmStrip}
+              - {label: "Teatro", value: MaskHappy}
+              - {label: "Radio", value: MicrophoneStage}
+              - {label: "Fotografía", value: Camera}
+              - {label: "Escritura", value: PenNib}
+              - {label: "Música", value: MusicNote}
+              - {label: "Artes visuales", value: Palette}
+              - {label: "Videojuegos", value: GameController}
+              - {label: "Lectura", value: BookOpen}
+              - {label: "Podcast", value: Headphones}
+              - {label: "Video", value: Video}
+              - {label: "Innovación", value: Lightbulb}
+              - {label: "Estrella", value: Star}
+              - {label: "Cohete", value: Rocket}
+      - label: "Talleres"
+        name: workshops
+        widget: list
+        collapsed: true
+        summary: '{{fields.title}}'
+        hint: "Talleres disponibles"
+        fields:
+          - {label: "Nombre del taller", name: "title", widget: "string"}
+          - {label: "Descripción", name: "description", widget: "text", required: false}
+          - {label: "Detalle", name: "detail", widget: "string", required: false, hint: "Ej: Duración: 6 semanas · Cupo limitado"}
+          - label: "Ícono"
+            name: icon
+            widget: select
+            required: false
+            default: Users
+            options:
+              - {label: "Usuarios", value: Users}
+              - {label: "Cine", value: FilmStrip}
+              - {label: "Teatro", value: MaskHappy}
+              - {label: "Radio", value: MicrophoneStage}
+              - {label: "Fotografía", value: Camera}
+              - {label: "Escritura", value: PenNib}
+              - {label: "Música", value: MusicNote}
+              - {label: "Artes visuales", value: Palette}
+              - {label: "Videojuegos", value: GameController}
+              - {label: "Lectura", value: BookOpen}
+              - {label: "Podcast", value: Headphones}
+              - {label: "Video", value: Video}
+              - {label: "Innovación", value: Lightbulb}
+              - {label: "Estrella", value: Star}
+              - {label: "Cohete", value: Rocket}
+      - label: "CTA — Crear nuevo grupo"
+        hint: "Sección opcional al final de la página para incentivar nuevas propuestas"
+        name: cta
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Texto", name: "body", widget: "text"}
+          - {label: "Texto del botón", name: "label", widget: "string", required: false, hint: "Ej: Proponer una actividad"}
+  - name: page-community
+    label: "Página — Servicio Comunitario"
+    <<: *page
+    filter: {field: pageId, value: student-life-community}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "community"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "student-life-community"}
+      - {label: "Texto introductorio", name: "body", widget: "text", required: false, hint: "Descripción breve del servicio comunitario"}
+      - label: "Descripción — ¿En qué consiste?"
+        name: descriptionItems
+        widget: list
+        hint: "Cada elemento es un párrafo explicativo"
+        field: {label: "Párrafo", name: "item", widget: "text"}
+      - label: "Requisitos"
+        name: requirements
+        widget: list
+        hint: "Cada requisito se muestra con viñeta"
+        field: {label: "Requisito", name: "item", widget: "string"}
+      - label: "CTA — Iniciar proyecto"
+        hint: "Sección opcional de llamado a la acción"
+        name: cta
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Texto", name: "body", widget: "text", required: false}
+          - {label: "Texto del botón", name: "label", widget: "string", required: false, hint: "Ej: Contactar Coordinación"}
+      - label: "Aviso informativo"
+        hint: "Tarjeta opcional que se muestra al final de la página"
+        name: alert
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Texto", name: "body", widget: "text"}
+  - name: page-admission-process
+    label: "Página — Proceso de Admisión"
+    <<: *page
+    filter: {field: pageId, value: admission-process}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "content"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "admission-process"}
+      - {label: "Subtítulo", name: "subtitle", widget: "string", required: false}
+      - {label: "Etiqueta", name: "eyebrow", widget: "string", hint: "Ej: Admisión", required: false}
+      - {label: "Texto introductorio", name: "body", widget: "text", required: false}
+      - label: "Pasos del Proceso"
+        name: items
+        widget: list
+        summary: '{{fields.title}}'
+        hint: "Cada paso se muestra como un elemento en la línea de tiempo. El orden define la numeración."
+        fields:
+          - {label: "Título", name: "title", widget: "string", hint: "Nombre del paso (ej: Registro OPSU)"}
+          - {label: "Descripción", name: "description", widget: "text", hint: "Explicación del paso"}
+          - {label: "Fecha / Período", name: "detail", widget: "string", required: false, hint: "Ej: Enero – Febrero"}
+          - {label: "Icono", name: "icon", widget: "select", required: false, hint: "Ícono visual del paso", options: ["clipboard-text", "files", "pencil-simple-line", "megaphone", "student"]}
+          - {label: "Destacar", name: "emphasis", widget: "boolean", required: false, hint: "Marcar como paso decisivo (se resalta visualmente)", default: false}
+  - name: page-admission-requirements
+    label: "Página — Requisitos de Admisión"
+    <<: *page
+    filter: {field: pageId, value: admission-requirements}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "content-headings"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "admission-requirements"}
+      - {label: "Subtítulo", name: "subtitle", widget: "string", required: false}
+      - {label: "Etiqueta", name: "eyebrow", widget: "string", hint: "Ej: Admisión", required: false}
+      - label: "Documentos Requeridos"
+        name: items
+        widget: list
+        summary: '{{fields.title}}'
+        hint: "Documentos que debe presentar el aspirante"
+        fields:
+          - {label: "Título", name: "title", widget: "string", hint: "Nombre del documento"}
+          - {label: "Descripción", name: "description", widget: "text", hint: "Detalles sobre el documento"}
+      - label: "Sección — Requisitos Adicionales"
+        name: headings
+        widget: list
+        collapsed: true
+        summary: '{{fields.title}}'
+        hint: "Requisitos adicionales de elegibilidad"
+        fields:
+          - {label: "Título", name: "title", widget: "string", hint: "Ej: Requisitos Adicionales"}
+          - {label: "Elementos", name: "items", widget: "list", field: {label: "Requisito", name: "item", widget: "string"}}
+  - name: page-alumni-testimonials
+    label: "Página — Testimonios de Egresados"
+    <<: *page
+    filter: {field: pageId, value: alumni-testimonials}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "content"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "alumni-testimonials"}
+      - {label: "Subtítulo", name: "subtitle", widget: "string", required: false}
+      - {label: "Etiqueta", name: "eyebrow", widget: "string", hint: "Ej: Egresados", required: false}
+      - {label: "Texto introductorio", name: "body", widget: "text", required: false, hint: "Párrafo de introducción que aparece antes de los testimonios"}
+      - {label: "items", name: "items", widget: "hidden", default: []}
+  - name: page-alumni-continuing-education
+    label: "Página — Formación Continua"
+    <<: *page
+    filter: {field: pageId, value: alumni-continuing-education}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "content"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "alumni-continuing-education"}
+      - {label: "Subtítulo", name: "subtitle", widget: "string", required: false}
+      - {label: "Etiqueta", name: "eyebrow", widget: "string", hint: "Ej: Egresados", required: false}
+      - {label: "Texto introductorio", name: "body", widget: "text", required: false, hint: "Párrafo de introducción antes de los cursos"}
+      - label: "Cursos"
+        name: items
+        widget: list
+        summary: '{{fields.title}}'
+        hint: "Cada curso se muestra como una tarjeta"
+        fields:
+          - {label: "Título", name: "title", widget: "string", hint: "Nombre del curso"}
+          - {label: "Descripción", name: "description", widget: "text", hint: "Descripción del curso"}
+          - {label: "Duración", name: "detail", widget: "string", required: false, hint: "Ej: 40 horas"}
+          - {label: "Icono", name: "icon", widget: "select", required: false, options: ["newspaper", "video", "megaphone", "camera"], hint: "Ícono visual del curso"}
+          - {label: "Enlace", name: "href", widget: "string", required: false, hint: "URL para más información (ej: /contact)"}
+  - name: page-events-listing
+    label: "Página — Listado de Eventos"
+    <<: *page
+    filter: {field: pageId, value: student-life-events-listing}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "events-listing"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "student-life-events-listing"}
+      - {label: "Subtítulo", name: "subtitle", widget: "string", required: false}
+      - {label: "Texto introductorio", name: "body", widget: "text", required: false}
+      - label: "CTA — Organizar evento"
+        name: cta
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Texto", name: "body", widget: "text", required: false}
+          - {label: "Texto del botón", name: "label", widget: "string", required: false, hint: "Ej: Contactar Coordinación"}
+      - label: "Estado vacío"
+        name: emptyState
+        widget: object
+        required: false
+        collapsed: true
+        fields:
+          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Texto", name: "body", widget: "text", required: false}
+          - {label: "Texto del botón", name: "label", widget: "string", required: false}
+  - name: page-curriculum
+    label: "Página — Currículo"
+    <<: *page
+    filter: {field: pageId, value: academics-curriculum}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "headings"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "academics-curriculum"}
+      - {label: "URL del Pénsum PDF", name: "pdfUrl", widget: "string", required: false, hint: "Ruta al archivo PDF (ej: /pensum.pdf) o enlace externo"}
+      - label: "Secciones"
+        name: headings
+        widget: list
+        collapsed: true
+        summary: '{{fields.title}}'
+        hint: "Ciclos del pensum (nombre y descripción)"
+        fields:
+          - {label: "Título", name: "title", widget: "string", hint: "Ej: Ciclo Básico, Profesional"}
+          - {label: "Descripción", name: "description", widget: "string", required: false}
+  - name: page-course-content
+    label: "Página — Contenido de Cursos"
+    description: "Solo el título y el texto de esta página. Los cursos individuales se administran en la colección «Cursos» (icono de lista en el panel lateral)."
+    <<: *page
+    filter: {field: pageId, value: academics-course-content}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "body"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "academics-course-content"}
+      - {label: "Texto introductorio", name: "body", widget: "text", required: false, hint: "Primera línea = párrafo de introducción. Líneas siguientes = contenido adicional. Los cursos se gestionan desde la colección «Cursos»."}
+  - name: page-mission
+    label: "Página — Misión y Visión"
+    <<: *page
+    filter: {field: pageId, value: program-mission}
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "pageType", name: "pageType", widget: "hidden", default: "headings-items"}
+      - {label: "ID de Página", name: "pageId", widget: "hidden", default: "program-mission"}
+      - label: "Secciones"
+        name: headings
+        widget: list
+        collapsed: true
+        summary: '{{fields.title}}'
+        hint: "Bloques con título y sub-elementos"
+        fields:
+          - {label: "Título", name: "title", widget: "string", hint: "Ej: Ciclo Básico, Misión"}
+          - {label: "Descripción", name: "description", widget: "string", required: false}
+          - {label: "Pie", name: "eyebrow", widget: "string", required: false}
+      - label: "Elementos"
+        name: items
+        widget: list
+        collapsed: true
+        summary: '{{fields.title}}'
+        hint: "Valores institucionales"
+        fields:
+          - {label: "Título", name: "title", widget: "string"}
+          - {label: "Descripción", name: "description", widget: "text", required: false}

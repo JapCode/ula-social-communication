@@ -1,11 +1,10 @@
 ---
 import ContentLayout from '@/layouts/ContentLayout.astro';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 import {
   PhCalendarX,
   PhEnvelopeSimple,
   PhArrowRight,
-  PhClock,
   PhMapPin,
 } from 'phosphor-icons-astro';
 import { getTypeLabel, getTypeColors, getTypeIcon } from '@/lib/events';
@@ -13,36 +12,40 @@ import { getTypeLabel, getTypeColors, getTypeIcon } from '@/lib/events';
 const events = await getCollection('events');
 const sortedEvents = events.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 
-// Separate upcoming vs past
-const today = new Date();
-today.setHours(0, 0, 0, 0);
-const upcomingEvents = sortedEvents.filter(e => new Date(e.data.date) >= today);
-const pastEvents = sortedEvents.filter(e => new Date(e.data.date) < today);
+// Featured = most recent event
+const featured = sortedEvents[0] || null;
+const remaining = sortedEvents.slice(1);
 
-// Featured = next upcoming event
-const featured = upcomingEvents[0] || null;
-const remaining = upcomingEvents.slice(1);
+// ============================================================
+// Page content from CMS
+// ============================================================
 
-const pageTitle = "Eventos";
-const pageSubtitle = "Foros, charlas, seminarios y actividades especiales de la carrera";
+const pageEntry = await getEntry('pages', 'student-life-events-listing');
+
+if (!pageEntry) {
+  throw new Error('Events listing page entry not found');
+}
+
+const { title, subtitle, body, cta, emptyState } = pageEntry.data;
+const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
 ---
 
-<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Vida Estudiantil">
+<ContentLayout title={title} subtitle={subtitle} breadcrumb={breadcrumb} eyebrow="Vida Estudiantil" sectionTheme="student-life">
   <div class="py-4 md:py-8">
 
     <!-- Intro -->
-    <div class="mb-10 md:mb-14 max-w-2xl reveal-intro">
-      <p class="text-slate-500 leading-relaxed text-lg">
-        La Escuela de Comunicación Social organiza foros, talleres, charlas y eventos culturales a lo largo del año. Acá encontrás toda la programación.
-      </p>
-    </div>
+    {body && (
+      <div class="mb-10 md:mb-14 max-w-2xl reveal-intro">
+        <p class="text-slate-500 leading-relaxed text-lg">{body}</p>
+      </div>
+    )}
 
-    {upcomingEvents.length > 0 ? (
+    {sortedEvents.length > 0 ? (
       <>
-        <!-- Featured Event — next upcoming, prominent treatment -->
+        <!-- Featured Event — most recent, prominent treatment -->
         {featured && (
           <div class="mb-12 md:mb-16 reveal-intro">
-            <h2 class="text-[10px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-6 md:mb-8">Próximo Evento</h2>
+            <h2 class="text-[10px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-6 md:mb-8">Destacado</h2>
 
             {(() => {
               const eventDate = new Date(featured.data.date);
@@ -55,9 +58,9 @@ const pageSubtitle = "Foros, charlas, seminarios y actividades especiales de la 
               const TypeIcon = getTypeIcon(featured.data.type);
               return (
                 <a href={`/student-life/events/${featured.id}`} class="group block">
-                  <div class="bg-white border border-slate-100/50 rounded-luma overflow-hidden transition-all duration-300 hover:shadow-luma">
+                  <div class="bg-white border border-tinted rounded-luma overflow-hidden transition-all duration-300 hover:shadow-luma">
                     <div class="p-6 md:p-8 lg:p-10">
-                      <!-- Type badge + date -->
+                      {/* Type badge + date */}
                       <div class="flex items-center gap-3 mb-4">
                         <span class={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${getTypeColors(featured.data.type)}`}>
                           <TypeIcon size={12} weight="regular" />
@@ -66,17 +69,17 @@ const pageSubtitle = "Foros, charlas, seminarios y actividades especiales de la 
                         <span class="text-xs text-slate-400">{formattedDate}</span>
                       </div>
 
-                      <!-- Title -->
+                      {/* Title */}
                       <h3 class="text-xl md:text-2xl lg:text-3xl font-bold text-slate-900 tracking-tight mb-3 group-hover:text-primary transition-colors duration-300 leading-tight">
                         {featured.data.title}
                       </h3>
 
-                      <!-- Description -->
+                      {/* Description */}
                       <p class="text-sm md:text-base text-slate-500 leading-relaxed mb-5 max-w-2xl">
                         {featured.data.description}
                       </p>
 
-                      <!-- Location + CTA -->
+                      {/* Location + CTA */}
                       <div class="flex flex-wrap items-center gap-x-6 gap-y-3">
                         <div class="flex items-center gap-1.5 text-xs text-slate-400">
                           <PhMapPin size={14} weight="regular" />
@@ -95,12 +98,12 @@ const pageSubtitle = "Foros, charlas, seminarios y actividades especiales de la 
           </div>
         )}
 
-        <!-- Other upcoming events — list rows with dividers -->
+        <!-- All other events — list rows with dividers -->
         {remaining.length > 0 && (
           <div class="mb-12 md:mb-16">
-            <h2 class="text-[10px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-6 md:mb-8">Más Eventos</h2>
+            <h2 class="text-[10px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-6 md:mb-8">Todos los Eventos</h2>
 
-            <div class="divide-y divide-slate-100">
+            <div class="divide-y divide-tinted">
               {remaining.map((event, index) => {
                 const eventDate = new Date(event.data.date);
                 const formattedDate = eventDate.toLocaleDateString('es-VE', {
@@ -113,8 +116,8 @@ const pageSubtitle = "Foros, charlas, seminarios y actividades especiales de la 
                     <a href={`/student-life/events/${event.id}`} class="flex items-start gap-4 md:gap-6">
                       {/* Date block */}
                       <div class="flex-shrink-0 w-14 text-center pt-0.5">
-                        <span class="block text-lg font-bold text-slate-900 leading-none">{eventDate.getDate()}</span>
-                        <span class="block text-[10px] font-bold uppercase tracking-wider text-slate-400 mt-0.5">{formattedDate.split(' ')[1]}</span>
+                        <span class="block text-lg font-bold text-ink leading-none">{eventDate.getDate()}</span>
+                        <span class="block text-[10px] font-bold uppercase tracking-wider text-green mt-0.5">{formattedDate.split(' ')[1]}</span>
                       </div>
 
                       {/* Content */}
@@ -146,43 +149,6 @@ const pageSubtitle = "Foros, charlas, seminarios y actividades especiales de la 
             </div>
           </div>
         )}
-
-        <!-- Past events — collapsible -->
-        {pastEvents.length > 0 && (
-          <details class="past-events-group border-t border-slate-100 pt-8 mt-10 md:mt-14">
-            <summary class="flex items-center gap-3 cursor-pointer group list-none">
-              <PhClock size={18} weight="regular" class="text-slate-400 group-hover:text-primary transition-colors" />
-              <h2 class="text-sm font-bold uppercase tracking-[0.2em] text-slate-400 group-hover:text-slate-600 transition-colors">
-                Eventos Pasados ({pastEvents.length})
-              </h2>
-              <span class="ml-auto text-slate-300 group-open:rotate-180 transition-transform duration-300">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              </span>
-            </summary>
-            <div class="mt-6 divide-y divide-slate-100">
-              {pastEvents.map(event => {
-                const eventDate = new Date(event.data.date);
-                const formattedDate = eventDate.toLocaleDateString('es-VE', { day: 'numeric', month: 'short', year: 'numeric' });
-                return (
-                  <a
-                    href={`/student-life/events/${event.id}`}
-                    class="group flex items-center gap-4 py-4 transition-all duration-200 hover:bg-slate-50/50 rounded-lg px-2 -mx-2"
-                  >
-                    <div class="flex-shrink-0 text-xs font-semibold text-slate-300 w-24 font-mono">{formattedDate}</div>
-                    <div class="flex-1 min-w-0">
-                      <h3 class="text-sm font-medium text-slate-400 group-hover:text-slate-600 transition-colors truncate">
-                        {event.data.title}
-                      </h3>
-                    </div>
-                    <span class={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold uppercase tracking-wider opacity-50 ${getTypeColors(event.data.type)}`}>
-                      {getTypeLabel(event.data.type)}
-                    </span>
-                  </a>
-                );
-              })}
-            </div>
-          </details>
-        )}
       </>
     ) : (
       <!-- Empty State -->
@@ -190,39 +156,40 @@ const pageSubtitle = "Foros, charlas, seminarios y actividades especiales de la 
         <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-50 mb-5">
           <PhCalendarX size={32} weight="light" class="text-slate-300" />
         </div>
-        <h3 class="text-lg font-bold text-slate-700 mb-2">No hay eventos programados</h3>
-        <p class="text-sm text-slate-500 max-w-md mx-auto mb-6">
-          No hay eventos programados actualmente. Revisá próximamente o contactá a la coordinación para más información.
-        </p>
+        <h3 class="text-lg font-bold text-slate-700 mb-2">{emptyState?.title ?? 'No hay eventos programados'}</h3>
+        {emptyState?.body && <p class="text-sm text-slate-500 max-w-md mx-auto mb-6">{emptyState.body}</p>}
+        {emptyState?.label && (
+          <a href="/contact" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded-full hover:shadow-luma hover:-translate-y-0.5 transition-all duration-300">
+            {emptyState.label}
+            <PhArrowRight size={14} weight="regular" />
+          </a>
+        )}
       </div>
     )}
 
     <!-- CTA: Organize your own event -->
-    <div class="mt-10 md:mt-14 p-6 md:p-8 rounded-xl bg-slate-50/80 border border-slate-100">
-      <div class="flex items-start gap-4">
-        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center">
-          <PhEnvelopeSimple size={20} weight="light" class="text-primary" />
-        </div>
-        <div class="flex-1 min-w-0">
-          <h3 class="text-base font-medium text-slate-700 mb-1">
-            ¿Querés organizar un evento?
-          </h3>
-          <p class="text-slate-400 leading-relaxed text-sm mb-4">
-            ¿Eres estudiante o docente y quieres organizar un evento relacionado con Comunicación Social? 
-            Consultá los requisitos y contactá a la coordinación.
-          </p>
-          <div class="flex flex-wrap gap-3">
-            <a
-              href="/contact"
-              class="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-deep transition-colors"
-            >
-              Contactar Coordinación
-              <PhArrowRight size={14} weight="light" class="transition-transform duration-200 hover:translate-x-0.5" />
-            </a>
+    {cta && (
+      <div class="mt-10 md:mt-14 p-6 md:p-8 rounded-xl bg-slate-50/80 border border-slate-100">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center">
+            <PhEnvelopeSimple size={20} weight="light" class="text-primary" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-medium text-slate-700 mb-1">{cta.title}</h3>
+            {cta.body && <p class="text-slate-400 leading-relaxed text-sm mb-4">{cta.body}</p>}
+            <div class="flex flex-wrap gap-3">
+              <a
+                href="/contact"
+                class="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-deep transition-colors"
+              >
+                {cta.label ?? 'Contactar Coordinación'}
+                <PhArrowRight size={14} weight="light" class="transition-transform duration-200 hover:translate-x-0.5" />
+              </a>
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    )}
 
   </div>
 </ContentLayout>
@@ -278,29 +245,11 @@ const pageSubtitle = "Foros, charlas, seminarios y actividades especiales de la 
   .divide-y > .reveal-intro:nth-child(4) { transition-delay: 240ms; }
   .divide-y > .reveal-intro:nth-child(5) { transition-delay: 320ms; }
 
-  /* Past events collapse animation */
-  .past-events-group[open] summary ~ * {
-    animation: fadeIn 0.3s ease-out;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .past-events-group summary::-webkit-details-marker {
-    display: none;
-  }
-
   @media (prefers-reduced-motion: reduce) {
     .reveal-intro {
       opacity: 1;
       transform: none;
       transition: none;
-    }
-
-    .past-events-group[open] summary ~ * {
-      animation: none !important;
     }
   }
 </style>

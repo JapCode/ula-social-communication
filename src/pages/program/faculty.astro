@@ -1,20 +1,24 @@
 ---
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import FacultyCard from '@/components/FacultyCard.astro';
-import { PhUsers, PhMagnifyingGlass, PhClock, PhMapPin } from 'phosphor-icons-astro';
+import { PhUsers, PhMagnifyingGlass, PhClock, PhMapPin, PhCaretLeft, PhCaretRight } from 'phosphor-icons-astro';
 import { getCollection } from 'astro:content';
 
 const pageTitle = "Docentes";
 const breadcrumb = [
-  { label: "Programa", href: "/program" }
+  { label: "La Carrera", href: "/program" }
 ];
+
+const ITEMS_PER_PAGE = 12;
 
 const allFaculty = await getCollection('faculty');
 const activeFaculty = allFaculty.filter(f => f.data.status === 'active');
 const retiredFaculty = allFaculty.filter(f => f.data.status === 'retired');
+const activeTotalPages = Math.max(1, Math.ceil(activeFaculty.length / ITEMS_PER_PAGE));
+const retiredTotalPages = Math.max(1, Math.ceil(retiredFaculty.length / ITEMS_PER_PAGE));
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb}>
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic">
 
   <!-- Introductory context -->
   <p class="text-base md:text-lg text-slate-500 leading-relaxed max-w-2xl mb-8">
@@ -22,20 +26,18 @@ const retiredFaculty = allFaculty.filter(f => f.data.status === 'retired');
   </p>
 
   <!-- Search (client-side island) -->
-  {activeFaculty.length > 2 && (
-    <div class="mb-8">
-      <div class="relative max-w-sm">
-        <PhMagnifyingGlass size={18} weight="light" class="search-icon absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-        <input
-          type="search"
-          id="faculty-search"
-          class="search-input w-full pl-10 pr-4 py-2.5 bg-surface-elevated border border-slate-100/50 rounded-full text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all"
-          placeholder="Buscar por nombre, especialidad o cargo..."
-          aria-label="Buscar docentes"
-        />
-      </div>
+  <div class="mb-8">
+    <div class="relative max-w-sm">
+      <PhMagnifyingGlass size={18} weight="light" class="search-icon absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+      <input
+        type="search"
+        id="faculty-search"
+        class="search-input w-full pl-10 pr-4 py-2.5 bg-surface-elevated border border-tinted rounded-full text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all"
+        placeholder="Buscar por nombre, especialidad o cargo..."
+        aria-label="Buscar docentes"
+      />
     </div>
-  )}
+  </div>
 
   <!-- Empty state -->
   {allFaculty.length === 0 && (
@@ -50,52 +52,133 @@ const retiredFaculty = allFaculty.filter(f => f.data.status === 'retired');
 
   {allFaculty.length > 0 && (
     <>
-      <!-- Active Faculty -->
+      <!-- ============================================ -->
+      <!-- ACTIVE FACULTY                               -->
+      <!-- ============================================ -->
       {activeFaculty.length > 0 && (
-        <div class="mb-12">
+        <div class="mb-12 faculty-section" data-section="active">
           <span class="inline-block text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400 mb-4">
             Profesores Activos
           </span>
           <div id="faculty-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {activeFaculty.map(teacher => (
-              <FacultyCard
-                name={teacher.data.name}
-                title={teacher.data.title}
-                specialization={teacher.data.specialization}
-                email={teacher.data.email}
-                bio={teacher.data.bio}
-                status={teacher.data.status}
-              />
-            ))}
+            {activeFaculty.map((teacher, i) => {
+              const pageNum = Math.floor(i / ITEMS_PER_PAGE) + 1;
+              return (
+                <div data-page={pageNum} class="faculty-grid-item">
+                  <FacultyCard
+                    name={teacher.data.name}
+                    title={teacher.data.title}
+                    specialization={teacher.data.specialization}
+                    email={teacher.data.email}
+                    bio={teacher.data.bio}
+                    status={teacher.data.status}
+                  />
+                </div>
+              );
+            })}
           </div>
-          <p id="no-results" class="hidden text-center py-12 text-sm text-slate-400">
-            No se encontraron docentes con ese criterio de búsqueda.
+
+          <!-- Active pagination info -->
+          <div id="active-pagination-info" class="text-xs text-slate-400 mt-6 text-center">
+            Mostrando {Math.min(ITEMS_PER_PAGE, activeFaculty.length)}-{Math.min(ITEMS_PER_PAGE * 2, activeFaculty.length)} de {activeFaculty.length} docentes
+          </div>
+
+          <!-- Active pagination controls -->
+          {activeTotalPages > 1 && (
+            <nav id="active-pagination-controls" class="flex items-center justify-center gap-1.5 mt-3" aria-label="Paginación de profesores activos">
+              <button
+                id="active-page-prev"
+                class="pagination-btn inline-flex items-center justify-center w-9 h-9 rounded-full text-sm text-slate-500 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                aria-label="Página anterior"
+                disabled
+              >
+                <PhCaretLeft size={16} weight="bold" />
+              </button>
+
+              <!-- Page numbers injected dynamically by JS -->
+              <div id="active-page-numbers" class="flex items-center gap-1.5"></div>
+
+              <button
+                id="active-page-next"
+                class="pagination-btn inline-flex items-center justify-center w-9 h-9 rounded-full text-sm text-slate-500 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                aria-label="Página siguiente"
+              >
+                <PhCaretRight size={16} weight="bold" />
+              </button>
+            </nav>
+          )}
+
+          <!-- Active no-results -->
+          <p id="active-no-results" class="hidden text-center py-12 text-sm text-slate-400">
+            No se encontraron profesores activos con ese criterio de búsqueda.
           </p>
         </div>
       )}
 
-      <!-- Retired Faculty -->
+      <!-- ============================================ -->
+      <!-- RETIRED FACULTY                              -->
+      <!-- ============================================ -->
       {retiredFaculty.length > 0 && (
-        <div class="mt-12 pt-10 border-t border-slate-100/50">
+        <div class="mt-12 pt-10 border-t border-tinted faculty-section" data-section="retired">
           <span class="inline-block text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400 mb-4">
-            Profesores Eméritos
+            Profesores Jubilados
           </span>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {retiredFaculty.map(teacher => (
-              <FacultyCard
-                name={teacher.data.name}
-                title={teacher.data.title}
-                specialization={teacher.data.specialization}
-                bio={teacher.data.bio}
-                status={teacher.data.status}
-              />
-            ))}
+          <div id="retired-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {retiredFaculty.map((teacher, i) => {
+              const pageNum = Math.floor(i / ITEMS_PER_PAGE) + 1;
+              return (
+                <div data-retired-page={pageNum} class="retired-grid-item">
+                  <FacultyCard
+                    name={teacher.data.name}
+                    title={teacher.data.title}
+                    specialization={teacher.data.specialization}
+                    bio={teacher.data.bio}
+                    status={teacher.data.status}
+                  />
+                </div>
+              );
+            })}
           </div>
+
+          <!-- Retired pagination info -->
+          <div id="retired-pagination-info" class="text-xs text-slate-400 mt-6 text-center">
+            Mostrando {Math.min(ITEMS_PER_PAGE, retiredFaculty.length)}-{Math.min(ITEMS_PER_PAGE * 2, retiredFaculty.length)} de {retiredFaculty.length} docentes
+          </div>
+
+          <!-- Retired pagination controls -->
+          {retiredTotalPages > 1 && (
+            <nav id="retired-pagination-controls" class="flex items-center justify-center gap-1.5 mt-3" aria-label="Paginación de profesores jubilados">
+              <button
+                id="retired-page-prev"
+                class="pagination-btn inline-flex items-center justify-center w-9 h-9 rounded-full text-sm text-slate-500 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                aria-label="Página anterior"
+                disabled
+              >
+                <PhCaretLeft size={16} weight="bold" />
+              </button>
+
+              <!-- Page numbers injected dynamically by JS -->
+              <div id="retired-page-numbers" class="flex items-center gap-1.5"></div>
+
+              <button
+                id="retired-page-next"
+                class="pagination-btn inline-flex items-center justify-center w-9 h-9 rounded-full text-sm text-slate-500 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors"
+                aria-label="Página siguiente"
+              >
+                <PhCaretRight size={16} weight="bold" />
+              </button>
+            </nav>
+          )}
+
+          <!-- Retired no-results -->
+          <p id="retired-no-results" class="hidden text-center py-12 text-sm text-slate-400">
+            No se encontraron profesores jubilados con ese criterio de búsqueda.
+          </p>
         </div>
       )}
 
       <!-- Contact Guidance -->
-      <div class="mt-14 p-6 md:p-8 bg-surface-elevated border border-slate-100/50 rounded-luma">
+      <div class="mt-14 p-6 md:p-8 bg-surface-elevated border border-tinted rounded-luma">
         <div class="flex items-start gap-4">
           <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
             <PhClock size={20} weight="light" class="text-primary" />
@@ -122,36 +205,252 @@ const retiredFaculty = allFaculty.filter(f => f.data.status === 'retired');
   )}
 </ContentLayout>
 
-<!-- Client-side search island -->
+<!-- Client-side search & pagination island -->
 <script is:inline>
   document.addEventListener('DOMContentLoaded', () => {
-    const input = document.getElementById('faculty-search');
-    const grid = document.getElementById('faculty-grid');
-    const noResults = document.getElementById('no-results');
-    if (!input || !grid) return;
+    const PER_PAGE = 12;
+    const searchInput = document.getElementById('faculty-search');
 
-    input.addEventListener('input', () => {
-      const query = input.value.toLowerCase().trim();
-      const cards = grid.querySelectorAll('.faculty-card');
-      let visibleCount = 0;
+    // -------------------------------------------------------
+    // Helper: compute which page numbers to show with ellipsis
+    // -------------------------------------------------------
+    function getPageRange(totalPages, currentPage) {
+      const WINDOW = 5; // max numbered buttons (first/last/ellipsis excluded)
+      const pages = [];
 
-      cards.forEach(card => {
+      if (totalPages <= WINDOW + 2) {
+        for (let i = 1; i <= totalPages; i++) pages.push(i);
+        return pages;
+      }
+
+      // Always show first page
+      pages.push(1);
+
+      const half = Math.floor((WINDOW - 1) / 2);
+      let start = currentPage - half;
+      let end = currentPage + half;
+
+      if (start <= 2) {
+        start = 2;
+        end = Math.min(start + WINDOW - 1, totalPages - 1);
+      }
+      if (end >= totalPages - 1) {
+        end = totalPages - 1;
+        start = Math.max(end - WINDOW + 1, 2);
+      }
+
+      if (start > 2) pages.push('...');
+      for (let i = start; i <= end; i++) pages.push(i);
+      if (end < totalPages - 1) pages.push('...');
+
+      // Always show last page
+      pages.push(totalPages);
+
+      return pages;
+    }
+
+    // -------------------------------------------------------
+    // Factory: creates a paginator for a DOM section
+    // -------------------------------------------------------
+    function createPaginator(config) {
+      const {
+        gridId,
+        itemSelector,
+        infoId,
+        prevId,
+        nextId,
+        pageNumbersId,        // id of the container where page buttons are injected
+        noResultsId,
+      } = config;
+
+      const grid = document.getElementById(gridId);
+      const infoEl = document.getElementById(infoId);
+      const prevBtn = document.getElementById(prevId);
+      const nextBtn = document.getElementById(nextId);
+      const pageNumbersEl = document.getElementById(pageNumbersId);
+      const noResultsEl = document.getElementById(noResultsId);
+
+      const allItems = grid ? Array.from(grid.querySelectorAll(`.${itemSelector}`)) : [];
+
+      let currentPage = 1;
+      let totalPages = 1;
+      let filteredItems = [];
+
+      function cardFromItem(item) {
+        return item.querySelector('.faculty-card');
+      }
+
+      function cardMatchesQuery(card, query) {
+        if (!query) return true;
         const name = (card.getAttribute('data-faculty-name') || '').toLowerCase();
         const spec = (card.getAttribute('data-faculty-spec') || '').toLowerCase();
         const title = (card.getAttribute('data-faculty-title') || '').toLowerCase();
-        const match = !query || name.includes(query) || spec.includes(query) || title.includes(query);
-
-        if (match) {
-          card.style.display = '';
-          visibleCount++;
-        } else {
-          card.style.display = 'none';
-        }
-      });
-
-      if (noResults) {
-        noResults.classList.toggle('hidden', visibleCount > 0);
+        return name.includes(query) || spec.includes(query) || title.includes(query);
       }
+
+      /** Navigate to a specific page. */
+      function goToPage(page, query) {
+        currentPage = Math.max(1, Math.min(page, totalPages));
+        const start = (currentPage - 1) * PER_PAGE;
+        const end = start + PER_PAGE;
+
+        let visibleOnPage = 0;
+        allItems.forEach(item => {
+          const card = cardFromItem(item);
+          if (!card) { item.style.display = 'none'; return; }
+
+          const matchesSearch = cardMatchesQuery(card, query);
+          if (!matchesSearch) {
+            item.style.display = 'none';
+            return;
+          }
+
+          const itemIndex = filteredItems.indexOf(item);
+          const onPage = itemIndex >= start && itemIndex < end;
+          item.style.display = onPage ? '' : 'none';
+          if (onPage) visibleOnPage++;
+        });
+
+        // Update info text
+        if (infoEl) {
+          if (filteredItems.length === 0) {
+            infoEl.textContent = '';
+          } else {
+            const shownStart = start + 1;
+            const shownEnd = Math.min(end, filteredItems.length);
+            infoEl.textContent = `Mostrando ${shownStart}-${shownEnd} de ${filteredItems.length} docentes`;
+          }
+        }
+
+        // Show/hide no-results
+        if (noResultsEl) {
+          noResultsEl.classList.toggle('hidden', visibleOnPage > 0);
+        }
+
+        // Rebuild page number buttons
+        renderPageNumbers();
+
+        // Update prev/next
+        if (prevBtn) prevBtn.disabled = currentPage <= 1;
+        if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
+      }
+
+      /** Destroy and rebuild the page number buttons inside the container. */
+      function renderPageNumbers() {
+        if (!pageNumbersEl) return;
+        pageNumbersEl.innerHTML = '';
+
+        const range = getPageRange(totalPages, currentPage);
+
+        range.forEach(item => {
+          if (item === '...') {
+            const span = document.createElement('span');
+            span.className = 'inline-flex items-center justify-center w-9 h-9 text-xs text-slate-300 select-none';
+            span.textContent = '...';
+            pageNumbersEl.appendChild(span);
+          } else {
+            const btn = document.createElement('button');
+            const isActive = item === currentPage;
+            btn.className = [
+              'pagination-btn inline-flex items-center justify-center w-9 h-9 rounded-full text-sm font-medium transition-colors',
+              isActive ? 'bg-primary text-white' : 'text-slate-500 hover:bg-slate-100',
+            ].join(' ');
+            btn.textContent = item;
+            btn.setAttribute('aria-label', `Página ${item}`);
+            if (isActive) btn.setAttribute('aria-current', 'page');
+
+            const pageNum = item;
+            btn.addEventListener('click', () => {
+              const q = (searchInput ? searchInput.value.toLowerCase().trim() : '').toLowerCase().trim();
+              goToPage(pageNum, q);
+            });
+            btn.addEventListener('keydown', (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                const q = (searchInput ? searchInput.value.toLowerCase().trim() : '').toLowerCase().trim();
+                goToPage(pageNum, q);
+              }
+            });
+
+            pageNumbersEl.appendChild(btn);
+          }
+        });
+      }
+
+      /** Recompute filtered items from current search. */
+      function applyFilter(query) {
+        filteredItems = [];
+        allItems.forEach(item => {
+          const card = cardFromItem(item);
+          if (card && cardMatchesQuery(card, query)) {
+            filteredItems.push(item);
+          }
+        });
+
+        totalPages = Math.max(1, Math.ceil(filteredItems.length / PER_PAGE));
+        if (currentPage > totalPages) currentPage = totalPages;
+        goToPage(currentPage, query);
+        return filteredItems.length;
+      }
+
+      // Wire up prev/next events
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          const q = (searchInput ? searchInput.value.toLowerCase().trim() : '').toLowerCase().trim();
+          goToPage(currentPage - 1, q);
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          const q = (searchInput ? searchInput.value.toLowerCase().trim() : '').toLowerCase().trim();
+          goToPage(currentPage + 1, q);
+        });
+      }
+
+      return { applyFilter, goToPage };
+    }
+
+    // -------------------------------------------------------
+    // Create the two paginators
+    // -------------------------------------------------------
+    const activePaginator = createPaginator({
+      gridId: 'faculty-grid',
+      itemSelector: 'faculty-grid-item',
+      infoId: 'active-pagination-info',
+      prevId: 'active-page-prev',
+      nextId: 'active-page-next',
+      pageNumbersId: 'active-page-numbers',
+      noResultsId: 'active-no-results',
     });
+
+    const retiredPaginator = createPaginator({
+      gridId: 'retired-grid',
+      itemSelector: 'retired-grid-item',
+      infoId: 'retired-pagination-info',
+      prevId: 'retired-page-prev',
+      nextId: 'retired-page-next',
+      pageNumbersId: 'retired-page-numbers',
+      noResultsId: 'retired-no-results',
+    });
+
+    // -------------------------------------------------------
+    // Search: filter both sections, reset to page 1
+    // -------------------------------------------------------
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.toLowerCase().trim();
+        activePaginator.applyFilter(query);
+        retiredPaginator.applyFilter(query);
+      });
+    }
+
+    // -------------------------------------------------------
+    // Initial render
+    // -------------------------------------------------------
+    {
+      const query = (searchInput ? searchInput.value.toLowerCase().trim() : '').toLowerCase().trim();
+      activePaginator.applyFilter(query);
+      retiredPaginator.applyFilter(query);
+    }
   });
 </script>

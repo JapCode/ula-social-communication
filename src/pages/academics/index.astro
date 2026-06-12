@@ -1,40 +1,36 @@
 ---
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import SectionCard from '@/components/SectionCard.astro';
+import { getEntry } from 'astro:content';
 
-const pageTitle = "Oferta Académica";
-const pageSubtitle = "Todo lo que necesitas saber sobre el pensum, cursos e investigación de la carrera";
+const pageEntry = await getEntry('pages', 'academics-index');
+const { title, subtitle, items = [], stats = [] } = pageEntry?.data ?? {};
+
+const pageTitle = title ?? "Oferta Académica";
+const pageSubtitle = subtitle ?? "Todo lo que necesitas saber sobre el pensum, cursos e investigación de la carrera";
+
+// Stats: use CMS stats, fall back to defaults
+const displayStats = stats.length ? stats : [
+  { value: "10", label: "Semestres" },
+  { value: "180", label: "Créditos" },
+  { value: "50+", label: "Materias" },
+  { value: "4", label: "Mesas de trabajo" },
+];
 ---
 
-<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Estudios">
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Estudios" sectionTheme="academic">
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-    <SectionCard 
-      title="Currículo" 
-      description="Malla curricular completa de la carrera"
-      icon="tree-structure"
-      href="/academics/curriculum"
-    />
-    <SectionCard 
-      title="Contenido de Cursos" 
-      description="Material y programas por materia"
-      icon="book-open"
-      href="/academics/course-content"
-    />
-    <SectionCard 
-      title="Líneas de Investigación" 
-      description="Temas y proyectos de investigación"
-      icon="science"
-      href="/academics/research"
-    />
-    <SectionCard 
-      title="Pasantías" 
-      description="Requisitos y formularios"
-      icon="work"
-      href="/academics/internships"
-    />
+    {items.slice(0, 6).map(item => (
+      <SectionCard 
+        title={item.title ?? ""}
+        description={item.description ?? ""}
+        icon="tree-structure"
+        href={item.href ?? "#"}
+      />
+    ))}
   </div>
   
-  <div class="mt-16 p-8 bg-white border border-slate-100/50 rounded-luma shadow-luma">
+  <div class="mt-16 p-8 bg-white border border-tinted rounded-luma shadow-luma">
     <h3 class="text-lg font-bold text-slate-900 mb-4">Información Académica</h3>
     <p class="text-slate-500 leading-relaxed">
       La carrera de Comunicación Social en el NURR tiene una duración de 5 años (10 semestres) 
@@ -42,22 +38,12 @@ const pageSubtitle = "Todo lo que necesitas saber sobre el pensum, cursos e inve
       producción periodística, audiovisual, digital, investigación y práctica profesional.
     </p>
     <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-      <div class="text-center p-4 bg-slate-50/50 rounded-lg">
-        <span class="text-2xl font-bold text-primary">10</span>
-        <p class="text-xs text-slate-500 mt-1">Semestres</p>
-      </div>
-      <div class="text-center p-4 bg-slate-50/50 rounded-lg">
-        <span class="text-2xl font-bold text-primary">180</span>
-        <p class="text-xs text-slate-500 mt-1">Créditos</p>
-      </div>
-      <div class="text-center p-4 bg-slate-50/50 rounded-lg">
-        <span class="text-2xl font-bold text-primary">50+</span>
-        <p class="text-xs text-slate-500 mt-1">Materias</p>
-      </div>
-      <div class="text-center p-4 bg-slate-50/50 rounded-lg">
-        <span class="text-2xl font-bold text-primary">4</span>
-        <p class="text-xs text-slate-500 mt-1">Mesas de trabajo</p>
-      </div>
+      {displayStats.map(stat => (
+        <div class="text-center p-4 bg-slate-50/50 rounded-lg">
+          <span class="text-2xl font-bold text-primary">{stat.value}</span>
+          <p class="text-xs text-slate-500 mt-1">{stat.label}</p>
+        </div>
+      ))}
     </div>
   </div>
 </ContentLayout>

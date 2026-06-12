@@ -16,6 +16,7 @@ const categories = [
 
 const pageTitle = "Artículos Periodísticos";
 const pageSubtitle = "Reportajes, crónicas y análisis producidos por estudiantes y docentes";
+const breadcrumb = [{ label: "Portafolio", href: "/portfolio" }];
 
 function formatDate(date: string | Date): string {
   return new Date(date).toLocaleDateString('es-VE', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -24,9 +25,16 @@ function formatDate(date: string | Date): string {
 function catLabel(key: string): string {
   return categories.find(c => c.key === key)?.label || key;
 }
+
+// Normalize image paths from Decap CMS (handles both relative and absolute paths)
+function normalizeImagePath(path: string | undefined | null): string | undefined {
+  if (!path) return undefined;
+  if (path.startsWith('/') || path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `/images/uploads/${path}`;
+}
 ---
 
-<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Portafolio" narrow={true}>
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Portafolio" narrow={true} sectionTheme="portfolio" breadcrumb={breadcrumb}>
 
   <!-- Category Filter -->
   <nav class="mb-12" aria-label="Filtrar por categoría">
@@ -53,11 +61,11 @@ function catLabel(key: string): string {
             data-category={article.data.category}
           >
             <!-- Image -->
-            {article.data.coverImage ? (
+            {normalizeImagePath(article.data.coverImage) ? (
               <a href={`/portfolio/articles/${article.id}`} class="mb-8 block overflow-hidden rounded-luma aspect-video w-full ">
                 <img
-                  src={article.data.coverImage}
-                  alt=""
+                  src={normalizeImagePath(article.data.coverImage)}
+                  alt={article.data.title}
                   class={i === 0
                     ? 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03] m-0!'
                     : 'w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03] m-0!1'
@@ -68,8 +76,8 @@ function catLabel(key: string): string {
             ) : (
               <div class={
                 i === 0
-                  ? 'mb-6 flex aspect-video max-h-[300px] items-center justify-center rounded-luma border border-slate-100/50 bg-surface'
-                  : 'mb-6 flex aspect-video max-h-[180px] items-center justify-center rounded-luma border border-slate-100/50 bg-surface'
+                  ? 'mb-6 flex aspect-video max-h-[300px] items-center justify-center rounded-luma border border-tinted bg-surface'
+                  : 'mb-6 flex aspect-video max-h-[180px] items-center justify-center rounded-luma border border-tinted bg-surface'
               }>
                 <PhNewspaper size={i === 0 ? 64 : 32} weight="light" class="text-primary/15" />
               </div>
@@ -126,7 +134,7 @@ function catLabel(key: string): string {
   )}
 
   <!-- CTA -->
-  <div class="border-t border-slate-100/50 py-8">
+  <div class="border-t border-tinted py-8">
     <div class="flex items-start gap-6 md:gap-10">
       <span class="hidden md:flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-slate-100">
         <PhArrowRight size={20} weight="light" class="text-slate-300" />

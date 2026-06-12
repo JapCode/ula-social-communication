@@ -1,42 +1,35 @@
 ---
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import { PhVideo, PhMicrophone, PhCamera, PhPaintBrush, PhClock, PhMapPin, PhMonitor } from 'phosphor-icons-astro';
+import { getEntry } from 'astro:content';
 
-const pageTitle = "Laboratorio de Medios";
-const pageSubtitle = "Producción audiovisual, radio y contenido multimedia de los estudiantes";
+const pageEntry = await getEntry('pages', 'portfolio-media-lab');
+const { title, subtitle, items = [] } = pageEntry?.data ?? {};
+const body = pageEntry?.data?.body ?? pageEntry?.body ?? "";
 
-const disciplines = [
-  {
-    title: 'Producción de Video',
-    description: 'Los estudiantes producen documentales, videos institucionales, cortometrajes y contenido para redes sociales. Trabajan en todas las etapas del proceso: preproducción, grabación, edición y postproducción.',
-    icon: PhVideo,
-  },
-  {
-    title: 'Producción Radial',
-    description: 'La radio estudiantil es un espacio de práctica donde los estudiantes crean programas, noticieros, podcasts y contenido de audio para distintas audiencias y formatos.',
-    icon: PhMicrophone,
-  },
-  {
-    title: 'Fotografía',
-    description: 'Los estudiantes desarrollan proyectos fotográficos que van desde la fotografía periodística hasta la fotografía de autor, explorando diferentes técnicas y estilos.',
-    icon: PhCamera,
-  },
-  {
-    title: 'Diseño Digital',
-    description: 'Los estudiantes trabajan en branding, diseño editorial, infografías y contenido visual para medios digitales, desarrollando habilidades en herramientas de diseño profesional.',
-    icon: PhPaintBrush,
-  },
-];
+const pageTitle = title ?? "Laboratorio de Medios";
+const pageSubtitle = subtitle ?? "Producción audiovisual, radio y contenido multimedia de los estudiantes";
 
-const equipment = [
-  { icon: PhVideo, label: 'Cámaras de Video' },
-  { icon: PhCamera, label: 'Cámaras Fotográficas' },
-  { icon: PhMicrophone, label: 'Equipos de Audio' },
-  { icon: PhMonitor, label: 'Estaciones de Edición' },
-];
+// items[0-3] = disciplines (title, description)
+const discIcons = [PhVideo, PhMicrophone, PhCamera, PhPaintBrush];
+const disciplines = items.slice(0, 4).map((item, i) => ({
+  icon: discIcons[i] || PhVideo,
+  title: item.title ?? "",
+  description: item.description ?? "",
+}));
+
+// items[4-7] = equipment (title=label)
+const equipIcons = [PhVideo, PhCamera, PhMicrophone, PhMonitor];
+const equipment = items.slice(4, 8).map((item, i) => ({
+  icon: equipIcons[i] || PhMonitor,
+  label: item.title ?? "",
+}));
+
+const eyebrow = "Portafolio";
+const breadcrumb = [{ label: "Portafolio", href: "/portfolio" }];
 ---
 
-<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Portafolio">
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} breadcrumb={breadcrumb} eyebrow={eyebrow} sectionTheme="portfolio">
 
   <!-- Intro -->
   <div class="media-lab-intro mb-12 md:mb-16">
@@ -45,13 +38,11 @@ const equipment = [
       <span class="text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400">Espacio de creación</span>
     </div>
     <p class="text-slate-500 leading-relaxed max-w-2xl">
-      El Laboratorio de Medios es un espacio de creación y producción donde los estudiantes de Comunicación 
-      Social desarrollan sus habilidades en la elaboración de contenido audiovisual, radio, fotografía y 
-      diseño digital. Equipado con tecnología de vanguardia para apoyar las actividades académicas y extracurriculares.
+      {body || "El Laboratorio de Medios es un espacio de creación y producción donde los estudiantes de Comunicación Social desarrollan sus habilidades en la elaboración de contenido audiovisual, radio, fotografía y diseño digital. Equipado con tecnología de vanguardia para apoyar las actividades académicas y extracurriculares."}
     </p>
   </div>
 
-  <!-- Disciplines — alternating editorial rows -->
+  <!-- Disciplines -- alternating editorial rows -->
   <div class="disciplines mb-12 md:mb-16">
     <div class="flex items-center gap-3 mb-8">
       <span class="block w-6 h-px bg-primary/40"></span>
@@ -107,7 +98,7 @@ const equipment = [
       <span class="block w-6 h-px bg-primary/40"></span>
       <span class="text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400">Horario y ubicación</span>
     </div>
-    <div class="bg-surface-elevated border border-slate-100/50 p-6 md:p-8">
+    <div class="bg-surface-elevated border border-tinted p-6 md:p-8">
       <p class="text-slate-500 mb-5">
         El Laboratorio de Medios está disponible para todos los estudiantes de Comunicación Social.
       </p>

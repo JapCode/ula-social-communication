@@ -16,7 +16,7 @@ const director = staff.find(s => s.data.department === 'Dirección');
 const supportingStaff = staff.filter(s => s.data.department !== 'Dirección');
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb}>
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic">
 
   <!-- Introductory context -->
   <p class="text-base md:text-lg text-slate-500 leading-relaxed max-w-2xl mb-12">
@@ -74,7 +74,7 @@ const supportingStaff = staff.filter(s => s.data.department !== 'Dirección');
       )}
 
       <!-- Contact / Office Hours -->
-      <div class="mt-14 p-6 md:p-8 bg-surface-elevated border border-slate-100/50 rounded-luma">
+      <div class="mt-14 p-6 md:p-8 bg-surface-elevated border border-tinted rounded-luma">
         <div class="flex items-start gap-4">
           <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
             <PhClock size={20} weight="light" class="text-primary" />

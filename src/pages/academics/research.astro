@@ -12,59 +12,41 @@ import {
   PhPhone,
   PhMapPin,
 } from 'phosphor-icons-astro';
+import { getEntry } from 'astro:content';
 
-const pageTitle = "Líneas de Investigación";
-const breadcrumb = [{ label: "Académico", href: "/academics" }];
+const DEFAULT_INTRO = "La investigación es el motor de la innovación comunicacional. Nuestras líneas de investigación exploran los desafíos contemporáneos de la comunicación desde una perspectiva crítica, creativa y comprometida con la realidad regional.";
 
-const lineas = [
-  {
-    number: "01",
-    title: "Narrativas Transmedia",
-    description: "Nuevas formas narrativas en medios digitales y plataformas interactivas — cómo las historias se cuentan hoy a través de múltiples canales.",
-    icon: PhBookOpen,
-  },
-  {
-    number: "02",
-    title: "Periodismo Digital",
-    description: "Transformación del periodismo en entornos digitales: verificación de datos, narrativas multimedia y nuevos modelos de producción informativa.",
-    icon: PhNewspaper,
-  },
-  {
-    number: "03",
-    title: "Comunicación Comunitaria",
-    description: "Procesos comunicacionales en comunidades locales y rurales — medios comunitarios, participación ciudadana y desarrollo territorial.",
-    icon: PhUsers,
-  },
-  {
-    number: "04",
-    title: "Audiovisual y Cine",
-    description: "Producción audiovisual y análisis cinematográfico con enfoque regional — identidad, representación y nuevas estéticas.",
-    icon: PhVideo,
-  },
-  {
-    number: "05",
-    title: "Comunicación Política",
-    description: "Análisis de discursos, campañas y estrategias comunicacionales en el ámbito político y la opinión pública.",
-    icon: PhMegaphone,
-  },
-  {
-    number: "06",
-    title: "Semiótica y Discurso",
-    description: "Análisis de signos, símbolos y construcción de significado en medios — cómo el lenguaje moldea la percepción de la realidad.",
-    icon: PhBrain,
-  },
-];
+const pageEntry = await getEntry('pages', 'academics-research');
+const { title, body, items = [], thesis, contact } = pageEntry?.data ?? {};
 
-const contacto = {
-  coordinador: "Dr. Carlos Mendoza",
-  cargo: "Coordinador de Investigación",
-  email: "investigacion.comunicacion@ula.ve",
-  telefono: "+58 274 000-0000",
-  oficina: "Edificio Principal, Oficina 8",
+const pageTitle = title ?? "Líneas de Investigación";
+const introText = body ?? DEFAULT_INTRO;
+
+// Icons cycle through the list for each research line
+const lineaIcons = [PhBookOpen, PhNewspaper, PhUsers, PhVideo, PhMegaphone, PhBrain];
+const lineas = items.map((item, i) => ({
+  number: String(i + 1).padStart(2, '0'),
+  title: item.title ?? "",
+  description: item.description ?? "",
+  icon: lineaIcons[i % lineaIcons.length] || PhBookOpen,
+}));
+
+const thesisTitle = thesis?.title ?? "Trabajos de Grado";
+const thesisText = thesis?.text ?? "Los estudiantes pueden desarrollar sus trabajos de grado en cualquiera de las líneas de investigación establecidas. Cada línea cuenta con docentes asesores especializados.";
+const thesisNote = thesis?.note ?? "Consulta las líneas disponibles y asigna tu asesor antes de inscribir tu tema de tesis.";
+
+const contactInfo = {
+  coordinador: contact?.name ?? "Dr. Carlos Mendoza",
+  cargo: contact?.role ?? "Coordinador de Investigación",
+  email: contact?.email ?? "investigacion.comunicacion@ula.ve",
+  telefono: contact?.phone ?? "+58 274 000-0000",
+  oficina: contact?.office ?? "Edificio Principal, Oficina 8",
 };
+
+const breadcrumb = [{ label: "Académico", href: "/academics" }];
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb}>
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic">
   <section class="research-page">
 
     <!-- Opening -->
@@ -73,7 +55,7 @@ const contacto = {
         <span class="rp-opening__line"></span>
       </div>
       <p class="rp-opening__text">
-        La investigación es el motor de la innovación comunicacional. Nuestras líneas de investigación exploran los desafíos contemporáneos de la comunicación desde una perspectiva crítica, creativa y comprometida con la realidad regional.
+        {introText}
       </p>
     </div>
 
@@ -108,31 +90,31 @@ const contacto = {
     <div class="rp-bottom">
       <div class="rp-thesis">
         <PhGraduationCap size={24} weight="duotone" class="rp-thesis__icon" />
-        <h3 class="rp-thesis__title">Trabajos de Grado</h3>
+        <h3 class="rp-thesis__title">{thesisTitle}</h3>
         <p class="rp-thesis__text">
-          Los estudiantes pueden desarrollar sus trabajos de grado en cualquiera de las líneas de investigación establecidas. Cada línea cuenta con docentes asesores especializados.
+          {thesisText}
         </p>
         <p class="rp-thesis__note">
-          Consulta las líneas disponibles y asigna tu asesor antes de inscribir tu tema de tesis.
+          {thesisNote}
         </p>
       </div>
 
       <div class="rp-contact">
         <h3 class="rp-contact__title">Coordinación de Investigación</h3>
-        <p class="rp-contact__person">{contacto.coordinador}</p>
-        <p class="rp-contact__role">{contacto.cargo}</p>
+        <p class="rp-contact__person">{contactInfo.coordinador}</p>
+        <p class="rp-contact__role">{contactInfo.cargo}</p>
         <div class="rp-contact__details">
-          <a href={`mailto:${contacto.email}`} class="rp-contact__link">
+          <a href={`mailto:${contactInfo.email}`} class="rp-contact__link">
             <PhEnvelope size={14} weight="light" />
-            {contacto.email}
+            {contactInfo.email}
           </a>
           <span class="rp-contact__detail">
             <PhPhone size={14} weight="light" />
-            {contacto.telefono}
+            {contactInfo.telefono}
           </span>
           <span class="rp-contact__detail">
             <PhMapPin size={14} weight="light" />
-            {contacto.oficina}
+            {contactInfo.oficina}
           </span>
         </div>
       </div>

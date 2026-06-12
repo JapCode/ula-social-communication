@@ -10,51 +10,34 @@ import {
   PhEnvelopeSimple,
   PhWarning,
 } from 'phosphor-icons-astro';
+import { getEntry } from 'astro:content';
 
-const pageTitle = "Requisitos de Admisión";
-const pageSubtitle = "Documentación necesaria para ingresar a la carrera de Comunicación Social";
+const pageEntry = await getEntry('pages', 'admission-requirements');
+const { title, subtitle, items = [], headings = [] } = pageEntry?.data ?? {};
 
-const documentos = [
-  {
-    icon: PhIdentificationCard,
-    title: "Cédula de Identidad",
-    description: "Copia legible por ambos lados. Debe estar vigente."
-  },
-  {
-    icon: PhScroll,
-    title: "Constancia de Notas / Certificado de Estudios",
-    description: "Certificado de notas de los estudios anteriores (bachiller o técnico medio)."
-  },
-  {
-    icon: PhImage,
-    title: "Fotografías",
-    description: "Dos (2) fotos recientes tamaño carnet (2×2 cm), fondo blanco."
-  },
-  {
-    icon: PhGraduationCap,
-    title: "Título de Bachiller",
-    description: "Copia del título o constancia de estar en proceso de obtención."
-  },
-  {
-    icon: PhHeartbeat,
-    title: "Certificado de Salud",
-    description: "Emitido por el servicio de salud universitario o un centro autorizado."
-  }
-];
+const pageTitle = title ?? "Requisitos de Admisión";
+const pageSubtitle = subtitle ?? "Documentación necesaria para ingresar a la carrera de Comunicación Social";
 
-const requisitos = [
-  "Haber completado la educación media (bachiller)",
-  "Presentar y aprobar la prueba de admisión de la ULA",
-  "Realizar el pago de los derechos de inscripción",
-  "Asistir a la jornada de inducción"
-];
+// Icons hardcoded by index for the 5 documents
+const docIcons = [PhIdentificationCard, PhScroll, PhImage, PhGraduationCap, PhHeartbeat];
+const documentos = items.slice(0, 5).map((item, i) => ({
+  icon: docIcons[i] || PhIdentificationCard,
+  title: item.title ?? "",
+  description: item.description ?? "",
+}));
+
+// headings[0] = requisitos adicionales section (items as strings)
+const reqHeading = headings[0];
+const requisitos = reqHeading?.items ?? [];
+const reqTitle = reqHeading?.title ?? "Requisitos Adicionales";
 ---
 
 <ContentLayout
   title={pageTitle}
   subtitle={pageSubtitle}
   eyebrow="Admisión"
-  breadcrumb={[{ label: "Admisión", href: "/admission" }]}
+  breadcrumb={[{ label: "Proceso de Admisión", href: "/admission/process" }]}
+  sectionTheme="admission"
 >
   <div>
 
@@ -95,7 +78,7 @@ const requisitos = [
         Elegibilidad
       </span>
       <h2 class="text-2xl md:text-3xl font-display font-bold tracking-tight text-slate-900 mb-6">
-        Requisitos Adicionales
+        {reqTitle}
       </h2>
 
       <ul class="space-y-4">

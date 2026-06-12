@@ -1,135 +1,152 @@
 ---
+import { getEntry } from 'astro:content';
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import {
   PhCheckCircle,
   PhBriefcase,
   PhHeart,
   PhGraduationCap,
+  PhBuildings,
+  PhHandsClapping,
+  PhUsersThree,
+  PhGlobe,
+  PhLeaf,
+  PhStar,
+  PhRocket,
+  PhLightbulb,
+  PhBookOpen,
   PhDownloadSimple,
   PhEnvelope,
   PhPhone,
   PhMapPin,
-  PhArrowRight,
 } from 'phosphor-icons-astro';
 
-const pageTitle = "Pasantías";
-const breadcrumb = [{ label: "Académico", href: "/academics" }];
-
-const requisitos = [
-  "Haber aprobado el 70% del pénsum",
-  "Carta de aceptación de la organización",
-  "Seguro contra accidentes vigente",
-  "Asignación de asesor académico",
-];
-
-const modalidades = [
-  {
-    title: "Pasantía curricular",
-    description: "Práctica profesional en empresas u organizaciones, integrada como crédito académico.",
-    icon: PhBriefcase,
-  },
-  {
-    title: "Servicio comunitario",
-    description: "Aplicación de conocimientos en proyectos de impacto social y desarrollo comunitario.",
-    icon: PhHeart,
-  },
-  {
-    title: "Ayudantía de investigación",
-    description: "Colaboración en proyectos de investigación del programa bajo supervisión docente.",
-    icon: PhGraduationCap,
-  },
-];
-
-const contacto = {
-  coordinador: "Lic. Ana Rodríguez",
-  cargo: "Coordinadora de Pasantías",
-  email: "pasantias.comunicacion@ula.ve",
-  telefono: "+58 274 000-0000",
-  oficina: "Edificio Principal, Oficina 12",
+const iconMap: Record<string, any> = {
+  Briefcase: PhBriefcase,
+  Heart: PhHeart,
+  GraduationCap: PhGraduationCap,
+  Buildings: PhBuildings,
+  HandsClapping: PhHandsClapping,
+  UsersThree: PhUsersThree,
+  Globe: PhGlobe,
+  Leaf: PhLeaf,
+  Star: PhStar,
+  Rocket: PhRocket,
+  Lightbulb: PhLightbulb,
+  BookOpen: PhBookOpen,
 };
+
+const pageEntry = await getEntry('pages', 'academics-internships');
+
+if (!pageEntry) {
+  throw new Error('Internships page entry not found');
+}
+
+const { title, body, requirements, modalities, formUrl, contact } = pageEntry.data;
+
+const breadcrumb = [{ label: "Académico", href: "/academics" }];
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb}>
+<ContentLayout title={title} breadcrumb={breadcrumb} sectionTheme="academic">
   <section class="internships-page">
 
     <!-- Opening -->
-    <div class="ip-opening">
-      <div class="ip-opening__accent" aria-hidden="true">
-        <span class="ip-opening__line"></span>
+    {body && (
+      <div class="ip-opening">
+        <div class="ip-opening__accent" aria-hidden="true">
+          <span class="ip-opening__line"></span>
+        </div>
+        <p class="ip-opening__text">{body}</p>
       </div>
-      <p class="ip-opening__text">
-        400 horas de práctica profesional en organizaciones públicas o privadas — un requisito obligatorio para la graduación que conecta la formación académica con el mundo real.
-      </p>
-    </div>
+    )}
 
     <!-- Requirements — clean checklist -->
-    <div class="ip-requirements">
-      <div class="ip-section-header">
-        <span class="ip-section-header__line"></span>
-        <span class="ip-section-header__eyebrow">Práctica</span>
-      </div>
-      <h2 class="ip-section-title">Requisitos</h2>
+    {requirements && requirements.length > 0 && (
+      <div class="ip-requirements">
+        <div class="ip-section-header">
+          <span class="ip-section-header__line"></span>
+          <span class="ip-section-header__eyebrow">Práctica</span>
+        </div>
+        <h2 class="ip-section-title">Requisitos</h2>
 
-      <div class="ip-requirements__list">
-        {requisitos.map((req, i) => (
-          <div class="ip-requirement">
-            <PhCheckCircle size={18} weight="duotone" class="ip-requirement__icon" />
-            <span class="ip-requirement__text">{req}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <!-- Modalities — horizontal cards -->
-    <div class="ip-modalities">
-      <div class="ip-section-header">
-        <span class="ip-section-header__line"></span>
-        <span class="ip-section-header__eyebrow">Opciones</span>
-      </div>
-      <h2 class="ip-section-title">Modalidades</h2>
-
-      <div class="ip-modalities__grid">
-        {modalidades.map((mod) => (
-          <div class="ip-modality">
-            <mod.icon size={22} weight="duotone" class="ip-modality__icon" />
-            <h3 class="ip-modality__title">{mod.title}</h3>
-            <p class="ip-modality__desc">{mod.description}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-
-    <!-- CTA + Contact -->
-    <div class="ip-bottom">
-      <div class="ip-cta">
-        <h3 class="ip-cta__title">¿Cumples los requisitos?</h3>
-        <p class="ip-cta__text">Descarga el formato de solicitud para iniciar tu proceso de pasantía.</p>
-        <a href="#" class="ip-cta__button">
-          <PhDownloadSimple size={16} weight="regular" class="ip-cta__icon" />
-          Descargar Formato de Solicitud
-        </a>
-      </div>
-
-      <div class="ip-contact">
-        <h3 class="ip-contact__title">¿Necesitas orientación?</h3>
-        <p class="ip-contact__person">{contacto.coordinador}</p>
-        <p class="ip-contact__role">{contacto.cargo}</p>
-        <div class="ip-contact__details">
-          <a href={`mailto:${contacto.email}`} class="ip-contact__link">
-            <PhEnvelope size={14} weight="light" />
-            {contacto.email}
-          </a>
-          <span class="ip-contact__detail">
-            <PhPhone size={14} weight="light" />
-            {contacto.telefono}
-          </span>
-          <span class="ip-contact__detail">
-            <PhMapPin size={14} weight="light" />
-            {contacto.oficina}
-          </span>
+        <div class="ip-requirements__list">
+          {requirements.map((req: string) => (
+            <div class="ip-requirement">
+              <PhCheckCircle size={18} weight="duotone" class="ip-requirement__icon" />
+              <span class="ip-requirement__text">{req}</span>
+            </div>
+          ))}
         </div>
       </div>
-    </div>
+    )}
+
+    <!-- Modalities — horizontal cards -->
+    {modalities && modalities.length > 0 && (
+      <div class="ip-modalities">
+        <div class="ip-section-header">
+          <span class="ip-section-header__line"></span>
+          <span class="ip-section-header__eyebrow">Opciones</span>
+        </div>
+        <h2 class="ip-section-title">Modalidades</h2>
+
+        <div class="ip-modalities__grid">
+          {modalities.map((mod: { title: string; description?: string; icon?: string }) => {
+            const Icon = iconMap[mod.icon ?? 'Briefcase'] ?? PhBriefcase;
+            return (
+              <div class="ip-modality">
+                <Icon size={22} weight="duotone" class="ip-modality__icon" />
+                <h3 class="ip-modality__title">{mod.title}</h3>
+                {mod.description && <p class="ip-modality__desc">{mod.description}</p>}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+    )}
+
+    <!-- CTA + Contact -->
+    {(formUrl || contact) && (
+      <div class="ip-bottom">
+        {formUrl && (
+          <div class="ip-cta">
+            <h3 class="ip-cta__title">¿Cumples los requisitos?</h3>
+            <p class="ip-cta__text">Descarga el formato de solicitud para iniciar tu proceso de pasantía.</p>
+            <a href={formUrl} class="ip-cta__button" download>
+              <PhDownloadSimple size={16} weight="regular" class="ip-cta__icon" />
+              Descargar Formato de Solicitud
+            </a>
+          </div>
+        )}
+
+        {contact && (
+          <div class="ip-contact">
+            <h3 class="ip-contact__title">¿Necesitas orientación?</h3>
+            <p class="ip-contact__person">{contact.name}</p>
+            {contact.role && <p class="ip-contact__role">{contact.role}</p>}
+            <div class="ip-contact__details">
+              {contact.email && (
+                <a href={`mailto:${contact.email}`} class="ip-contact__link">
+                  <PhEnvelope size={14} weight="light" />
+                  {contact.email}
+                </a>
+              )}
+              {contact.phone && (
+                <span class="ip-contact__detail">
+                  <PhPhone size={14} weight="light" />
+                  {contact.phone}
+                </span>
+              )}
+              {contact.office && (
+                <span class="ip-contact__detail">
+                  <PhMapPin size={14} weight="light" />
+                  {contact.office}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+    )}
 
   </section>
 </ContentLayout>

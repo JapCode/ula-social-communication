@@ -1,67 +1,81 @@
 ---
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import SectionCard from '@/components/SectionCard.astro';
+import { PhUsersThree, PhIdentificationCard, PhCalendar, PhBooks, PhUserPlus } from 'phosphor-icons-astro';
+import { getEntry } from 'astro:content';
 
-const pageTitle = "Egresados";
-const pageSubtitle = "Red de egresados, testimonios y formación continua";
+const pageEntry = await getEntry('pages', 'alumni-index');
+const { title, subtitle, items = [], stats = [] } = pageEntry?.data ?? {};
+
+const pageTitle = title ?? "Egresados";
+const pageSubtitle = subtitle ?? "Red de egresados, testimonios y formación continua";
+
+const displayStats = stats.length ? stats : [
+  { value: "500+", label: "Egresados activos" },
+  { value: "95%", label: "Tasa de empleo" },
+  { value: "20+", label: "Años de trayectoria" },
+];
 ---
 
-<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Egresados">
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} eyebrow="Egresados" sectionTheme="admission">
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    <SectionCard title="Testimonios" description="Experiencias y testimonios de egresados" icon="quote" href="/alumni/testimonials" />
-    <SectionCard title="Formación Continua" description="Cursos, talleres y actualizaciones" icon="school" href="/alumni/continuing-education" />
+    {items.slice(0, 6).map(item => (
+      <SectionCard title={item.title ?? ""} description={item.description ?? ""} icon="quote" href={item.href ?? "#"} />
+    ))}
   </div>
 
-  <div class="mt-12 bg-white border border-slate-100/50 rounded-luma p-6 md:p-8">
+  <div class="mt-12 bg-white border border-tinted rounded-luma p-6 md:p-8">
     <h2 class="text-xl font-bold text-slate-900 mb-4">Red de Egresados</h2>
     <p class="text-slate-500 mb-6">
       La Escuela de Comunicación Social mantiene una activa red de egresados que incluye profesionales 
-      destacados en journalism, producción audiovisual, comunicación organizacional y relaciones públicas. 
+      destacados en periodismo, producción audiovisual, comunicación organizacional y relaciones públicas. 
       Nuestra comunidad de egresados es un pilar fundamental para el desarrollo de la carrera.
     </p>
     
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-      <div class="text-center p-6 bg-slate-50 rounded-lg">
-        <span class="text-3xl font-bold text-primary">500+</span>
-        <p class="text-sm text-slate-500 mt-2">Egresados activos</p>
-      </div>
-      <div class="text-center p-6 bg-slate-50 rounded-lg">
-        <span class="text-3xl font-bold text-primary">95%</span>
-        <p class="text-sm text-slate-500 mt-2">Tasa de empleo</p>
-      </div>
-      <div class="text-center p-6 bg-slate-50 rounded-lg">
-        <span class="text-3xl font-bold text-primary">20+</span>
-        <p class="text-sm text-slate-500 mt-2">Años de trayectoria</p>
-      </div>
+      {displayStats.map(stat => (
+        <div class="text-center p-6 bg-slate-50 rounded-lg">
+          <span class="text-3xl font-bold text-primary">{stat.value}</span>
+          <p class="text-sm text-slate-500 mt-2">{stat.label}</p>
+        </div>
+      ))}
     </div>
   </div>
 
-  <div class="mt-8 bg-white border border-slate-100/50 rounded-luma p-6 md:p-8">
+  <div class="mt-8 bg-white border border-tinted rounded-luma p-6 md:p-8">
     <h2 class="text-xl font-bold text-slate-900 mb-4">Beneficios para Egresados</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
       <div class="flex items-start gap-3">
-        <span class="ph-light text-primary">groups</span>
+        <div class="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+          <PhUsersThree size={18} weight="light" class="text-primary" />
+        </div>
         <div>
           <h3 class="font-semibold text-slate-900">Red Profesional</h3>
           <p class="text-sm text-slate-500">Acceso a la red de contactos profesionales y oportunidades de networking</p>
         </div>
       </div>
       <div class="flex items-start gap-3">
-        <span class="ph-light text-primary">id-card</span>
+        <div class="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+          <PhIdentificationCard size={18} weight="light" class="text-primary" />
+        </div>
         <div>
           <h3 class="font-semibold text-slate-900">Descuentos en Cursos</h3>
           <p class="text-sm text-slate-500">Beneficios en programas de formación continua y posgrado</p>
         </div>
       </div>
       <div class="flex items-start gap-3">
-        <span class="ph-light text-primary">event</span>
+        <div class="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+          <PhCalendar size={18} weight="light" class="text-primary" />
+        </div>
         <div>
           <h3 class="font-semibold text-slate-900">Eventos Exclusivos</h3>
           <p class="text-sm text-slate-500">Invitación a eventos, foros y actividades de la carrera</p>
         </div>
       </div>
       <div class="flex items-start gap-3">
-        <span class="ph-light text-primary">library</span>
+        <div class="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+          <PhBooks size={18} weight="light" class="text-primary" />
+        </div>
         <div>
           <h3 class="font-semibold text-slate-900">Biblioteca Virtual</h3>
           <p class="text-sm text-slate-500">Acceso a recursos digitales y bases de datos académicas</p>
@@ -72,7 +86,9 @@ const pageSubtitle = "Red de egresados, testimonios y formación continua";
 
   <div class="mt-8 bg-primary/5 border border-primary/20 rounded-luma p-6 md:p-8">
     <div class="flex items-start gap-4">
-      <span class="ph-light text-primary text-2xl">user-plus</span>
+      <div class="flex-shrink-0 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center">
+        <PhUserPlus size={20} weight="light" class="text-primary" />
+      </div>
       <div>
         <h3 class="font-semibold text-slate-900">¿Eres egresado?</h3>
         <p class="text-sm text-slate-500 mt-1">

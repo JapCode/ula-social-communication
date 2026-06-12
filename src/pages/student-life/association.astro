@@ -1,63 +1,68 @@
 ---
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import { PhUsersThree, PhEnvelopeSimple, PhArrowRight } from 'phosphor-icons-astro';
+import { getEntry } from 'astro:content';
 
-const pageTitle = "Asociación de Estudiantes";
+const pageEntry = await getEntry('pages', 'student-life-association');
+
+if (!pageEntry) {
+  throw new Error('Association page entry not found');
+}
+
+const { title, body, activities, participationText, alert } = pageEntry.data;
+
 const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb}>
+<ContentLayout title={title} breadcrumb={breadcrumb} sectionTheme="student-life">
   <div class="max-w-3xl py-4 md:py-8">
 
     <!-- Intro -->
-    <div class="mb-10 md:mb-14">
-      <p class="text-slate-500 leading-relaxed text-lg">
-        La Asociación de Estudiantes de Comunicación Social es el órgano de representación estudiantil ante las autoridades académicas del Núcleo Universitario Rafael Rangel.
-      </p>
-    </div>
+    {body && (
+      <div class="mb-10 md:mb-14">
+        <p class="text-slate-500 leading-relaxed text-lg">{body}</p>
+      </div>
+    )}
 
     <!-- What they do -->
-    <div class="mb-10">
-      <h2 class="text-lg font-bold text-slate-900 mb-4">¿Qué hace la Asociación?</h2>
-      <div class="space-y-3 text-slate-500 leading-relaxed">
-        <p>Representa los intereses y necesidades de los estudiantes de Comunicación Social ante la coordinación y las autoridades universitarias.</p>
-        <p>Organiza actividades académicas, culturales y de integración estudiantil a lo largo del año.</p>
-        <p>Canaliza las inquietudes del estudiantado y promueve la participación activa en la vida universitaria.</p>
+    {activities && activities.length > 0 && (
+      <div class="mb-10">
+        <h2 class="text-lg font-bold text-slate-900 mb-4">¿Qué hace la Asociación?</h2>
+        <div class="space-y-3 text-slate-500 leading-relaxed">
+          {activities.map((text: string) => <p>{text}</p>)}
+        </div>
       </div>
-    </div>
+    )}
 
     <!-- How to get involved -->
-    <div class="mb-10">
-      <h2 class="text-lg font-bold text-slate-900 mb-4">¿Cómo participar?</h2>
-      <p class="text-slate-500 leading-relaxed mb-6">
-        Si eres estudiante activo de Comunicación Social y quieres ser parte de la Asociación, acercate a la coordinación o escribinos para conocer las formas de participación.
-      </p>
-      <div class="flex flex-wrap gap-3">
-        <a href="/contact" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded-full hover:shadow-luma hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300">
-          <PhEnvelopeSimple size={14} weight="light" />
-          Contactar
-          <PhArrowRight size={14} weight="regular" />
-        </a>
+    {participationText && (
+      <div class="mb-10">
+        <h2 class="text-lg font-bold text-slate-900 mb-4">¿Cómo participar?</h2>
+        <p class="text-slate-500 leading-relaxed mb-6">{participationText}</p>
+        <div class="flex flex-wrap gap-3">
+          <a href="/contact" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded-full hover:shadow-luma hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300">
+            <PhEnvelopeSimple size={14} weight="light" />
+            Contactar
+            <PhArrowRight size={14} weight="regular" />
+          </a>
+        </div>
       </div>
-    </div>
+    )}
 
-    <!-- Info card -->
-    <div class="p-6 md:p-8 rounded-xl bg-slate-50/80 border border-slate-100">
-      <div class="flex items-start gap-4">
-        <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center">
-          <PhUsersThree size={20} weight="light" class="text-primary" />
-        </div>
-        <div class="flex-1 min-w-0">
-          <h3 class="text-base font-medium text-slate-700 mb-1">
-            Información en actualización
-          </h3>
-          <p class="text-slate-400 leading-relaxed text-sm">
-            Estamos actualizando la información de contacto y actividades de la Asociación. 
-            Mientras tanto, podés contactarnos a través del formulario general o por WhatsApp.
-          </p>
+    <!-- Alert / info card -->
+    {alert && (
+      <div class="p-6 md:p-8 rounded-xl bg-slate-50/80 border border-slate-100">
+        <div class="flex items-start gap-4">
+          <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/5 border border-primary/10 flex items-center justify-center">
+            <PhUsersThree size={20} weight="light" class="text-primary" />
+          </div>
+          <div class="flex-1 min-w-0">
+            <h3 class="text-base font-medium text-slate-700 mb-1">{alert.title}</h3>
+            <p class="text-slate-400 leading-relaxed text-sm">{alert.body}</p>
+          </div>
         </div>
       </div>
-    </div>
+    )}
 
   </div>
 </ContentLayout>

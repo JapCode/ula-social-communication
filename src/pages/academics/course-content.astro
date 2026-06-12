@@ -4,10 +4,19 @@ import {
   PhDownloadSimple,
   PhFileText,
 } from 'phosphor-icons-astro';
-import { getCollection } from 'astro:content';
+import { getCollection, getEntry } from 'astro:content';
 
-const pageTitle = "Contenido de Cursos";
+const DEFAULT_INTRO = "Material de estudio, programas y recursos de cada materia del pénsum — organizados por semestre para que encuentres lo que necesitas rápidamente.";
+
+const pageEntry = await getEntry('pages', 'academics-course-content');
+const { title, body } = pageEntry?.data ?? {};
+const pageTitle = title ?? "Contenido de Cursos";
 const breadcrumb = [{ label: "Académico", href: "/academics" }];
+
+// body is the main content; extract the first line as intro if it exists
+const lines = (body ?? DEFAULT_INTRO).split('\n');
+const intro = lines[0] || DEFAULT_INTRO;
+const bodyHtml = lines.slice(1).join('\n').trim();
 
 const allCourses = await getCollection('courses');
 const sortedCourses = allCourses.sort((a, b) => a.data.semester - b.data.semester);
@@ -23,7 +32,7 @@ const semesters = sortedCourses.reduce<Record<number, typeof sortedCourses>>((ac
 const semesterKeys = Object.keys(semesters).map(Number).sort((a, b) => a - b);
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb}>
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic">
   <section class="courses-page">
 
     <!-- Opening -->
@@ -31,10 +40,14 @@ const semesterKeys = Object.keys(semesters).map(Number).sort((a, b) => a - b);
       <div class="cp-opening__accent" aria-hidden="true">
         <span class="cp-opening__line"></span>
       </div>
-      <p class="cp-opening__text">
-        Material de estudio, programas y recursos de cada materia del pénsum — organizados por semestre para que encuentres lo que necesitas rápidamente.
-      </p>
+      <p class="cp-opening__text">{intro}</p>
     </div>
+
+    {bodyHtml && (
+      <div class="cp-body leading-relaxed text-[15px] text-ink-muted max-w-3xl">
+        {bodyHtml}
+      </div>
+    )}
 
     <!-- Semester groups -->
     {semesterKeys.map((semNum) => (
@@ -59,7 +72,7 @@ const semesterKeys = Object.keys(semesters).map(Number).sort((a, b) => a - b);
                 <p class="cp-course__desc">{course.data.description}</p>
               </div>
               {course.data.pdfUrl ? (
-                <a href={course.data.pdfUrl} class="cp-course__download" aria-label={`Descargar programa de ${course.data.name}`}>
+                <a href={course.data.pdfUrl} target="_blank" rel="noopener noreferrer" class="cp-course__download" aria-label={`Descargar programa de ${course.data.name}`}>
                   <PhDownloadSimple size={16} weight="regular" />
                   <span>Programa</span>
                 </a>

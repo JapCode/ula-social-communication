@@ -1,13 +1,17 @@
 ---
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import { PhDownloadSimple, PhInfo } from 'phosphor-icons-astro';
+import { getEntry } from 'astro:content';
 
-const pageTitle = "Currículo";
-const breadcrumb = [
-  { label: "Académico", href: "/academics" }
-];
+const pageEntry = await getEntry('pages', 'academics-curriculum');
+const { title, headings = [], pdfUrl } = pageEntry?.data ?? {};
+const body = pageEntry?.data?.body ?? pageEntry?.body ?? "";
 
-const cycles = [
+const pageTitle = title ?? "Currículo";
+
+// headings[0-2] = curriculum cycles with items for semester-level course groupings
+// Fall back to hardcoded data if no CMS data available
+const defaultCycles = [
   {
     name: "Ciclo Básico",
     description: "Fundamentos teóricos y herramientas de comunicación",
@@ -37,20 +41,42 @@ const cycles = [
     ]
   }
 ];
+
+// If CMS headings are present, use them; otherwise fall back to hardcoded data
+const cycles = headings.length >= 3 ? headings.map((h, ci) => ({
+  name: h.title ?? defaultCycles[ci]?.name ?? "",
+  description: h.description ?? defaultCycles[ci]?.description ?? "",
+  semesters: defaultCycles[ci]?.semesters ?? [],
+})) : defaultCycles;
+
+const breadcrumb = [
+  { label: "Académico", href: "/academics" }
+];
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb}>
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic">
 
   <!-- Download CTA -->
   <div class="mb-12 flex justify-end">
     <a
-      href="#"
-      aria-disabled="true"
-      title="Próximamente"
-      class="inline-flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-full text-xs font-bold hover:shadow-luma transition-all opacity-80 cursor-not-allowed"
+      href={pdfUrl || "#"}
+      download={pdfUrl && !pdfUrl.startsWith("http") ? pdfUrl : undefined}
+      target={pdfUrl?.startsWith("http") ? "_blank" : undefined}
+      rel={pdfUrl?.startsWith("http") ? "noopener noreferrer" : undefined}
+      aria-disabled={!pdfUrl ? "true" : undefined}
+      title={pdfUrl ? "Descargar Pénsum PDF" : "Próximamente"}
+      class="inline-flex items-center gap-2.5 bg-primary text-white pl-6 pr-5 py-3 rounded-full text-xs font-bold shadow-md hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
+      class:list={{ "opacity-60 cursor-not-allowed hover:shadow-md hover:-translate-y-0 active:translate-y-0": !pdfUrl }}
     >
-      <PhDownloadSimple size={16} weight="light" class="text-white" />
-      Descargar Pénsum PDF
+      <span class="flex items-center gap-2">
+        <PhDownloadSimple size={16} weight="bold" class="text-white" />
+        Descargar Pénsum PDF
+      </span>
+      <span class="w-5 h-5 rounded-full bg-white/15 flex items-center justify-center">
+        <svg width="8" height="8" viewBox="0 0 8 8" fill="none" class="text-white">
+          <path d="M1 7L7 1M7 1H2M7 1V6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
     </a>
   </div>
 
