@@ -51,6 +51,7 @@ collections:
     sortable_fields: [date, title]
     media_folder: ../../../public/images/uploads
     public_folder: /images/uploads
+    preview_path: "portfolio/articles/{{slug}}"
     view_filters:
       - label: Investigación
         field: category
@@ -96,6 +97,7 @@ collections:
     sortable_fields: [date]
     media_folder: ../../../public/images/uploads
     public_folder: /images/uploads
+    preview_path: "student-life/events/{{slug}}"
     fields:
       - {label: Título, name: title, widget: string}
       - {label: Fecha, name: date, widget: datetime, format: YYYY-MM-DD}
