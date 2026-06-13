@@ -53,12 +53,27 @@
       var self = this;
       var entry = this.props.entry;
       var widgetFor = this.props.widgetFor;
+      var getAsset = this.props.getAsset;
 
       if (!entry) return null;
 
       var data = entry.get('data');
       if (!data) {
         return h('div', { className: 'nc-loading' }, 'Cargando…');
+      }
+
+      // DIAGNOSTIC: Log entry info to debug draft image issue
+      try {
+        var mediaFiles = entry.get('mediaFiles');
+        if (mediaFiles && typeof mediaFiles.toJS === 'function') {
+          console.log('[CMS Fix] Entry mediaFiles:', mediaFiles.toJS());
+        } else if (mediaFiles) {
+          console.log('[CMS Fix] Entry mediaFiles (raw):', mediaFiles);
+        } else {
+          console.log('[CMS Fix] Entry mediaFiles: none');
+        }
+      } catch (e) {
+        console.log('[CMS Fix] Could not access mediaFiles:', e.message);
       }
 
       // Collect field names from the entry data (order-preserving)
@@ -124,18 +139,22 @@
 
     /**
      * Resolve a single <img> element's src via getAsset.
+     * Decap CMS returns an Aa (AssetProxy) object with shape:
+     *   { url: string, fileObj: File|null, path: string, field: object|null }
+     *
+     * - For DRAFT images: fileObj is a File, url is a blob: URL
+     * - For UPLOADED images: fileObj is null, url is the original path
      */
     _resolveImage: function (img, getAsset) {
       var src = img.getAttribute('src');
 
-      // Already resolved (blob/data URL) — skip and mark done
       if (!src) {
         img.setAttribute('data-cms-fixed', 'true');
         return;
       }
 
       if (src.startsWith('blob:') || src.startsWith('data:')) {
-        console.log('[CMS Fix] Image already resolved:', src.substring(0, 40) + '…');
+        console.log('[CMS Fix] Image already resolved:', src.substring(0, 50) + '…');
         img.setAttribute('data-cms-fixed', 'true');
         return;
       }
@@ -144,14 +163,32 @@
 
       try {
         var resolved = getAsset(src);
-        console.log('[CMS Fix] getAsset returned:', resolved, typeof resolved);
-        if (resolved && typeof resolved === 'string' && resolved !== src) {
+        console.log('[CMS Fix] getAsset result:', resolved);
+
+        // Handle AssetProxy object returned by getAsset
+        if (resolved && typeof resolved === 'object' && resolved.url) {
+          if (resolved.fileObj) {
+            // DRAFT image — has a File object, url should be blob:
+            console.log('[CMS Fix] ✓ DRAFT image found, fileObj present, url:', resolved.url.substring(0, 60) + '…');
+            img.setAttribute('src', resolved.url);
+          } else {
+            // UPLOADED image — no fileObj, url is the original path
+            console.log('[CMS Fix] Uploaded image (no fileObj, url matches src):', resolved.url);
+            if (resolved.url !== src) {
+              console.log('[CMS Fix] Uploaded image url differs from src, using url');
+              img.setAttribute('src', resolved.url);
+            }
+          }
+          img.setAttribute('data-cms-fixed', 'true');
+          return;
+        }
+
+        // Handle plain string return (fallback)
+        if (typeof resolved === 'string' && resolved !== src) {
+          console.log('[CMS Fix] Using string result:', resolved.substring(0, 60) + '…');
           img.setAttribute('src', resolved);
-          console.log('[CMS Fix] ✓ Image resolved:', src, '→', resolved.substring(0, 40) + '…');
-        } else if (resolved === src) {
-          console.log('[CMS Fix] getAsset returned same path (not a draft image or not found)');
         } else {
-          console.log('[CMS Fix] getAsset returned unexpected value:', resolved);
+          console.log('[CMS Fix] getAsset returned same/empty value, no change needed');
         }
       } catch (e) {
         console.warn('[CMS Fix] getAsset error for "' + src + '":', e);
