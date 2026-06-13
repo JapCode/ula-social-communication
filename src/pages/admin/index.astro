@@ -12,5 +12,28 @@
   </head>
   <body>
     <script is:inline src="/admin/decap-cms.js"></script>
+    <script is:inline>
+      // Decap CMS preview fix: ensure the preview iframe resolves images
+      // relative to the current origin instead of the hardcoded site_url.
+      // This allows newly uploaded images to load in both local dev and production.
+      (function() {
+        var origin = window.location.origin;
+        setInterval(function() {
+          document.querySelectorAll('iframe').forEach(function(iframe) {
+            try {
+              var doc = iframe.contentDocument;
+              if (doc && doc.head && !doc.querySelector('base[data-fixed]')) {
+                var base = doc.createElement('base');
+                base.href = origin;
+                base.setAttribute('data-fixed', '');
+                doc.head.prepend(base);
+              }
+            } catch(e) {
+              // Cross-origin iframe — skip
+            }
+          });
+        }, 1000);
+      })();
+    </script>
   </body>
 </html>
