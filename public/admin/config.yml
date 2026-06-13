@@ -10,7 +10,9 @@ local_backend: true
 media_folder: public/images/uploads
 public_folder: /images/uploads
 
-site_url: https://ula-social-communication.pages.dev
+# site_url is intentionally omitted so the CMS preview iframe uses the
+# default base URL (current origin). This makes /images/uploads/ resolve
+# correctly in both local dev (localhost) and production (pages.dev).
 display_url: https://ula-social-communication.pages.dev
 
 locale: es
