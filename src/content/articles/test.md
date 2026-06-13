@@ -8,13 +8,11 @@ coverImage: /images/uploads/16570362211682616913.jpg
 ---
 La convergencia de medios ha transformado radicalmente la forma en que contamos historias. En el Núcleo Universitario Rafael Rangel, nuestros investigadores están a la vanguardia de este cambio.
 
-
-
 ## El contexto actual
 
 Las plataformas digitales han democratizado la producción de contenido, pero también han planteado nuevos desafíos éticos y narrativos que los comunicadores sociales deben abordar con rigor académico.
 
-
+![](/images/uploads/caio-coelho-xfmxlq_kjxg-unsplash.jpg)
 
 ## Hallazgos principales
 
