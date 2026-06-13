@@ -62,13 +62,24 @@
         return h('div', { className: 'nc-loading' }, 'Cargando…');
       }
 
-      // DIAGNOSTIC: Log entry info to debug draft image issue
+      // DIAGNOSTIC: Log entry mediaFiles details
       try {
         var mediaFiles = entry.get('mediaFiles');
-        if (mediaFiles && typeof mediaFiles.toJS === 'function') {
-          console.log('[CMS Fix] Entry mediaFiles:', mediaFiles.toJS());
+        if (mediaFiles && mediaFiles.length > 0) {
+          console.log('[CMS Fix] Entry mediaFiles count:', mediaFiles.length);
+          // Log paths of first few to see format
+          for (var mi = 0; mi < Math.min(mediaFiles.length, 5); mi++) {
+            var mf = mediaFiles[mi];
+            console.log('[CMS Fix] mediaFile[' + mi + ']:', {
+              path: mf.path,
+              name: mf.name,
+              hasFileObj: !!mf.fileObj,
+              fileObjType: mf.fileObj ? mf.fileObj.constructor.name : null,
+              url: mf.url,
+            });
+          }
         } else if (mediaFiles) {
-          console.log('[CMS Fix] Entry mediaFiles (raw):', mediaFiles);
+          console.log('[CMS Fix] Entry mediaFiles (empty):', mediaFiles);
         } else {
           console.log('[CMS Fix] Entry mediaFiles: none');
         }
@@ -117,35 +128,29 @@
 
     /**
      * Scan the rendered preview and fix any unresolved image src attributes.
-     * Uses getAsset() to resolve paths — returns blob URLs for draft images,
-     * unchanged paths for already-uploaded images.
      */
     resolveImages: function () {
       if (!this._root) return;
 
       var getAsset = this.props.getAsset;
-      if (typeof getAsset !== 'function') {
-        console.warn('[CMS Fix] getAsset is not a function');
-        return;
-      }
+      var entry = this.props.entry;
 
       var imgs = this._root.querySelectorAll('img:not([data-cms-fixed])');
       console.log('[CMS Fix] Found', imgs.length, 'unresolved images');
 
       for (var i = 0; i < imgs.length; i++) {
-        this._resolveImage(imgs[i], getAsset);
+        this._resolveImage(imgs[i], getAsset, entry);
       }
     },
 
     /**
-     * Resolve a single <img> element's src via getAsset.
-     * Decap CMS returns an Aa (AssetProxy) object with shape:
-     *   { url: string, fileObj: File|null, path: string, field: object|null }
+     * Resolve a single <img> element's src.
      *
-     * - For DRAFT images: fileObj is a File, url is a blob: URL
-     * - For UPLOADED images: fileObj is null, url is the original path
+     * Tries two strategies:
+     *   1. getAsset(path) — Decap CMS's built-in resolver (returns Aa object)
+     *   2. Direct mediaFiles lookup — create blob: URL from fileObj if path matches
      */
-    _resolveImage: function (img, getAsset) {
+    _resolveImage: function (img, getAsset, entry) {
       var src = img.getAttribute('src');
 
       if (!src) {
@@ -161,37 +166,57 @@
 
       console.log('[CMS Fix] Resolving image src:', src);
 
-      try {
-        var resolved = getAsset(src);
-        console.log('[CMS Fix] getAsset result:', resolved);
-
-        // Handle AssetProxy object returned by getAsset
-        if (resolved && typeof resolved === 'object' && resolved.url) {
-          if (resolved.fileObj) {
-            // DRAFT image — has a File object, url should be blob:
-            console.log('[CMS Fix] ✓ DRAFT image found, fileObj present, url:', resolved.url.substring(0, 60) + '…');
-            img.setAttribute('src', resolved.url);
-          } else {
-            // UPLOADED image — no fileObj, url is the original path
-            console.log('[CMS Fix] Uploaded image (no fileObj, url matches src):', resolved.url);
-            if (resolved.url !== src) {
-              console.log('[CMS Fix] Uploaded image url differs from src, using url');
+      // Strategy 1: Try getAsset
+      var resolvedViaAsset = false;
+      if (typeof getAsset === 'function') {
+        try {
+          var resolved = getAsset(src);
+          if (resolved && typeof resolved === 'object' && resolved.url) {
+            if (resolved.fileObj) {
+              console.log('[CMS Fix] ✓ getAsset found DRAFT image, url:', resolved.url.substring(0, 60) + '…');
               img.setAttribute('src', resolved.url);
+              resolvedViaAsset = true;
+            } else if (resolved.url !== src) {
+              console.log('[CMS Fix] getAsset returned different url:', resolved.url);
+              img.setAttribute('src', resolved.url);
+              resolvedViaAsset = true;
+            }
+          } else if (typeof resolved === 'string' && resolved !== src) {
+            img.setAttribute('src', resolved);
+            resolvedViaAsset = true;
+          }
+        } catch (e) {
+          console.warn('[CMS Fix] getAsset error:', e);
+        }
+      }
+
+      // Strategy 2: Direct mediaFiles lookup
+      if (!resolvedViaAsset && entry) {
+        try {
+          var mediaFiles = entry.get('mediaFiles');
+          if (mediaFiles && mediaFiles.length > 0) {
+            for (var mi = 0; mi < mediaFiles.length; mi++) {
+              var mf = mediaFiles[mi];
+              // Try matching by path, name, or if src ends with the filename
+              var srcName = src.split('/').pop();
+              var matches = (mf.path === src) ||
+                (mf.name === srcName) ||
+                (mf.path && mf.path.endsWith(srcName));
+              if (matches && mf.fileObj) {
+                var blobUrl = URL.createObjectURL(mf.fileObj);
+                console.log('[CMS Fix] ✓ Direct mediaFiles match for "' + srcName + '", created blob:', blobUrl.substring(0, 60) + '…');
+                img.setAttribute('src', blobUrl);
+                resolvedViaAsset = true;
+                break;
+              }
+            }
+            if (!resolvedViaAsset) {
+              console.log('[CMS Fix] mediaFiles searched, no matching draft found for:', src);
             }
           }
-          img.setAttribute('data-cms-fixed', 'true');
-          return;
+        } catch (e) {
+          console.warn('[CMS Fix] mediaFiles lookup error:', e);
         }
-
-        // Handle plain string return (fallback)
-        if (typeof resolved === 'string' && resolved !== src) {
-          console.log('[CMS Fix] Using string result:', resolved.substring(0, 60) + '…');
-          img.setAttribute('src', resolved);
-        } else {
-          console.log('[CMS Fix] getAsset returned same/empty value, no change needed');
-        }
-      } catch (e) {
-        console.warn('[CMS Fix] getAsset error for "' + src + '":', e);
       }
 
       img.setAttribute('data-cms-fixed', 'true');
