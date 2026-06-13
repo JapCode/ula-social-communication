@@ -9,6 +9,13 @@ import {
 } from 'phosphor-icons-astro';
 import { getTypeLabel, getTypeColors, getTypeIcon } from '@/lib/events';
 
+// Normalize image paths from Decap CMS
+function normalizeImagePath(path: string | undefined | null): string | undefined {
+  if (!path) return undefined;
+  if (path.startsWith('/') || path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `/images/uploads/${path}`;
+}
+
 const events = await getCollection('events');
 const sortedEvents = events.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
 
@@ -59,6 +66,14 @@ const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
               return (
                 <a href={`/student-life/events/${featured.id}`} class="group block">
                   <div class="bg-white border border-tinted rounded-luma overflow-hidden transition-all duration-300 hover:shadow-luma">
+                    {(() => {
+                      const coverUrl = normalizeImagePath(featured.data.coverImage);
+                      return coverUrl ? (
+                        <div class="aspect-video w-full overflow-hidden">
+                          <img src={coverUrl} alt={`Imagen del evento: ${featured.data.title}`} class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" />
+                        </div>
+                      ) : null;
+                    })()}
                     <div class="p-6 md:p-8 lg:p-10">
                       {/* Type badge + date */}
                       <div class="flex items-center gap-3 mb-4">
@@ -119,6 +134,16 @@ const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
                         <span class="block text-lg font-bold text-ink leading-none">{eventDate.getDate()}</span>
                         <span class="block text-[10px] font-bold uppercase tracking-wider text-green mt-0.5">{formattedDate.split(' ')[1]}</span>
                       </div>
+
+                      {/* Thumbnail */}
+                      {(() => {
+                        const thumbUrl = normalizeImagePath(event.data.coverImage);
+                        return thumbUrl ? (
+                          <div class="flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden">
+                            <img src={thumbUrl} alt="" class="w-full h-full object-cover" loading="lazy" />
+                          </div>
+                        ) : null;
+                      })()}
 
                       {/* Content */}
                       <div class="flex-1 min-w-0">

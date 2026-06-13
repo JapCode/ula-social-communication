@@ -8,6 +8,13 @@ export interface Props {
 
 const { news } = Astro.props;
 
+// Normalize image paths from Decap CMS
+function normalizeImagePath(path: string | undefined | null): string | undefined {
+  if (!path) return undefined;
+  if (path.startsWith('/') || path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `/images/uploads/${path}`;
+}
+
 /**
  * Converts a date string (YYYY-MM-DD) to a relative time string in Spanish.
  * Calculated at build time — best for static sites with regular deploys.
@@ -43,7 +50,7 @@ function timeAgo(dateStr: string): string {
 			<div class="news-card-image">
 				<img
 					alt={news.image_alt}
-					src={news.image}
+					src={normalizeImagePath(news.image) ?? ''}
 					loading="lazy"
 					width="800"
 					height="600"

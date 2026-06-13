@@ -1,6 +1,13 @@
 ---
 import { PhUser, PhEnvelope, PhGraduationCap } from 'phosphor-icons-astro';
 
+// Normalize image paths from Decap CMS
+function normalizeImagePath(path: string | undefined | null): string | undefined {
+  if (!path) return undefined;
+  if (path.startsWith('/') || path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `/images/uploads/${path}`;
+}
+
 interface Props {
   name: string;
   title: string;
@@ -8,10 +15,12 @@ interface Props {
   email?: string;
   bio?: string;
   status?: "active" | "retired";
+  photo?: string;
 }
 
-const { name, title, specialization, email, bio, status = "active" } = Astro.props;
+const { name, title, specialization, email, bio, status = "active", photo } = Astro.props;
 const isRetired = status === "retired";
+const photoUrl = normalizeImagePath(photo);
 ---
 
 <article class:list={[
@@ -19,10 +28,16 @@ const isRetired = status === "retired";
   isRetired && 'faculty-card--retired',
 ]} data-faculty-name={name.toLowerCase()} data-faculty-spec={specialization.toLowerCase()} data-faculty-title={title.toLowerCase()}>
   <div class="faculty-card__inner">
-    <!-- Avatar -->
-    <div class="faculty-card__avatar">
-      <PhUser size={22} weight="light" class="faculty-card__avatar-icon" />
-    </div>
+    <!-- Avatar / Photo -->
+    {photoUrl ? (
+      <div class="faculty-card__avatar faculty-card__avatar--photo">
+        <img src={photoUrl} alt={`Foto de ${name}`} class="faculty-card__photo" loading="lazy" />
+      </div>
+    ) : (
+      <div class="faculty-card__avatar">
+        <PhUser size={22} weight="light" class="faculty-card__avatar-icon" />
+      </div>
+    )}
 
     <!-- Info -->
     <div class="faculty-card__info">
@@ -98,6 +113,18 @@ const isRetired = status === "retired";
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .faculty-card__avatar--photo {
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .faculty-card__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
   }
 
   .faculty-card__avatar-icon {

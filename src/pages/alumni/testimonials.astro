@@ -37,6 +37,7 @@ const introText = introBody ?? "La Escuela de Comunicación Social del NURR ha f
           author={testimonials[0].data.name}
           role={testimonials[0].data.currentRole}
           year={testimonials[0].data.graduationYear}
+          image={testimonials[0].data.photo}
           featured={true}
         />
       </div>
@@ -50,6 +51,7 @@ const introText = introBody ?? "La Escuela de Comunicación Social del NURR ha f
               author={testimonial.data.name}
               role={testimonial.data.currentRole}
               year={testimonial.data.graduationYear}
+              image={testimonial.data.photo}
             />
           ))}
         </div>

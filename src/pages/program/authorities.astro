@@ -48,6 +48,7 @@ const supportingStaff = staff.filter(s => s.data.department !== 'Dirección');
             department={director.data.department}
             email={director.data.email}
             phone={director.data.phone}
+            photo={director.data.photo}
             featured
           />
         </div>
@@ -67,6 +68,7 @@ const supportingStaff = staff.filter(s => s.data.department !== 'Dirección');
                 department={person.data.department}
                 email={person.data.email}
                 phone={person.data.phone}
+                photo={person.data.photo}
               />
             ))}
           </div>

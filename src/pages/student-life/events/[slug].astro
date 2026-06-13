@@ -15,6 +15,15 @@ export async function getStaticPaths() {
 const { event } = Astro.props;
 const { Content } = await render(event);
 
+// Normalize image paths from Decap CMS
+function normalizeImagePath(path: string | undefined | null): string | undefined {
+  if (!path) return undefined;
+  if (path.startsWith('/') || path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `/images/uploads/${path}`;
+}
+
+const coverImageUrl = normalizeImagePath(event.data.coverImage);
+
 const eventDate = new Date(event.data.date);
 const formattedDate = eventDate.toLocaleDateString('es-VE', {
   weekday: 'long',
@@ -47,6 +56,13 @@ const pageSubtitle = formattedDate;
       <span class="text-slate-300">·</span>
       <span class="text-slate-500">{event.data.location}</span>
     </div>
+
+    <!-- Cover Image -->
+    {coverImageUrl && (
+      <div class="mb-8">
+        <img src={coverImageUrl} alt={`Imagen del evento: ${event.data.title}`} class="w-full rounded-[var(--radius-luma)]" loading="lazy" />
+      </div>
+    )}
 
     <!-- Event Content -->
     <div class="content-area">

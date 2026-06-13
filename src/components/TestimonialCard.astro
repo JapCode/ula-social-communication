@@ -1,16 +1,24 @@
 ---
 import { PhQuotes } from 'phosphor-icons-astro';
 
+// Normalize image paths from Decap CMS
+function normalizeImagePath(path: string | undefined | null): string | undefined {
+  if (!path) return undefined;
+  if (path.startsWith('/') || path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `/images/uploads/${path}`;
+}
+
 interface Props {
   quote: string;
   author: string;
   role: string;
   year: number;
-  image?: any;
+  image?: string;
   featured?: boolean;
 }
 
-const { quote, author, role, year, featured = false } = Astro.props;
+const { quote, author, role, year, featured = false, image } = Astro.props;
+const photoUrl = normalizeImagePath(image);
 
 // Generate initials from author name
 const initials = author
@@ -48,9 +56,15 @@ const avatarColor = avatarColors[colorIndex];
 
   <!-- Author info -->
   <footer class="testimonial-author">
-    <div class="testimonial-avatar" style={`background-color: ${avatarColor.bg}; color: ${avatarColor.text};`}>
-      {initials}
-    </div>
+    {photoUrl ? (
+      <div class="testimonial-avatar testimonial-avatar--photo">
+        <img src={photoUrl} alt={`Foto de ${author}`} class="testimonial-photo" loading="lazy" />
+      </div>
+    ) : (
+      <div class="testimonial-avatar" style={`background-color: ${avatarColor.bg}; color: ${avatarColor.text};`}>
+        {initials}
+      </div>
+    )}
     <div class="testimonial-meta">
       <cite class="testimonial-name">{author}</cite>
       <span class="testimonial-role">{role}</span>
@@ -116,6 +130,17 @@ const avatarColor = avatarColors[colorIndex];
     font-size: 0.8125rem;
     font-weight: 700;
     letter-spacing: 0.05em;
+  }
+
+  .testimonial-avatar--photo {
+    overflow: hidden;
+  }
+
+  .testimonial-photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
   }
 
   .testimonial-meta {

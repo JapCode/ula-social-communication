@@ -49,7 +49,7 @@ collections:
     identifier_field: title
     summary: '{{title}} — {{author}}'
     sortable_fields: [date, title]
-    media_folder: ../../public/images/uploads
+    media_folder: ../../../public/images/uploads
     public_folder: /images/uploads
     view_filters:
       - label: Investigación
@@ -94,7 +94,7 @@ collections:
     identifier_field: title
     summary: '{{title}} — {{location}}'
     sortable_fields: [date]
-    media_folder: ../../public/images/uploads
+    media_folder: ../../../public/images/uploads
     public_folder: /images/uploads
     fields:
       - {label: Título, name: title, widget: string}
@@ -128,7 +128,7 @@ collections:
     format: frontmatter
     identifier_field: name
     summary: '{{name}} — {{specialization}}'
-    media_folder: ../../public/images/uploads
+    media_folder: ../../../public/images/uploads
     public_folder: /images/uploads
     fields:
       - {label: Nombre, name: name, widget: string}
@@ -158,7 +158,7 @@ collections:
     format: frontmatter
     identifier_field: name
     summary: '{{name}} — {{role}}'
-    media_folder: ../../public/images/uploads
+    media_folder: ../../../public/images/uploads
     public_folder: /images/uploads
     fields:
       - {label: Nombre, name: name, widget: string}
@@ -181,7 +181,7 @@ collections:
     format: frontmatter
     identifier_field: name
     summary: '{{name}} — {{currentRole}}'
-    media_folder: ../../public/images/uploads
+    media_folder: ../../../public/images/uploads
     public_folder: /images/uploads
     fields:
       - {label: Nombre, name: name, widget: string}

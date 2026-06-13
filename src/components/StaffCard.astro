@@ -1,6 +1,13 @@
 ---
 import { PhUser, PhEnvelope, PhPhone } from 'phosphor-icons-astro';
 
+// Normalize image paths from Decap CMS
+function normalizeImagePath(path: string | undefined | null): string | undefined {
+  if (!path) return undefined;
+  if (path.startsWith('/') || path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `/images/uploads/${path}`;
+}
+
 interface Props {
   name: string;
   role: string;
@@ -8,9 +15,11 @@ interface Props {
   email?: string;
   phone?: string;
   featured?: boolean;
+  photo?: string;
 }
 
-const { name, role, department, email, phone, featured = false } = Astro.props;
+const { name, role, department, email, phone, featured = false, photo } = Astro.props;
+const photoUrl = normalizeImagePath(photo);
 ---
 
 <article class:list={[
@@ -18,10 +27,16 @@ const { name, role, department, email, phone, featured = false } = Astro.props;
   featured && 'staff-card--featured',
 ]}>
   <div class="staff-card__inner">
-    <!-- Avatar -->
-    <div class="staff-card__avatar">
-      <PhUser size={featured ? 28 : 20} weight="light" class="staff-card__avatar-icon" />
-    </div>
+    <!-- Avatar / Photo -->
+    {photoUrl ? (
+      <div class="staff-card__avatar staff-card__avatar--photo">
+        <img src={photoUrl} alt={`Foto de ${name}`} class="staff-card__photo" loading="lazy" />
+      </div>
+    ) : (
+      <div class="staff-card__avatar">
+        <PhUser size={featured ? 28 : 20} weight="light" class="staff-card__avatar-icon" />
+      </div>
+    )}
 
     <!-- Info -->
     <div class="staff-card__info">
@@ -98,6 +113,18 @@ const { name, role, department, email, phone, featured = false } = Astro.props;
     width: 4rem;
     height: 4rem;
     background: rgba(0, 93, 170, 0.1);
+  }
+
+  .staff-card__avatar--photo {
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .staff-card__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
   }
 
   .staff-card__avatar-icon {
