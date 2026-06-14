@@ -10,7 +10,9 @@ items:
       comunicacional global, latinoamericano e institucional, así como su
       evolución interdisciplinaria.
 
+
       •Comprensión Analítica del Entorno: Interpreta con rigurosidad crítica y metodológica la realidad socio-política, cultural e histórica venezolana y andina, analizando la correlación de fuerzas de los flujos de comunicación con la opinión pública.
+
 
       •Marco Jurídico e Institucional: Aplica adecuadamente la legislación nacional e internacional regulatoria del derecho a la información, la libertad de expresión y el ejercicio libre del periodismo, respetando firmemente los estatutos deontológicos.
     icon: pencil
