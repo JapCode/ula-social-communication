@@ -54,13 +54,13 @@ news:
       href: /student-life/community
   title: Nuevas narrativas transmedia en el entorno digital
   tag: Actualidad
-  image: /images/brooke-cagle-g1Kr4Ozfoac-unsplash.jpg
+  image: 184786.jpg
   description: Un recorrido por las últimas investigaciones de nuestra facultad
     sobre el impacto de la tecnología en el periodismo moderno.
   category: Investigación
 video:
-  eyebrow: Experiencia ULA
-  title: Vibrando con el Núcleo
+  eyebrow: Un espacio para los estudoantes
+  title: Sala de Cine
   badge: Destacado
   video_id: G_JfKOjwzwo
   duration: 3:24
