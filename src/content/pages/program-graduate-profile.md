@@ -3,10 +3,11 @@ title: Perfil del Egresado
 pageType: body-items-headings
 pageId: program-graduate-profile
 items:
-  - title: Producción Comunicacional
-    description: Contenido para medios impresos, digitales, audiovisuales y sonoros
-      — aplicando técnicas narrativas y géneros periodísticos con criterio
-      profesional.
+  - title: "Competencias Conceptuales (Saber)Dominio Teórico y Epistemológico:  "
+    description: "Comprende con propiedad científica las corrientes teóricas,
+      modelos y escuelas críticas del pensamiento comunicacional global,
+      latinoamericano e institucional, así como su evolución interdisciplinaria.
+      "
     icon: pencil
   - title: Investigación Comunicacional
     description: Diseño y ejecución de proyectos de investigación en comunicación,
@@ -40,4 +41,5 @@ headings:
       - Comunicación Comunitaria
       - Organizaciones Sociales
 ---
-Formamos comunicadores capaces de interpretar la realidad, construir narrativas y transformar la sociedad a través de la palabra, la imagen y el pensamiento crítico.
+El Licenciado en Comunicación Social egresado de la Universidad de Los Andes, Núcleo Universitario "Rafael Rangel" (ULA NURR), es un profesional de perfil integral, humanista y con un profundo sentido de responsabilidad ética. Posee un dominio sólido de competencias teóricas y operativas para investigar, evaluar, diseñar y gestionar estrategias comunicacionales dentro de entornos públicos o privados. Demuestra una alta resiliencia y capacidad de adaptación estratégica frente al cambio tecnológico y las demandas sociales del entorno contemporáneo.
+Para efectos de la planificación e investigación institucional, este perfil se desglosa en tres dimensiones evaluables: 
