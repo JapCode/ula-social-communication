@@ -9,13 +9,6 @@ backend:
 # It should only be enabled for local development.
 # local_backend: true
 
-media_library:
-  name: cloudinary
-  config:
-    cloud_name: dyqotor0j
-    api_key: 368224326323364
-
-# Fallback for any non-Cloudinary file operations (required by CMS schema)
 media_folder: public/images/uploads
 public_folder: /images/uploads
 
