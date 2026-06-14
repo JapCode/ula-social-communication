@@ -15,5 +15,5 @@ quote: >-
   periodismo, la gerencia estratégica y la academia.
 
   ​Su visión de constante evolución la ha llevado a diversificar su perfil como Licenciada en Administración (UNESR), maestrante en Gerencia de Talento Humano y especialista en formación en Periodismo en Medios Digitales (ULA-Táchira).
-photo: bardia-golzar-mcphcr9gwec-unsplash.jpg
+photo: ilyuza-mingazova-uyxpvkrra2i-unsplash.jpg
 ---
