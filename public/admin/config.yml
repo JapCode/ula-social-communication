@@ -9,7 +9,7 @@ backend:
 # It should only be enabled for local development.
 # local_backend: true
 
-media_folder: /public/images/uploads
+media_folder: public/images/uploads
 public_folder: /images/uploads
 
 # site_url is intentionally omitted so the CMS preview iframe uses the
