@@ -3,11 +3,16 @@ title: Perfil del Egresado
 pageType: body-items-headings
 pageId: program-graduate-profile
 items:
-  - title: "Competencias Conceptuales (Saber)Dominio Teórico y Epistemológico:  "
-    description: "Comprende con propiedad científica las corrientes teóricas,
-      modelos y escuelas críticas del pensamiento comunicacional global,
-      latinoamericano e institucional, así como su evolución interdisciplinaria.
-      "
+  - title: Competencias Conceptuales (Saber)
+    description: >-
+      •Dominio Teórico y Epistemológico: Comprende con propiedad científica las
+      corrientes teóricas, modelos y escuelas críticas del pensamiento
+      comunicacional global, latinoamericano e institucional, así como su
+      evolución interdisciplinaria.
+
+      •Comprensión Analítica del Entorno: Interpreta con rigurosidad crítica y metodológica la realidad socio-política, cultural e histórica venezolana y andina, analizando la correlación de fuerzas de los flujos de comunicación con la opinión pública.
+
+      •Marco Jurídico e Institucional: Aplica adecuadamente la legislación nacional e internacional regulatoria del derecho a la información, la libertad de expresión y el ejercicio libre del periodismo, respetando firmemente los estatutos deontológicos.
     icon: pencil
   - title: Investigación Comunicacional
     description: Diseño y ejecución de proyectos de investigación en comunicación,
