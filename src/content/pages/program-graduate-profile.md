@@ -33,18 +33,19 @@ items:
 
       •Planificación y Comunicación Estratégica: Formula, ejecuta y audita planes globales de comunicación interna y de relaciones públicas externas para corporaciones, organismos del Estado y organizaciones no gubernamentales (ONG), mitigando escenarios de crisis de reputación.
     icon: search
-  - title: Comunicación Organizacional
-    description: Gestión de comunicación interna y externa, relaciones públicas y
-      estrategia corporativa para organizaciones de todo tipo.
-    icon: megaphone
-  - title: Comunicación Digital
-    description: "Estrategias para entornos digitales: gestión de redes sociales,
-      contenido web y narrativas transmedia."
-    icon: globe
-  - title: Producción Audiovisual
-    description: Técnicas de producción para cine, televisión, video y formatos
-      digitales multimedia — de la idea al producto final.
-    icon: video
+  - title: "Competencias Actitudinales (Saber Ser y Convivir) "
+    description: >-
+      •Compromiso y Sensibilidad Social: Ejerce su profesión guiado por valores
+      humanos de justicia, promoviendo de manera activa la inclusión social, los
+      derechos de las minorías, el resguardo de la identidad cultural trujillana
+      y los objetivos de desarrollo sostenible.
+
+
+      •Vigilancia Ética y Combate a la Desinformación: Actúa como un profesional comprometido con la alfabetización mediática e informacional, asumiendo una postura proactiva e incorruptible contra la manipulación de datos, noticias falsas y sesgos informativos.
+
+
+      •Liderazgo Proactivo y Colaborativo: Lidera con empatía, resiliencia y creatividad grupos profesionales interdisciplinarios, demostrando destreza para la toma de decisiones complejas en salas de redacción y departamentos organizacionales bajo alta presión
+    icon: star
 headings:
   - title: Áreas Principales
     items:
