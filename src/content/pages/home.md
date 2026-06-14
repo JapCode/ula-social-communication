@@ -42,15 +42,15 @@ news:
   secondary:
     - category: Comunicación
       title: Periodismo digital y el futuro de la información local
-      date: "2026-05-24"
+      date: 2026-05-24
       href: /portfolio/articles
     - category: Eventos
       title: "Foro: Inteligencia Artificial en la comunicación pública"
-      date: "2026-05-20"
+      date: 2026-05-20
       href: /student-life/events
     - category: Comunidad
       title: "Comunicación comunitaria: voces desde el territorio"
-      date: "2026-05-13"
+      date: 2026-05-13
       href: /student-life/community
   title: Nuevas narrativas transmedia en el entorno digital
   tag: Actualidad
@@ -68,9 +68,9 @@ video:
     a la mejor escuela de comunicación del país.
 footer:
   email: comunicacion@nurr.ula.ve
-  phone: +58 272 221-2222
+  phone: "+58 422 515-3760 "
   schedule: Lun–Vie 8:00 AM – 4:00 PM
-  social_instagram: https://www.instagram.com/comunicacionnurr/
-  social_twitter: https://x.com/ComunicacionNURR
+  social_instagram: https://www.instagram.com/comunicacionsocialulanurr/
+  social_twitter: https://x.com/ulanurr_cs
   social_youtube: https://www.youtube.com/@ComunicacionNURR
 ---
