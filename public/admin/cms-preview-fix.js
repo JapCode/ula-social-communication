@@ -6,7 +6,7 @@
   var h = window.h;
   var createClass = window.createClass;
 
-  var TARGET_COLLECTIONS = ['articles', 'events'];
+  var TARGET_COLLECTIONS = ['articles', 'events', 'faculty', 'staff', 'testimonials'];
 
   /**
    * Custom preview that renders all fields with widgetFor(),
