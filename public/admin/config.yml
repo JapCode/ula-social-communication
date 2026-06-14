@@ -9,6 +9,13 @@ backend:
 # It should only be enabled for local development.
 # local_backend: true
 
+media_library:
+  name: cloudinary
+  config:
+    cloud_name: dyqotor0j
+    api_key: 368224326323364
+
+# Fallback for any non-Cloudinary file operations (required by CMS schema)
 media_folder: public/images/uploads
 public_folder: /images/uploads
 
@@ -34,8 +41,7 @@ x-page: &page
   identifier_field: title
   summary: '{{title}}'
   sortable_fields: [title]
-  media_folder: ../../../public/images/uploads
-  public_folder: /images/uploads
+
 
 # ════════════════════════════════════════════════════════════
 collections:
@@ -53,8 +59,7 @@ collections:
     identifier_field: title
     summary: '{{title}} — {{author}}'
     sortable_fields: [date, title]
-    media_folder: ../../../public/images/uploads
-    public_folder: /images/uploads
+
     preview_path: "portfolio/articles/{{slug}}"
     view_filters:
       - label: Investigación
@@ -99,8 +104,7 @@ collections:
     identifier_field: title
     summary: '{{title}} — {{location}}'
     sortable_fields: [date]
-    media_folder: ../../../public/images/uploads
-    public_folder: /images/uploads
+
     preview_path: "student-life/events/{{slug}}"
     fields:
       - {label: Título, name: title, widget: string}
@@ -134,8 +138,7 @@ collections:
     format: frontmatter
     identifier_field: name
     summary: '{{name}} — {{specialization}}'
-    media_folder: ../../../public/images/uploads
-    public_folder: /images/uploads
+
     fields:
       - {label: Nombre, name: name, widget: string}
       - {label: Título Académico, name: title, widget: string}
@@ -164,8 +167,7 @@ collections:
     format: frontmatter
     identifier_field: name
     summary: '{{name}} — {{role}}'
-    media_folder: ../../../public/images/uploads
-    public_folder: /images/uploads
+
     fields:
       - {label: Nombre, name: name, widget: string}
       - {label: Cargo, name: role, widget: string}
@@ -187,8 +189,7 @@ collections:
     format: frontmatter
     identifier_field: name
     summary: '{{name}} — {{currentRole}}'
-    media_folder: ../../../public/images/uploads
-    public_folder: /images/uploads
+
     fields:
       - {label: Nombre, name: name, widget: string}
       - {label: Año de Graduación, name: graduationYear, widget: number, value_type: int, min: 1980, max: 2030}
