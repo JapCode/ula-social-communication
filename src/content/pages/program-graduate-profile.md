@@ -16,22 +16,35 @@ items:
 
       •Marco Jurídico e Institucional: Aplica adecuadamente la legislación nacional e internacional regulatoria del derecho a la información, la libertad de expresión y el ejercicio libre del periodismo, respetando firmemente los estatutos deontológicos.
     icon: pencil
-  - title: Investigación Comunicacional
-    description: Diseño y ejecución de proyectos de investigación en comunicación,
-      con metodologías cuantitativas y cualitativas rigurosas.
+  - title: Competencias Procedimentales y Técnicas (Saber Hacer)
+    description: >-
+      •Investigación Científica de la Comunicación: Diseña, gestiona y defiende
+      proyectos de investigación en ciencias sociales (básica, cualitativa,
+      cuantitativa o aplicada) para diagnosticar y resolver científicamente
+      problemáticas del campo. Esta competencia constituye la espina dorsal
+      evaluativa en las memorias de grado.
+
+
+      •Producción Periodística Convergente: Planifica, investiga, procesa y redacta géneros informativos, interpretativos y de opinión con alta pulcritud idiomática y narrativa, adaptando eficientemente el discurso a canales tradicionales (impreso, radio, televisión) y plataformas hipertextuales.
+
+
+      •Gestión de Narrativas e Inteligencia Artificial: Utiliza con destreza funcional herramientas digitales, flujos transmedia, gestión avanzada de comunidades de redes sociales (Community Management), analítica web, e integra críticamente metodologías de automatización e inteligencia artificial en la creación ética de contenidos.
+
+
+      •Planificación y Comunicación Estratégica: Formula, ejecuta y audita planes globales de comunicación interna y de relaciones públicas externas para corporaciones, organismos del Estado y organizaciones no gubernamentales (ONG), mitigando escenarios de crisis de reputación.
     icon: search
   - title: Comunicación Organizacional
     description: Gestión de comunicación interna y externa, relaciones públicas y
       estrategia corporativa para organizaciones de todo tipo.
     icon: megaphone
-  - title: Producción Audiovisual
-    description: Técnicas de producción para cine, televisión, video y formatos
-      digitales multimedia — de la idea al producto final.
-    icon: video
   - title: Comunicación Digital
     description: "Estrategias para entornos digitales: gestión de redes sociales,
       contenido web y narrativas transmedia."
     icon: globe
+  - title: Producción Audiovisual
+    description: Técnicas de producción para cine, televisión, video y formatos
+      digitales multimedia — de la idea al producto final.
+    icon: video
 headings:
   - title: Áreas Principales
     items:
