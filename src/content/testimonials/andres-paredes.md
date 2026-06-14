@@ -15,4 +15,5 @@ quote: >-
   periodismo, la gerencia estratégica y la academia.
 
   ​Su visión de constante evolución la ha llevado a diversificar su perfil como Licenciada en Administración (UNESR), maestrante en Gerencia de Talento Humano y especialista en formación en Periodismo en Medios Digitales (ULA-Táchira).
+photo: /images/uploads/184111.jpg
 ---
