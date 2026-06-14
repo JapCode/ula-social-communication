@@ -51,13 +51,29 @@
 
         if (!src || src.startsWith('blob:') || src.startsWith('data:')) continue;
 
-        // Strategy: direct mediaFiles lookup → blob URL
-        if (mediaFiles && mediaFiles.length) {
+        var resolved = false;
+
+        // Strategy 1: getAsset — resolves committed images, gives absolute URL
+        if (typeof getAsset === 'function') {
+          try {
+            var asset = getAsset(src);
+            if (asset && asset.url) {
+              if (asset.url !== src) {
+                img.setAttribute('src', asset.url);
+                resolved = true;
+              }
+            }
+          } catch (e) {}
+        }
+
+        // Strategy 2: mediaFiles lookup — resolves draft images via blob URL
+        if (!resolved && mediaFiles && mediaFiles.length) {
           var srcName = src.split('/').pop();
           for (var j = 0; j < mediaFiles.length; j++) {
             var mf = mediaFiles[j];
             if (mf.fileObj && (mf.path === src || mf.name === srcName || (mf.path && mf.path.endsWith(srcName)))) {
               img.setAttribute('src', URL.createObjectURL(mf.fileObj));
+              resolved = true;
               break;
             }
           }
