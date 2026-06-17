@@ -62,7 +62,7 @@ video:
   eyebrow: 'Laboratorio de computación "Teresita Jiménez" '
   title: Reinaguración
   badge: Destacado
-  video_id: https://youtube.com/@comunicacionsocialulanurr?si=97ilATdcFCuBDNyR
+  video_id: https://youtu.be/VrEm2DAT1NA?si=8U0PQFXgJChWQN7o
   duration: 3:28
   description: Nuestro laboratorio de computación ha sido renovado
 footer:
