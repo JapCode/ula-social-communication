@@ -71,5 +71,5 @@ footer:
   schedule: Lun–Vie 8:00 AM – 4:00 PM
   social_instagram: https://www.instagram.com/comunicacionsocialulanurr/
   social_twitter: https://x.com/ulanurr_cs
-  social_youtube: https://youtu.be/VrEm2DAT1NA?si=31ESQ8FqiVvyeQAv
+  social_youtube: https://youtube.com/@comunicacionsocialulanurr?si=97ilATdcFCuBDNyR
 ---
