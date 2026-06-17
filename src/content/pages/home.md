@@ -59,13 +59,12 @@ news:
     sobre el impacto de la tecnología en el periodismo moderno.
   category: Investigación
 video:
-  eyebrow: Un espacio para los estudoantes
-  title: Sala de Cine
+  eyebrow: 'Laboratorio de computación "Teresita Jiménez" '
+  title: Reinaguración
   badge: Destacado
-  video_id: G_JfKOjwzwo
-  duration: 3:24
-  description: Descubre nuestras instalaciones y el ambiente académico que define
-    a la mejor escuela de comunicación del país.
+  video_id: https://youtu.be/VrEm2DAT1NA?si=31ESQ8FqiVvyeQAv
+  duration: 3:28
+  description: Nuestro laboratorio de computación ha sido renovado
 footer:
   email: comunicacion@nurr.ula.ve
   phone: "+58 422 515-3760 "
