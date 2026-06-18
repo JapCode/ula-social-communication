@@ -1,7 +1,7 @@
 ---
 name: José Cordero
 graduationYear: 2015
-currentRole: Periodista
+currentRole: Profesor de inglés y de francés
 quote: >
   José Cordero es licenciado en Comunicación Social y magíster en Literatura
   Latinoamericana, egresado del Núcleo Universitario Rafael Rangel. Inició su
