@@ -36,6 +36,6 @@ items:
     icon: youtube-logo
   - description: "@comunicacionsocialnurr"
     title: TiktTok
-    icon: envelope
+    icon: phone
     href: https://www.tiktok.com/@comunicacionsocialnurr?_r=1&_d=f38gc23h7h4mf7&sec_uid=MS4wLjABAAAAsmr5AdtjUngG0w-eytcxuwFIbGZpa2e5BJ0EPN5Home8MaPko_bN8YhsToSiLJtL&share_author_id=7601687398540248071&sharer_language=es&source=h5_m&u_code=f1k430bjkk13a8&timestamp=1781729029&user_id=7601687398540248071&sec_user_id=MS4wLjABAAAAsmr5AdtjUngG0w-eytcxuwFIbGZpa2e5BJ0EPN5Home8MaPko_bN8YhsToSiLJtL&item_author_type=1&utm_source=copy&utm_campaign=client_share&utm_medium=android&share_iid=7652106881334707976&share_link_id=022ee118-5efc-4d75-b78f-a831588dd395&share_app_id=1233&ugbiz_name=ACCOUNT&ug_btm=b8727%2Cb7360&social_share_type=5&enable_checksum=1
 ---
