@@ -39,21 +39,21 @@ const slugify = (text: string) =>
   aria-label="Navegación principal"
 >
   <div
-    class="floating-nav bg-white/80 backdrop-blur-xl border border-white/20 shadow-[0_2px_20px_-6px_rgba(0,0,0,0.06)] rounded-full px-4 md:px-6 lg:px-8 py-2 md:py-2.5 flex items-center justify-between transition-shadow duration-300"
+    class="floating-nav bg-white/80 backdrop-blur-xl border border-white/20 shadow-[0_2px_20px_-6px_rgba(0,0,0,0.06)] rounded-full px-4 md:px-6 lg:px-8  flex items-center justify-between transition-shadow duration-300"
   >
     <!-- Logo -->
-    <a href="/" class="flex items-center gap-2 md:gap-3">
-      <img
-        src="/ula_logo.jpg"
-        alt="ULA NURR"
-        class="h-9 md:h-10 w-auto"
-        width="120"
-        height="34"
-      />
+    <a href="/" class="flex items-center ">
+      <figure class="relative aspect-square h-[55px] w-[170px] min-w-fit overflow-hidden rounded ">
+        <img
+          src="/images/ula_logo.png"
+          alt="ULA NURR"
+          class="absolute object-cover object-center inset-0 w-[200px] h-[60px] -mt-0.5"
+        />
+      </figure>
     </a>
 
     <!-- Desktop Navigation (generated from data) -->
-    <div class="hidden lg:flex items-center gap-5" data-desktop-nav>
+    <div class="hidden lg:flex items-center gap-5 py-2 md:py-3.5" data-desktop-nav>
       <a
         class:list={[
           "text-[10px] md:text-[12px] font-bold tracking-[0.15em] uppercase transition-colors duration-300 relative group py-1.5 px-2.5",
