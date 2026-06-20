@@ -14,108 +14,94 @@ const { hero } = Astro.props;
 	id="inicio"
 	aria-labelledby="hero-title"
 >
-	<!-- Primary color background with editorial frame geometry -->
-	<div class="hero-bg absolute inset-0" aria-hidden="true">
-		<!-- Solid primary base -->
-		<div class="absolute inset-0 bg-primary"></div>
-		<!-- Subtle gradient depth -->
-		<div class="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary-deep"></div>
 
-		<!-- Editorial frame — 4 intersecting lines: edge to edge, below nav, through the seal -->
-		<div class="hidden lg:block absolute inset-0 overflow-hidden pointer-events-none">
-
-			<!-- Left vertical — from top edge to bottom edge, marks content margin -->
-			<div class="absolute left-[5%] top-0 bottom-0 w-px"
-				 style="background: linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.16) 10%, rgba(255,255,255,0.09) 80%, transparent 100%);"></div>
-
-			<!-- Right vertical — from top edge to bottom edge, frames the seal column -->
-			<div class="absolute right-[5%] top-0 bottom-0 w-px"
-				 style="background: linear-gradient(to bottom, transparent 0%, rgba(255,255,255,0.11) 10%, rgba(255,255,255,0.06) 80%, transparent 100%);"></div>
-
-			<!-- Top horizontal — safely below the fixed nav pill (~80px) -->
-			<div class="absolute top-[80px] left-0 right-0 h-px"
-				 style="background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.18) 12%, rgba(255,255,255,0.08) 88%, transparent 100%);"></div>
-
-			<!-- Bottom horizontal — crosses through the seal area at bottom-right, brighter toward the seal -->
-			<div class="absolute bottom-[25%] left-0 right-0 h-px"
-				 style="background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.13) 12%, rgba(255,255,255,0.06) 45%, rgba(255,255,255,0.14) 68%, rgba(255,255,255,0.06) 88%, transparent 100%);"></div>
-
-		</div>
-
-		<!-- Warm radiant accent — low-opacity orange glow for vibrant energy -->
-		<div class="absolute -bottom-40 -right-40 w-[500px] h-[500px] md:w-[700px] md:h-[700px] rounded-full opacity-[0.06]" style="background: radial-gradient(circle, #F89728 0%, transparent 70%);" aria-hidden="true"></div>
+	<!-- Frame lines — Extreme to extreme structural grid -->
+	<div class="hidden lg:block absolute inset-0 pointer-events-none z-0" aria-hidden="true">
+		<!-- Vertical lines -->
+		<div class="absolute left-8 xl:left-16 top-0 bottom-0 w-px bg-ink/10"></div>
+		<div class="absolute left-1/2 top-0 bottom-0 w-px bg-ink/10 -translate-x-1/2"></div>
+		<div class="absolute right-8 xl:right-16 top-0 bottom-0 w-px bg-ink/10"></div>
+		
+		<!-- Horizontal lines -->
+		<div class="absolute top-[25%] left-0 right-0 h-px bg-ink/10"></div>
+		<div class="absolute bottom-[20%] left-0 right-0 h-px bg-ink/10"></div>
 	</div>
 
 	<!-- Split hero: editorial content left, university seal right -->
-	<div class="relative z-10 min-h-[60vh] md:min-h-[80vh] lg:min-h-screen flex items-center justify-center xs:pt-16 pt-28 pb-6 lg:py-0">
-		<div class="w-full max-w-[1400px] mx-auto px-5 md:px-12 lg:px-16">
+	<div class="relative z-10 min-h-[60vh] md:min-h-[80vh] lg:min-h-screen lg:max-h-[56rem] flex items-center justify-center xs:pt-16 pt-28 pb-6 lg:pt-20 lg:pb-0">
+		<div class="w-full max-w-[1400px] mx-auto px-5 md:px-12 lg:px-16 relative">
+
 			<div class="grid grid-cols-1 lg:grid-cols-12 items-center gap-6 md:gap-10 lg:gap-12 xl:gap-16">
 
-				<!-- Left column: Editorial content (7/12) -->
-				<div class="lg:col-span-7 text-center lg:text-left">
+				<!-- Left column: Editorial content (8/12) -->
+				<div class="lg:col-span-8 text-center lg:text-left relative z-10">
+					<!-- Masking container to hide grid lines underneath -->
+					<div class="bg-surface-elevated py-8 pr-8 lg:-ml-8 lg:pl-8 inline-block shadow-[0_0_30px_30px_var(--color-surface-elevated)] lg:shadow-none lg:bg-transparent">
+					<div class="lg:bg-surface-elevated lg:shadow-[0_0_30px_30px_var(--color-surface-elevated)] lg:rounded-3xl">
 
 					<!-- Eyebrow — editorial magazine style -->
 					<div class="flex items-center gap-3 md:gap-4 mb-5 md:mb-8 justify-center lg:justify-start">
-						<span class="block w-6 md:w-16 h-px bg-white/25"></span>
-						<span class="hero-eyebrow text-[9px] md:text-[10px] font-bold tracking-[0.35em] md:tracking-[0.4em] uppercase text-white/50">
+						<span class="block w-6 md:w-16 h-px bg-ink/30"></span>
+						<span class="hero-eyebrow text-[9px] md:text-[10px] font-bold tracking-[0.35em] md:tracking-[0.4em] uppercase text-ink">
 							{hero.eyebrow}
 						</span>
-						<span class="block w-4 md:w-8 h-px bg-white/15"></span>
+						<span class="block w-4 md:w-8 h-px bg-ink/30"></span>
 					</div>
 
 					<!-- Main title — fluid, dramatic scale -->
 					<h1
 						id="hero-title"
-						class="hero-title font-display font-bold text-white leading-[0.82] tracking-tighter font-display-hero"
+						class="hero-title font-display font-black text-primary leading-[0.85] tracking-tighter uppercase"
 						style="font-size: clamp(2.4rem, 11vw, 10rem);"
 					>
 						<span class="hero-title-line">{hero.title_line1}</span><br />
-						<span class="hero-title-line text-white/35 font-normal italic font-display-hero">{hero.title_line2}</span>
+						<span class="hero-title-line text-primary">{hero.title_line2}</span>
 					</h1>
 
 					<!-- Value proposition — body font for editorial contrast -->
-					<p class="hero-value-prop text-sm md:text-base lg:text-lg text-white/70 mt-3 md:mt-6 max-w-prose mx-auto lg:mx-0 leading-relaxed font-body">
+					<p class="hero-value-prop text-sm md:text-base lg:text-lg text-ink/80 mt-4 md:mt-8 max-w-prose mx-auto lg:mx-0 leading-relaxed font-body border-l-2 border-primary pl-4">
 						{hero.description}
 					</p>
 
 					<!-- CTA row -->
-					<div class="flex flex-col sm:flex-row items-center gap-3 md:gap-4 mt-5 md:mt-8 justify-center lg:justify-start">
+					<div class="flex flex-col sm:flex-row items-center gap-3 md:gap-4 mt-6 md:mt-10 justify-center lg:justify-start">
 						<a
 							href={hero.cta_link}
-							class="hero-cta-primary xs:w-full sm:w-auto inline-flex items-center gap-2 px-6 py-3 bg-[#F89728] text-white text-sm font-bold tracking-wider uppercase rounded-full shadow-md hover:bg-[#E08820] hover:shadow-lg hover:-translate-y-0.5 active:bg-[#C87818] active:translate-y-0 transition-all duration-300"
+							class="hero-cta-primary xs:w-full sm:w-auto inline-flex items-center gap-2 px-8 py-4 bg-accent text-white text-sm font-bold tracking-widest uppercase rounded-none hover:bg-accent-hover transition-colors duration-300"
 						>
 							{hero.cta_text}
 							<PhArrowRight
 								size={16}
 								weight="bold"
-								class="transition-transform duration-300 group-hover:translate-x-0.5"
 							/>
 						</a>
 						<a
 							href={hero.secondary_link}
-							class="hero-cta-secondary xs:w-full sm:w-auto inline-flex items-center gap-2 text-white/70 text-sm font-bold tracking-wider uppercase hover:text-white transition-colors duration-300 group"
+							class="hero-cta-secondary xs:w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-primary text-primary text-sm font-bold tracking-widest uppercase hover:bg-primary hover:text-white transition-colors duration-300 rounded-none"
 						>
 							{hero.secondary_text}
-							<span class="w-6 h-px bg-white/40 transition-all duration-300 group-hover:w-10"></span>
 						</a>
 					</div>
 
 					<!-- Subtle scroll indicator — desktop only, gentle bounce -->
-					<div class="hidden lg:flex items-center gap-3 mt-12 lg:mt-16 text-white/30 hero-scroll-indicator">
+					<div class="hidden lg:flex items-center gap-3 mt-12 lg:mt-16 text-ink-faint hero-scroll-indicator relative z-10 bg-surface-elevated px-4 py-2 rounded shadow-[0_0_20px_10px_var(--color-surface-elevated)] self-start inline-flex">
 						<PhArrowDown size={14} weight="light" />
-						<span class="text-[9px] font-bold tracking-[0.3em] uppercase">Scroll</span>
+						<span class="text-[9px] font-bold tracking-[0.3em] uppercase">Explora</span>
 					</div>
 
+					</div>
+					</div>
 				</div>
 
 				<!-- Right column: University seal as stamp in lower-right corner -->
-				<div class="lg:col-span-5 flex justify-center lg:justify-end lg:me-10 items-center self-end pt-8 lg:pt-0 pb-4 lg:pb-2">
-					<div class="hero-seal-frame relative inline-flex items-center justify-center">
-						<img src="/images/161697.png" alt="Escudo ULA - Comunicación Social"
-							 class="relative w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] md:w-[320px] md:h-[320px] lg:w-[360px] lg:h-[360px] xl:w-[400px] xl:h-[400px] max-[400px]:!w-[160px] max-[400px]:!h-[160px] object-contain z-10"
-							 style="filter: brightness(0) invert(0.92) contrast(1.1);"
-							 loading="eager"
-							 decoding="async" />
+				<div class="lg:col-span-4 flex justify-center lg:justify-end lg:me-10 items-center self-end pt-8 lg:pt-0 pb-4 lg:pb-2 relative z-10">
+					<div class="bg-surface-elevated p-6 shadow-[0_0_40px_30px_var(--color-surface-elevated)] rounded-full">
+						<div class="hero-seal-frame relative inline-flex items-center justify-center">
+							<img src="/images/ula-seal.png" alt="Escudo ULA - Comunicación Social"
+								 class="relative w-[180px] h-[180px] sm:w-[220px] sm:h-[220px] md:w-[260px] md:h-[260px] lg:w-[280px] lg:h-[280px] xl:w-[320px] xl:h-[320px] max-[400px]:!w-[140px] max-[400px]:!h-[140px] object-contain z-10"
+								 loading="eager"
+								 decoding="async" />
+						</div>
 					</div>
 				</div>
 
@@ -126,12 +112,8 @@ const { hero } = Astro.props;
 
 <style>
 	.hero-editorial {
-		background-color: var(--color-primary);
+		background-color: var(--color-surface-elevated);
 		min-height: 100vh;
-	}
-
-	.hero-bg {
-		opacity: 1;
 	}
 
 	/* Mobile: let section height follow content */
@@ -148,7 +130,7 @@ const { hero } = Astro.props;
 	}
 	.hero-title-line {
 		display: inline-block;
-		animation: title-fade-up 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+		animation: title-fade-up 0.7s linear both;
 	}
 	.hero-title-line:last-child {
 		animation-delay: 0.25s;
@@ -160,7 +142,7 @@ const { hero } = Astro.props;
 		50% { transform: translateY(6px); opacity: 0.6; }
 	}
 	.hero-scroll-indicator {
-		animation: scroll-bounce 2.5s ease-in-out infinite;
+		animation: scroll-bounce 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 	}
 
 	/* ── Description fade-in just behind the title ── */
@@ -169,24 +151,18 @@ const { hero } = Astro.props;
 		to { opacity: 1; transform: translateY(0); }
 	}
 	.hero-value-prop {
-		animation: desc-fade 0.7s ease-out 0.2s both;
+		animation: desc-fade 0.5s linear 0.15s both;
 	}
 
-	/* ── Seal concentric rings — editorial framing ── */
-	.hero-seal-frame::before,
-	.hero-seal-frame::after {
+	/* ── Seal structural frame ── */
+	.hero-seal-frame::before {
 		content: '';
 		position: absolute;
-		border-radius: 9999px;
-		border: 1px solid rgba(255,255,255,0.06);
-		pointer-events: none;
-	}
-	.hero-seal-frame::before {
 		inset: -10%;
-	}
-	.hero-seal-frame::after {
-		inset: -22%;
-		border-color: rgba(255,255,255,0.03);
+		border: 1px solid var(--color-ink);
+		opacity: 0.1;
+		pointer-events: none;
+		border-radius: 0;
 	}
 
 	@media (prefers-reduced-motion: reduce) {

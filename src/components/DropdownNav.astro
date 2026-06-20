@@ -105,7 +105,7 @@ const hasActiveItem = sections.some((section) =>
         sections.map((section, sectionIndex) => (
           <div
             class={
-              sectionIndex > 0 ? "mt-3 pt-3 border-t border-[rgba(226,232,240,0.5)]" : ""
+              sectionIndex > 0 ? "mt-3 pt-3 border-t border-tinted" : ""
             }
           >
             {section.heading && (
@@ -121,7 +121,7 @@ const hasActiveItem = sections.some((section) =>
                     "flex items-start gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 group/item",
                     isActive(item.href)
                       ? "bg-primary/5 text-primary"
-                      : "hover:bg-[rgba(248,250,252,0.8)]",
+                      : "hover:bg-primary/[0.03]",
                   ]}
                 >
                   {item.icon && iconMap[item.icon] && (
