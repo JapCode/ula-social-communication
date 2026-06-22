@@ -6,7 +6,14 @@
   var h = window.h;
   var createClass = window.createClass;
 
-  var TARGET_COLLECTIONS = ['articles', 'events', 'faculty', 'staff', 'testimonials'];
+  var TARGET_COLLECTIONS = [
+    'articles', 'events', 'faculty', 'staff', 'testimonials',
+    'page-home', 'page-contact', 'page-history', 'page-graduate-profile',
+    'page-internships', 'page-association', 'page-groups', 'page-community',
+    'page-admission-process', 'page-admission-requirements',
+    'page-alumni-testimonials', 'page-alumni-continuing-education',
+    'page-events-listing', 'page-curriculum', 'page-course-content', 'page-mission'
+  ];
 
   /**
    * Custom preview that renders all fields with widgetFor(),
