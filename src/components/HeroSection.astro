@@ -10,99 +10,79 @@ const { hero } = Astro.props;
 ---
 
 <section
-	class="hero-editorial relative overflow-hidden"
+	class="hero-editorial relative"
 	id="inicio"
 	aria-labelledby="hero-title"
 >
 
-	<!-- Frame lines — Extreme to extreme structural grid -->
-	<div class="hidden lg:block absolute inset-0 pointer-events-none z-0" aria-hidden="true">
-		<!-- Vertical lines -->
-		<div class="absolute left-8 xl:left-16 top-0 bottom-0 w-px bg-ink/10"></div>
-		<div class="absolute left-1/2 top-0 bottom-0 w-px bg-ink/10 -translate-x-1/2"></div>
-		<div class="absolute right-8 xl:right-16 top-0 bottom-0 w-px bg-ink/10"></div>
-		
-		<!-- Horizontal lines -->
-		<div class="absolute top-[25%] left-0 right-0 h-px bg-ink/10"></div>
-		<div class="absolute bottom-[20%] left-0 right-0 h-px bg-ink/10"></div>
-	</div>
-
-	<!-- Split hero: editorial content left, university seal right -->
+	<!-- Hero: centered vertical layout -->
 	<div class="relative z-10 min-h-[60vh] md:min-h-[80vh] lg:min-h-screen lg:max-h-[56rem] flex items-center justify-center xs:pt-16 pt-28 pb-6 lg:pt-20 lg:pb-0">
 		<div class="w-full max-w-[1400px] mx-auto px-5 md:px-12 lg:px-16 relative">
 
-			<div class="grid grid-cols-1 lg:grid-cols-12 items-center gap-6 md:gap-10 lg:gap-12 xl:gap-16">
+			<!-- Decorative background number — centered watermark -->
+			<div class="hidden lg:block absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-primary/[0.03] pointer-events-none select-none font-display font-black overflow-hidden leading-none" style="font-size: clamp(20rem, 40vw, 50rem); letter-spacing: -0.06em;" aria-hidden="true">
+				26
+			</div>
 
-				<!-- Left column: Editorial content (8/12) -->
-				<div class="lg:col-span-8 text-center lg:text-left relative z-10">
-					<!-- Masking container to hide grid lines underneath -->
-					<div class="bg-surface-elevated py-8 pr-8 lg:-ml-8 lg:pl-8 inline-block shadow-[0_0_30px_30px_var(--color-surface-elevated)] lg:shadow-none lg:bg-transparent">
-					<div class="lg:bg-surface-elevated lg:shadow-[0_0_30px_30px_var(--color-surface-elevated)] lg:rounded-3xl">
+			<!-- Editorial content — centered vertical stack -->
+			<div class="relative z-10 text-center bg-surface-elevated max-w-2xl mx-auto">
 
-					<!-- Eyebrow — editorial magazine style -->
-					<div class="flex items-center gap-3 md:gap-4 mb-5 md:mb-8 justify-center lg:justify-start">
-						<span class="block w-6 md:w-16 h-px bg-ink/30"></span>
-						<span class="hero-eyebrow text-[9px] md:text-[10px] font-bold tracking-[0.35em] md:tracking-[0.4em] uppercase text-ink">
-							{hero.eyebrow}
-						</span>
-						<span class="block w-4 md:w-8 h-px bg-ink/30"></span>
-					</div>
-
-					<!-- Main title — fluid, dramatic scale -->
-					<h1
-						id="hero-title"
-						class="hero-title font-display font-black text-primary leading-[0.85] tracking-tighter uppercase"
-						style="font-size: clamp(2.4rem, 11vw, 10rem);"
-					>
-						<span class="hero-title-line">{hero.title_line1}</span><br />
-						<span class="hero-title-line text-primary">{hero.title_line2}</span>
-					</h1>
-
-					<!-- Value proposition — body font for editorial contrast -->
-					<p class="hero-value-prop text-sm md:text-base lg:text-lg text-ink/80 mt-4 md:mt-8 max-w-prose mx-auto lg:mx-0 leading-relaxed font-body border-l-2 border-primary pl-4">
-						{hero.description}
-					</p>
-
-					<!-- CTA row -->
-					<div class="flex flex-col sm:flex-row items-center gap-3 md:gap-4 mt-6 md:mt-10 justify-center lg:justify-start">
-						<a
-							href={hero.cta_link}
-							class="hero-cta-primary xs:w-full sm:w-auto inline-flex items-center gap-2 px-8 py-4 bg-accent text-white text-sm font-bold tracking-widest uppercase rounded-none hover:bg-accent-hover transition-colors duration-300"
-						>
-							{hero.cta_text}
-							<PhArrowRight
-								size={16}
-								weight="bold"
-							/>
-						</a>
-						<a
-							href={hero.secondary_link}
-							class="hero-cta-secondary xs:w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-primary text-primary text-sm font-bold tracking-widest uppercase hover:bg-primary hover:text-white transition-colors duration-300 rounded-none"
-						>
-							{hero.secondary_text}
-						</a>
-					</div>
-
-					<!-- Subtle scroll indicator — desktop only, gentle bounce -->
-					<div class="hidden lg:flex items-center gap-3 mt-12 lg:mt-16 text-ink-faint hero-scroll-indicator relative z-10 bg-surface-elevated px-4 py-2 rounded shadow-[0_0_20px_10px_var(--color-surface-elevated)] self-start inline-flex">
-						<PhArrowDown size={14} weight="light" />
-						<span class="text-[9px] font-bold tracking-[0.3em] uppercase">Explora</span>
-					</div>
-
-					</div>
-					</div>
+				<!-- Logo — centered above title -->
+				<div class="mb-6 md:mb-8 flex justify-center">
+		      <figure class="relative aspect-square h-[150px] w-[150px] min-w-fit overflow-hidden">
+						<img
+							src="/images/161618.png"
+							alt="ULA NURR"
+	          class="absolute object-cover object-center inset-0 w-[200px] h-[200px]"
+						/>
+					</figure>
 				</div>
 
-				<!-- Right column: University seal as stamp in lower-right corner -->
-				<div class="lg:col-span-4 flex justify-center lg:justify-end lg:me-10 items-center self-end pt-8 lg:pt-0 pb-4 lg:pb-2 relative z-10">
-					<div class="bg-surface-elevated p-6 shadow-[0_0_40px_30px_var(--color-surface-elevated)] rounded-full">
-						<div class="hero-seal-frame relative inline-flex items-center justify-center">
-							<img src="/images/ula-seal.png" alt="Escudo ULA - Comunicación Social"
-								 class="relative w-[180px] h-[180px] sm:w-[220px] sm:h-[220px] md:w-[260px] md:h-[260px] lg:w-[280px] lg:h-[280px] xl:w-[320px] xl:h-[320px] max-[400px]:!w-[140px] max-[400px]:!h-[140px] object-contain z-10"
-								 loading="eager"
-								 decoding="async" />
-						</div>
-					</div>
+				<!-- Eyebrow — centered magazine style -->
+				<div class="flex items-center gap-3 md:gap-4 mb-4 md:mb-6 justify-center">
+					<span class="block w-6 md:w-10 h-px bg-ink/30"></span>
+					<span class="hero-eyebrow text-[9px] md:text-[10px] font-bold tracking-[0.35em] md:tracking-[0.4em] uppercase text-ink">
+						{hero.eyebrow}
+					</span>
+					<span class="block w-4 md:w-8 h-px bg-ink/30"></span>
+				</div>
+
+				<!-- Main title — fluid, dramatic scale, centered -->
+				<h1
+					id="hero-title"
+					class="hero-title font-display font-black text-primary leading-[0.85] tracking-tighter uppercase mb-4 md:mb-6 text-center break-words max-w-full"
+					style="font-size: clamp(1.8rem, 6vw, 5rem);"
+				>
+					<span class="hero-title-line">{hero.title_line1}</span><br />
+					<span class="hero-title-line text-primary">{hero.title_line2}</span>
+				</h1>
+
+				<!-- Value proposition — centered, no left accent -->
+				<p class="hero-value-prop text-sm md:text-base lg:text-lg text-ink/80 mt-4 md:mt-6 max-w-prose mx-auto leading-relaxed font-body">
+					{hero.description}
+				</p>
+
+				<!-- CTA row — centered -->
+				<div class="flex flex-col sm:flex-row items-center gap-3 md:gap-4 mt-6 md:mt-10 justify-center">
+					<a
+						href={hero.cta_link}
+						class="hero-cta-primary xs:w-full sm:w-auto inline-flex items-center gap-2 px-8 py-4 bg-accent text-white text-sm font-bold tracking-widest uppercase rounded-none hover:bg-accent-hover transition-colors duration-300"
+					>
+						{hero.cta_text}
+						<PhArrowRight size={16} weight="bold" />
+					</a>
+					<a
+						href={hero.secondary_link}
+						class="hero-cta-secondary xs:w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-primary text-primary text-sm font-bold tracking-widest uppercase hover:bg-primary hover:text-white transition-colors duration-300 rounded-none"
+					>
+						{hero.secondary_text}
+					</a>
+				</div>
+
+				<!-- Subtle scroll indicator — desktop only, gentle bounce -->
+				<div class="hidden lg:flex items-center gap-3 mt-12 lg:mt-16 text-ink-faint hero-scroll-indicator justify-center">
+					<PhArrowDown size={14} weight="light" />
+					<span class="text-[9px] font-bold tracking-[0.3em] uppercase">Explora</span>
 				</div>
 
 			</div>
@@ -152,17 +132,6 @@ const { hero } = Astro.props;
 	}
 	.hero-value-prop {
 		animation: desc-fade 0.5s linear 0.15s both;
-	}
-
-	/* ── Seal structural frame ── */
-	.hero-seal-frame::before {
-		content: '';
-		position: absolute;
-		inset: -10%;
-		border: 1px solid var(--color-ink);
-		opacity: 0.1;
-		pointer-events: none;
-		border-radius: 0;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
