@@ -54,7 +54,7 @@ news:
       href: /student-life/community
   title: Nuevas narrativas transmedia en el entorno digital
   tag: Actualidad
-  image: /images/uploads/161615.png
+  image: /images/uploads/184786.jpg
   description: Un recorrido por las últimas investigaciones de nuestra facultad
     sobre el impacto de la tecnología en el periodismo moderno.
   category: Investigación
