@@ -10,80 +10,79 @@ const { hero } = Astro.props;
 ---
 
 <section
-	class="hero-editorial relative overflow-hidden"
+	class="hero-editorial relative"
 	id="inicio"
 	aria-labelledby="hero-title"
 >
-	<!-- Primary color background with subtle geometric accents -->
-	<div class="hero-bg absolute inset-0" aria-hidden="true">
-		<!-- Solid primary base -->
-		<div class="absolute inset-0 bg-primary"></div>
-		<!-- Subtle gradient depth -->
-		<div class="absolute inset-0 bg-gradient-to-br from-primary via-primary to-primary-deep"></div>
-		<!-- Geometric accent — large circle -->
-		<div class="hero-geo-circle hero-geo-circle--1 absolute -right-20 -top-20 w-[500px] h-[500px] md:w-[700px] md:h-[700px] rounded-full opacity-10" style="background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);"></div>
-		<!-- Geometric accent — small circle -->
-		<div class="hero-geo-circle hero-geo-circle--2 absolute -left-10 bottom-10 w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full opacity-[0.07]" style="background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);"></div>
-		<!-- Diagonal accent line -->
-		<div class="hidden lg:block absolute right-1/4 top-0 bottom-0 w-px bg-white/5"></div>
-		<!-- Horizontal accent line -->
-		<div class="hidden lg:block absolute left-0 right-0 top-2/3 h-px bg-white/5"></div>
-	</div>
 
-	<!-- Mobile: centered, content-rich layout | Desktop: editorial bottom-aligned -->
-	<div class="relative z-10 min-h-[60vh] md:min-h-[80vh] lg:min-h-screen flex flex-col justify-center lg:items-end lg:justify-end xs:pt-16 pt-28 pb-12 lg:py-0 lg:pb-16 xl:pb-24">
-		<div class="w-full max-w-[1400px] mx-auto px-6 md:px-12 lg:px-16">
-			<div class="hero-editorial-content text-center lg:text-left">
+	<!-- Hero: centered vertical layout -->
+	<div class="relative z-10 min-h-[60vh] md:min-h-[80vh] lg:min-h-screen lg:max-h-[56rem] flex items-center justify-center xs:pt-16 pt-28 pb-6 lg:pt-20 lg:pb-0">
+		<div class="w-full max-w-[1400px] mx-auto px-5 md:px-12 lg:px-16 relative">
 
-				<!-- Eyebrow — editorial magazine style -->
-				<div class="flex items-center gap-4 mb-6 md:mb-8 justify-center lg:justify-start">
-					<span class="block w-8 md:w-16 h-px bg-white/30"></span>
-					<span class="hero-eyebrow text-[9px] md:text-[10px] font-bold tracking-[0.4em] uppercase text-white/50">
-						{hero.eyebrow}
-					</span>
-					<span class="block w-4 md:w-8 h-px bg-white/20"></span>
+			<!-- Decorative background number — centered watermark -->
+			<div class="hidden lg:block absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2 text-primary/[0.03] pointer-events-none select-none font-display font-black overflow-hidden leading-none" style="font-size: clamp(20rem, 40vw, 50rem); letter-spacing: -0.06em;" aria-hidden="true">
+				26
+			</div>
+
+			<!-- Editorial content — centered vertical stack -->
+			<div class="relative z-10 text-center bg-surface-elevated max-w-2xl mx-auto">
+
+				<!-- Logo — centered above title -->
+				<div class="mb-6 md:mb-8 flex justify-center">
+		      <figure class="relative aspect-square h-[150px] w-[150px] min-w-fit overflow-hidden">
+						<img
+							src="/images/161618.png"
+							alt="ULA NURR"
+	          class="absolute object-cover object-center inset-0 w-[200px] h-[200px]"
+						/>
+					</figure>
 				</div>
 
-				<!-- Main title — editorial, dramatic scale -->
+				<!-- Eyebrow — centered magazine style -->
+				<div class="flex items-center gap-3 md:gap-4 mb-4 md:mb-6 justify-center">
+					<span class="block w-6 md:w-10 h-px bg-ink/30"></span>
+					<span class="hero-eyebrow text-[9px] md:text-[10px] font-bold tracking-[0.35em] md:tracking-[0.4em] uppercase text-ink">
+						{hero.eyebrow}
+					</span>
+					<span class="block w-4 md:w-8 h-px bg-ink/30"></span>
+				</div>
+
+				<!-- Main title — fluid, dramatic scale, centered -->
 				<h1
 					id="hero-title"
-					class="hero-title text-5xl sm:text-6xl md:text-7xl lg:text-9xl xl:text-[10rem] font-display font-bold text-white leading-[0.82] tracking-tighter font-display-hero"
+					class="hero-title font-display font-black text-primary leading-[0.85] tracking-tighter uppercase mb-4 md:mb-6 text-center break-words max-w-full"
+					style="font-size: clamp(1.8rem, 6vw, 5rem);"
 				>
-					{hero.title_line1}<br />
-					<span class="text-white/35 font-normal italic font-display-hero">{hero.title_line2}</span>
+					<span class="hero-title-line">{hero.title_line1}</span><br />
+					<span class="hero-title-line text-primary">{hero.title_line2}</span>
 				</h1>
 
-				<!-- Value proposition — body font for editorial contrast -->
-				<p class="hero-value-prop text-sm md:text-base lg:text-lg text-white/75 mt-4 md:mt-6 max-w-prose mx-auto lg:mx-0 leading-relaxed font-body">
+				<!-- Value proposition — centered, no left accent -->
+				<p class="hero-value-prop text-sm md:text-base lg:text-lg text-ink/80 mt-4 md:mt-6 max-w-prose mx-auto leading-relaxed font-body">
 					{hero.description}
 				</p>
 
-				<!-- CTA row -->
-				<div class="flex flex-col sm:flex-row items-center gap-4 mt-6 md:mt-8 justify-center lg:justify-start">
+				<!-- CTA row — centered -->
+				<div class="flex flex-col sm:flex-row items-center gap-3 md:gap-4 mt-6 md:mt-10 justify-center">
 					<a
 						href={hero.cta_link}
-						class="hero-cta-primary xs:w-full sm:w-auto inline-flex items-center gap-2 px-6 py-3 bg-[#F89728] text-white text-sm font-bold tracking-wider uppercase rounded-full shadow-md hover:bg-[#E08820] hover:shadow-lg hover:-translate-y-0.5 active:bg-[#C87818] active:translate-y-0 transition-all duration-300"
+						class="hero-cta-primary xs:w-full sm:w-auto inline-flex items-center gap-2 px-8 py-4 bg-accent text-white text-sm font-bold tracking-widest uppercase rounded-none hover:bg-accent-hover transition-colors duration-300"
 					>
 						{hero.cta_text}
-						<PhArrowRight
-							size={16}
-							weight="bold"
-							class="transition-transform duration-300 group-hover:translate-x-0.5"
-						/>
+						<PhArrowRight size={16} weight="bold" />
 					</a>
 					<a
 						href={hero.secondary_link}
-						class="hero-cta-secondary xs:w-full sm:w-auto inline-flex items-center gap-2 text-white/70 text-sm font-bold tracking-wider uppercase hover:text-white transition-colors duration-300 group"
+						class="hero-cta-secondary xs:w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-4 bg-transparent border-2 border-primary text-primary text-sm font-bold tracking-widest uppercase hover:bg-primary hover:text-white transition-colors duration-300 rounded-none"
 					>
 						{hero.secondary_text}
-						<span class="w-6 h-px bg-white/40 transition-all duration-300 group-hover:w-10"></span>
 					</a>
 				</div>
 
-				<!-- Subtle scroll indicator — desktop only -->
-				<div class="hidden lg:flex items-center gap-3 mt-12 lg:mt-16 text-white/30">
+				<!-- Subtle scroll indicator — desktop only, gentle bounce -->
+				<div class="hidden lg:flex items-center gap-3 mt-12 lg:mt-16 text-ink-faint hero-scroll-indicator justify-center">
 					<PhArrowDown size={14} weight="light" />
-					<span class="text-[9px] font-bold tracking-[0.3em] uppercase">Scroll</span>
+					<span class="text-[9px] font-bold tracking-[0.3em] uppercase">Explora</span>
 				</div>
 
 			</div>
@@ -93,48 +92,46 @@ const { hero } = Astro.props;
 
 <style>
 	.hero-editorial {
-		background-color: var(--color-primary);
+		background-color: var(--color-surface-elevated);
 		min-height: 100vh;
 	}
 
-	.hero-bg {
-		opacity: 1;
-	}
-
-	/* Hero elements visible immediately (no fade-in delay) */
-
-	/* Mobile: let section height follow content (container handles min-height) */
+	/* Mobile: let section height follow content */
 	@media (max-width: 767px) {
 		.hero-editorial {
 			min-height: auto;
 		}
 	}
 
-	/* Scale down geometric circles on very small phones */
-	@media (max-width: 480px) {
-		.hero-geo-circle--1 {
-			width: 280px;
-			height: 280px;
-			right: -80px;
-			top: -60px;
-		}
-		.hero-geo-circle--2 {
-			width: 180px;
-			height: 180px;
-			left: -50px;
-		}
+	/* ── Title staggered fade-up ── */
+	@keyframes title-fade-up {
+		from { opacity: 0; transform: translateY(24px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+	.hero-title-line {
+		display: inline-block;
+		animation: title-fade-up 0.7s linear both;
+	}
+	.hero-title-line:last-child {
+		animation-delay: 0.25s;
 	}
 
-	/* Moderate circle size on tablet to keep them proportional */
-	@media (min-width: 768px) and (max-width: 1023px) {
-		.hero-geo-circle--1 {
-			width: 400px;
-			height: 400px;
-		}
-		.hero-geo-circle--2 {
-			width: 240px;
-			height: 240px;
-		}
+	/* ── Scroll indicator bounce ── */
+	@keyframes scroll-bounce {
+		0%, 100% { transform: translateY(0); opacity: 0.25; }
+		50% { transform: translateY(6px); opacity: 0.6; }
+	}
+	.hero-scroll-indicator {
+		animation: scroll-bounce 2.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+	}
+
+	/* ── Description fade-in just behind the title ── */
+	@keyframes desc-fade {
+		from { opacity: 0; transform: translateY(12px); }
+		to { opacity: 1; transform: translateY(0); }
+	}
+	.hero-value-prop {
+		animation: desc-fade 0.5s linear 0.15s both;
 	}
 
 	@media (prefers-reduced-motion: reduce) {
