@@ -14,5 +14,5 @@ quote: >
   (Venezuela) y La Noticia (Estados Unidos). En 2021, recibió el Premio de
   Periodismo José Martí Bronce otorgado por la National Association of Hispanic
   Publications. 
-photo: /images/uploads/16570362211682616913.jpg
+photo: /images/uploads/183289.png
 ---
