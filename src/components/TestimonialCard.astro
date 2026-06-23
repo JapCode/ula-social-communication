@@ -44,9 +44,12 @@ const avatarColor = avatarColors[colorIndex];
 ---
 
 <article class:list={['testimonial', featured ? 'testimonial--featured' : 'testimonial--regular']}>
-  <!-- Quote mark — editorial style -->
+  <!-- Top accent line — subtle editorial detail -->
+  <div class="testimonial-accent" aria-hidden="true"></div>
+
+  <!-- Quote mark — background decoration -->
   <div class="testimonial-quote-mark" aria-hidden="true">
-    <PhQuotes size={featured ? 40 : 24} weight="fill" class="text-primary/10" />
+    <PhQuotes size={featured ? 36 : 24} weight="fill" class="text-primary/[0.06]" />
   </div>
 
   <!-- Quote text -->
@@ -74,7 +77,12 @@ const avatarColor = avatarColors[colorIndex];
 </article>
 
 <style>
-  /* Base testimonial */
+  /* ============================================================
+     Testimonial Card — Editorial style, no left border accents
+     Natural flow, scrollable quote on grid cards
+     ============================================================ */
+
+  /* --- Base card --- */
   .testimonial {
     position: relative;
     padding: 2rem;
@@ -88,13 +96,24 @@ const avatarColor = avatarColors[colorIndex];
     box-shadow: var(--shadow-luma);
   }
 
+  /* --- Top accent line --- */
+  .testimonial-accent {
+    width: 2rem;
+    height: 1px;
+    background: var(--color-primary);
+    opacity: 0.2;
+    margin-bottom: 1.25rem;
+  }
+
+  /* --- Quote mark watermark --- */
   .testimonial-quote-mark {
     position: absolute;
     top: 1.25rem;
     right: 1.5rem;
-    opacity: 0.5;
+    pointer-events: none;
   }
 
+  /* --- Quote text — scrollable on grid cards --- */
   .testimonial-quote {
     position: relative;
     z-index: 1;
@@ -109,6 +128,33 @@ const avatarColor = avatarColors[colorIndex];
     margin: 0;
   }
 
+  /* Scrollable quote for cards inside the grid */
+  .testimonial--regular .testimonial-quote {
+    max-height: 200px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 62, 126, 0.3) transparent;
+    padding-right: 0.25rem;
+  }
+
+  .testimonial--regular .testimonial-quote::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  .testimonial--regular .testimonial-quote::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .testimonial--regular .testimonial-quote::-webkit-scrollbar-thumb {
+    background: rgba(0, 62, 126, 0.25);
+    border-radius: 9999px;
+  }
+
+  .testimonial--regular .testimonial-quote::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 62, 126, 0.4);
+  }
+
+  /* --- Author footer --- */
   .testimonial-author {
     display: flex;
     align-items: center;
@@ -150,12 +196,13 @@ const avatarColor = avatarColors[colorIndex];
   }
 
   .testimonial-name {
-    font-family: var(--font-display), sans-serif;
-    font-size: 0.875rem;
+    font-family: var(--font-display), serif;
+    font-size: 0.9375rem;
     font-weight: 700;
     font-style: normal;
     color: var(--color-ink);
     line-height: 1.3;
+    letter-spacing: -0.01em;
   }
 
   .testimonial-role {
@@ -170,11 +217,15 @@ const avatarColor = avatarColors[colorIndex];
     letter-spacing: 0.05em;
   }
 
-  /* Featured variant — editorial pull-quote style */
+  /* --- Featured variant: larger canvas, full quote (no scroll cap) --- */
   .testimonial--featured {
-    padding: 2.5rem 2.5rem 2rem;
-    border-left: 3px solid var(--color-primary);
-    background: linear-gradient(135deg, var(--color-surface-elevated) 0%, rgba(0, 93, 170, 0.02) 100%);
+    padding: 2.5rem;
+  }
+
+  .testimonial--featured .testimonial-accent {
+    width: 2.5rem;
+    opacity: 0.3;
+    margin-bottom: 1.5rem;
   }
 
   .testimonial--featured .testimonial-quote p {
@@ -189,17 +240,32 @@ const avatarColor = avatarColors[colorIndex];
     right: 2rem;
   }
 
+  .testimonial--featured .testimonial-author {
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+  }
+
+  .testimonial--featured .testimonial-name {
+    font-size: 1rem;
+  }
+
+  /* --- Responsive --- */
   @media (max-width: 767px) {
     .testimonial {
       padding: 1.5rem;
     }
 
     .testimonial--featured {
-      padding: 1.75rem 1.5rem 1.5rem;
+      padding: 1.75rem;
     }
 
     .testimonial--featured .testimonial-quote p {
       font-size: 1rem;
+    }
+
+    /* More generous on mobile — 10 lines visible */
+    .testimonial--regular .testimonial-quote {
+      max-height: 260px;
     }
   }
 </style>

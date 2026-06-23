@@ -23,9 +23,14 @@ const introText = introBody ?? "La Escuela de Comunicación Social del NURR ha f
   ]}
   sectionTheme="admission"
 >
-  <!-- Intro — inline, not boxed -->
+  <!-- Intro — editorial opening with left accent bar (like gp-opening) -->
   <div class="testimonial-intro">
-    <p>{introText}</p>
+    <div class="testimonial-intro__accent" aria-hidden="true">
+      <span class="testimonial-intro__line"></span>
+    </div>
+    <p class="testimonial-intro__text">
+      {introText}
+    </p>
   </div>
 
   {testimonials.length > 0 ? (
@@ -86,25 +91,42 @@ const introText = introBody ?? "La Escuela de Comunicación Social del NURR ha f
 </ContentLayout>
 
 <style>
-  /* Intro — inline, editorial */
+  /* ============================================================
+     Testimonials Page — Editorial Layout
+     ============================================================ */
+
+  /* --- Intro — editorial opening with left accent bar --- */
   .testimonial-intro {
+    position: relative;
+    padding-left: 1.5rem;
     margin-bottom: 3rem;
-    max-width: 48rem;
   }
 
-  .testimonial-intro p {
-    font-size: 1.0625rem;
-    line-height: 1.75;
-    color: var(--color-ink-muted);
+  .testimonial-intro__accent {
+    position: absolute;
+    left: 0;
+    top: 0.25rem;
+    bottom: 0.25rem;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--color-primary), rgba(0, 93, 170, 0.15));
+    border-radius: 2px;
+  }
+
+  .testimonial-intro__text {
+    font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+    line-height: 1.7;
+    color: var(--color-ink);
+    font-weight: 400;
+    max-width: 48rem;
     margin: 0;
   }
 
-  /* Featured testimonial */
+  /* --- Featured testimonial --- */
   .featured-testimonial-wrapper {
-    margin-bottom: 2rem;
+    margin-bottom: 2.5rem;
   }
 
-  /* Remaining testimonials — asymmetric grid */
+  /* --- Remaining testimonials — responsive grid --- */
   .testimonials-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -115,10 +137,11 @@ const introText = introBody ?? "La Escuela de Comunicación Social del NURR ha f
   @media (min-width: 640px) {
     .testimonials-grid {
       grid-template-columns: repeat(2, 1fr);
+      gap: 1.75rem;
     }
   }
 
-  /* Empty state */
+  /* --- Empty state --- */
   .empty-state {
     text-align: center;
     padding: 4rem 2rem;
@@ -150,7 +173,7 @@ const introText = introBody ?? "La Escuela de Comunicación Social del NURR ha f
     color: var(--color-primary-deep);
   }
 
-  /* CTA band — primary background, editorial */
+  /* --- CTA band — primary background, editorial --- */
   .testimonial-cta {
     background: var(--color-primary);
     border-radius: var(--radius-luma);
