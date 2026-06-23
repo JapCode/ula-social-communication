@@ -16,6 +16,7 @@ Las plataformas digitales han democratizado la producción de contenido, pero ta
 ![sda](haryo-setyadi-acn5eraesb4-unsplash.jpg "asdada")
 
 ![](/images/uploads/sanmeet-chahil-in078aknh34-unsplash.jpg)
+*Foto: Juan Pérez*
 
 ## Hallazgos principales
 
