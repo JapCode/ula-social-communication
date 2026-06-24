@@ -5,7 +5,7 @@ author: "juanito "
 category: investigacion
 excerpt: a test fot the decap
 coverImage: /images/uploads/16570362211682616913.jpg
-image_credit: john doe
+image_credit: john does
 ---
 La convergencia de medios ha transformado radicalmente la forma en que contamos historias. En el Núcleo Universitario Rafael Rangel, nuestros investigadores están a la vanguardia de este cambio.
 
