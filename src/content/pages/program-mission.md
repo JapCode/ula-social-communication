@@ -43,16 +43,26 @@ headings:
       los trabajos de investigación académica) y la aplicación rigurosa de los
       códigos deontológicos de la profesión periodística."
 items:
-  - title: Compromiso social
-    description: Vinculación con la comunidad y el desarrollo regional
-  - title: Ética profesional
-    description: Integridad y responsabilidad en la práctica comunicacional
-  - title: Excelencia académica
-    description: Formación rigurosa y actualizada en comunicación social
-  - title: Inclusión y diversidad
-    description: Respeto a las múltiples voces y perspectivas culturales
-  - title: Innovación
-    description: Adaptación creativa a los nuevos medios y tecnologías
-  - title: Responsabilidad social
-    description: Contribución al bienestar colectivo a través de la comunicación
+  - title: "Veracidad y Rigor Periodístico: "
+    description: Compromiso inquebrantable con la búsqueda de la verdad, la
+      contrastación rigurosa de fuentes y la exactitud informativa, combatiendo
+      de forma activa los fenómenos de desinformación e infodemia.
+  - title: "Responsabilidad Social y Ciudadana:"
+    description: Entendimiento de la praxis comunicacional como un bien y servicio
+      público esencial para la cohesión social, el desarrollo inclusivo, la
+      equidad y la defensa irrestricta de los derechos humanos dentro de las
+      comunidades.
+  - title: "Pensamiento Crítico:"
+    description: Capacidad analítica y metodológica para interpretar los flujos de
+      información, las estructuras de poder político-económico y las dinámicas
+      culturales contemporáneas de manera independiente, plural y objetiva.
+  - title: "Innovación y Adaptabilidad:"
+    description: "Disposición y apertura hacia el aprendizaje continuo, la
+      experimentación con nuevas tecnologías narrativas interactivas, entornos
+      transmedia y la evolución del entorno digital. "
+  - title: "Ética y Transparencia: "
+    description: Respeto absoluto a la propiedad intelectual, los derechos de autor
+      (eje normativo clave para los trabajos de investigación académica) y la
+      aplicación rigurosa de los códigos deontológicos de la profesión
+      periodística.
 ---
