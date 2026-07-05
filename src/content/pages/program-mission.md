@@ -3,16 +3,6 @@ title: Misión y Visión
 pageType: headings-items
 pageId: program-mission
 headings:
-  - title: Visión
-    eyebrow: ""
-    description: Consolidarse como la escuela de comunicación referente en la región
-      occidental del país, reconocida por su excelencia académica, el impacto
-      social de su investigación y la capacidad de adaptación de sus egresados a
-      los desafíos de la era digital y la inteligencia artificial. Aspiramos a
-      ser un espacio de vanguardia que combine la tradición intelectual de la
-      ULA con la innovación mediática, formando líderes capaces de transformar
-      entornos sociales a través de la comunicación estratégica y el periodismo
-      ético.
   - title: Misión
     eyebrow: ""
     description: La carrera de Comunicación Social de la Universidad de Los Andes,
@@ -24,6 +14,16 @@ headings:
       contribuir al desarrollo democrático, cultural, social y económico de la
       región andina y del país, garantizando el derecho a la información y la
       libertad de expresión."
+  - title: Visión
+    eyebrow: ""
+    description: Consolidarse como la escuela de comunicación referente en la región
+      occidental del país, reconocida por su excelencia académica, el impacto
+      social de su investigación y la capacidad de adaptación de sus egresados a
+      los desafíos de la era digital y la inteligencia artificial. Aspiramos a
+      ser un espacio de vanguardia que combine la tradición intelectual de la
+      ULA con la innovación mediática, formando líderes capaces de transformar
+      entornos sociales a través de la comunicación estratégica y el periodismo
+      ético.
   - title: VALORES INSTITUCIONALES
     description: "•Veracidad y Rigor Periodístico: Compromiso inquebrantable con la
       búsqueda de la verdad, la contrastación rigurosa de fuentes y la exactitud
