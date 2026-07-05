@@ -7,7 +7,7 @@ hero:
   title_line1: Comunicación
   title_line2: Social
   description: Licenciatura en Comunicación Social — Formando profesionales
-    críticos para el futuro de la comunicación digital.
+    críticos para el futuro de la comunicación de emergente.
   cta_text: Cómo Inscribirse
   cta_link: /admission/process
   secondary_text: Explorar
