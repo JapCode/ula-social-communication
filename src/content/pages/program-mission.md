@@ -25,23 +25,7 @@ headings:
       entornos sociales a través de la comunicación estratégica y el periodismo
       ético.
   - title: VALORES INSTITUCIONALES
-    description: "•Veracidad y Rigor Periodístico: Compromiso inquebrantable con la
-      búsqueda de la verdad, la contrastación rigurosa de fuentes y la exactitud
-      informativa, combatiendo de forma activa los fenómenos de desinformación e
-      infodemia.  •Responsabilidad Social y Ciudadana: Entendimiento de la
-      praxis comunicacional como un bien y servicio público esencial para la
-      cohesión social, el desarrollo inclusivo, la equidad y la defensa
-      irrestricta de los derechos humanos dentro de las
-      comunidades.  •Pensamiento Crítico: Capacidad analítica y metodológica
-      para interpretar los flujos de información, las estructuras de poder
-      político-económico y las dinámicas culturales contemporáneas de manera
-      independiente, plural y objetiva.  •Innovación y Adaptabilidad:
-      Disposición y apertura hacia el aprendizaje continuo, la experimentación
-      con nuevas tecnologías narrativas interactivas, entornos transmedia y la
-      evolución del entorno digital.  •Ética y Transparencia: Respeto absoluto a
-      la propiedad intelectual, los derechos de autor (eje normativo clave para
-      los trabajos de investigación académica) y la aplicación rigurosa de los
-      códigos deontológicos de la profesión periodística."
+    description: ""
 items:
   - title: "Veracidad y Rigor Periodístico: "
     description: Compromiso inquebrantable con la búsqueda de la verdad, la
