@@ -1,9 +1,9 @@
 ---
-title: asdasd
-date: 2026-06-05
-endDate: 2026-06-05
-location: asdasd
-type: foro
-description: asdafsasf
+title: Técnicas Cinematograficas
+date: 2026-02-11
+endDate: ""
+location: Sala de Cine "José Ignacio Cabrujas"
+type: charla
+description: Clase Magistral
+coverImage: 226620.jpg
 ---
-asfasf
