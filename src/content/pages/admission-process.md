@@ -1,26 +1,18 @@
 ---
-title: Proceso de Admisión
+title: Modalidades de Admisión
 pageType: content
 pageId: admission-process
-subtitle: Pasos y fechas para realizar tu inscripción en Comunicación Social
+subtitle: si quieres ser parte de  la escuela de Comunicación Social del Núcleo
+  Universitario Rafael Rangel
 eyebrow: Admisión
 items:
-  - title: Registro OPSU
-    description: Regístrate en la plataforma de la OPSU durante el período de
-      inscripción de candidatos. Selecciona la Universidad de Los Andes y la
-      carrera de Comunicación Social como tu primera opción.
-    detail: Enero – Febrero
-    icon: clipboard-text
-    emphasis: false
-  - title: Prueba de Aptitud
-    description: Presenta la prueba de aptitud académica (antes prueba de admisión)
-      y la entrevista vocacional en las fechas indicadas por la universidad.
-    detail: Marzo – Abril
+  - title: prueba de habilidades especificas
+    description: llenar
+    detail: ""
     icon: files
-  - title: Asignación de Cupos
-    description: La OPSU asigna los cupos según el puntaje obtenido y la
-      disponibilidad de la carrera. Recibirás una notificación con el resultado.
-    detail: Mayo – Junio
+  - title: Convenio U.L.A. - Gremios
+    description: llenar.
+    detail: ""
     icon: pencil-simple-line
     emphasis: true
   - title: Inscripción Definitiva
@@ -35,4 +27,4 @@ items:
     detail: Septiembre – Octubre
     icon: student
 ---
-El proceso de admisión a la carrera de Comunicación Social en la ULA NURR se realiza a través de la OPSU (Oficina de Planificación del Sector Universitario). A continuación, te explicamos los pasos a seguir para formalizar tu inscripción.
+Existen varias modalidades Reglamentarias de admisión que pueden ser usadas por los aspirantes de manera simultanea en los procesos.
