@@ -1,8 +1,8 @@
 ---
-title: Currículo
+title: Pensum
 pageType: headings
 pageId: academics-curriculum
-pdfUrl: "/pensum-comunicacion-social.pdf"
+pdfUrl: /pensum-comunicacion-social.pdf
 headings:
   - title: Ciclo Básico
     description: Semestres 1–4 — Fundamentos teóricos y prácticos de la comunicación
