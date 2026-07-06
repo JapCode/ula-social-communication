@@ -3,7 +3,7 @@ pageType: home
 pageId: home
 title: Página Principal
 hero:
-  eyebrow: Núcleo Universitario Rafael Rangel
+  eyebrow: Núcleo Universitario "Rafael Rangel"
   title_line1: Comunicación
   title_line2: Social
   description: Licenciatura en Comunicación Social — Formando profesionales
@@ -67,7 +67,7 @@ video:
   description: Nuestro laboratorio de computación ha sido renovado
 footer:
   email: comunicacion@nurr.ula.ve
-  phone: "+58 422 515-3760 "
+  phone: "+58 412 263-2750 "
   schedule: Lun–Vie 8:00 AM – 4:00 PM
   social_instagram: https://www.instagram.com/comunicacionsocialulanurr/
   social_twitter: https://x.com/ulanurr_cs
