@@ -427,12 +427,12 @@ collections:
         collapsed: true
         hint: "Cada requisito es un texto corto. Se muestran con un ícono de verificación."
         field: {label: "Requisito", name: "requirement", widget: "string"}
-      - label: "Modalidades"
+      - label: "Formatos"
         name: modalities
         widget: list
         collapsed: true
         summary: '{{fields.title}}'
-        hint: "Tipos de pasantía disponibles (tarjetas con ícono)"
+        hint: "Formatos necesarios (tarjetas con ícono)"
         fields:
           - {label: "Título", name: "title", widget: "string"}
           - {label: "Descripción", name: "description", widget: "text", required: false}
