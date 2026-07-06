@@ -1,7 +1,7 @@
 ---
-name: Prof.Yherdyn Peña
+name: Departamento de Ciencias Sociales
 role: Jefe (E)
-department: Ciencias Sociales
+department: Prof. Yherdyn Peña
 email: ""
 phone: ""
 ---
