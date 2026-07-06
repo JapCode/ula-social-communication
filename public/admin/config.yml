@@ -179,10 +179,10 @@ collections:
       - {label: Teléfono, name: phone, widget: string, required: false}
       - {label: Foto, name: photo, widget: image, required: false}
 
-  # ── Testimonios ───────────────────────────────────────────
-  - name: testimonials
-    label: Testimonios
-    label_singular: Testimonio
+  # ── Egresados de Éxito ───────────────────────────────────────────
+  - name: Egresados de Éxito
+    label: Egresados de Éxito
+    label_singular: Egresados de Éxito
     folder: src/content/testimonials
     create: true
     delete: true
@@ -619,7 +619,7 @@ collections:
       - {label: "Subtítulo", name: "subtitle", widget: "string", required: false}
       - {label: "Etiqueta", name: "eyebrow", widget: "string", hint: "Ej: Admisión", required: false}
       - {label: "Texto introductorio", name: "body", widget: "text", required: false}
-      - label: "Pasos del Proceso"
+      - label: "Requisitos"
         name: items
         widget: list
         summary: '{{fields.title}}'
