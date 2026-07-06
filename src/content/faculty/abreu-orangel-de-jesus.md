@@ -1,5 +1,5 @@
 ---
-name: Abreu, Orangel De Jesús
+name: Abreu, Orangel de Jesús
 title: Profesor
 specialization: Comunicación Social
 bio: |-
