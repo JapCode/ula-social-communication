@@ -1,5 +1,5 @@
 ---
-name: prof. Orlando Quevedo
+name: Prof. Orlando Quevedo
 role: Coordinador
 department: Comunicación Social
 ---
