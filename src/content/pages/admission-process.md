@@ -66,5 +66,21 @@ items:
     detail: Septiembre – Octubre
     icon: student
     emphasis: true
+  - emphasis: false
+    title: Atleta de Alta Competencia
+    description: >-
+      Es una Modalidad de ingreso para aquel aspirante que practique una
+      disciplina deportiva, y que participe activa y continuamente en sus
+      respectivas competencias Nacionales o Internacionales.
+
+
+      Para ser calificado como Atleta de Alta Competencia, el aspirante debe:
+
+
+      Practicar una de las Disciplinas Deportivas Registradas en la Federación Venezolana Deportiva de la Educación Superior (FEVEDES), y que se practique en la Universidad de Los Andes.
+
+      Haber Representado a un Estado de la República en actividades propias de su disciplina, bien sea a nivel Nacional o Internacional durante los 2 últimos años previos a la solicitud de ingreso.
+
+      Cumplir con los parámetros establecidos por el Departamento Técnico de la Dirección de Deportes y el Laboratorio de Fisiología del Ejercicio de la Facultad de Humanidades y Educación ( Aprobar las Pruebas Técnica de la Disciplina, Prueba de Control Biológico y Examen Médico).
 ---
 Existen varias modalidades Reglamentarias de admisión que pueden ser usadas por los aspirantes de manera simultanea en los procesos.
