@@ -1,6 +1,6 @@
 ---
 image_credit: john does
-title: test
+title: test cloud
 date: 2026-05-26T00:00:00.000Z
 author: 'juanito '
 category: investigacion
