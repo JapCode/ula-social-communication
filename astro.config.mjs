@@ -16,6 +16,14 @@ export default defineConfig({
     ssr: {
       noExternal: ['@tinacms/astro', '@tinacms/bridge', '@tinacms/auth', 'tinacms'],
     },
+    server: {
+      proxy: {
+        '/admin': {
+          target: 'http://localhost:4001',
+          changeOrigin: true,
+        },
+      },
+    },
   },
   image: {
     service: passthroughImageService(),
