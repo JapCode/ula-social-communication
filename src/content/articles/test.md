@@ -14,8 +14,6 @@ La convergencia de medios ha transformado radicalmente la forma en que contamos 
 
 Las plataformas digitales han democratizado la producción de contenido, pero también han planteado nuevos desafíos éticos y narrativos que los comunicadores sociales deben abordar con rigor académico.
 
-![sda](/images/uploadsharyo-setyadi-acn5eraesb4-unsplash.jpg "asdada")
-
 ![](/images/uploads/sanmeet-chahil-in078aknh34-unsplash.jpg)
 *Foto: Juan Pérez*
 
