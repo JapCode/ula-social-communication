@@ -10,9 +10,9 @@ items:
     href: mailto:comunicacion@nurr.ula.ve
     icon: envelope
   - title: Teléfono
-    description: +58 422-5153760
+    description: 0412 2632750
     detail: Lunes a Viernes, 8:00 AM – 4:00 PM
-    href: "04225153760"
+    href: wa.me/5804122632750
     icon: phone
   - title: Ubicación
     description: Núcleo Universitario Rafael Rangel
