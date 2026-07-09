@@ -284,7 +284,7 @@ body {
 </a>
 ```
 
-### Botón Contacto (Nav)
+### Botón Noticias (Nav)
 
 ```html
 <a class="bg-[#F89728] text-white text-[10px] md:text-[11px] font-bold tracking-[0.12em] uppercase 
