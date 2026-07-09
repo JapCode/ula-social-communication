@@ -1,19 +1,20 @@
 ---
+image_credit: john does
 title: test
-date: 2026-05-26
-author: "juanito "
+date: 2026-05-26T00:00:00.000Z
+author: 'juanito '
 category: investigacion
 excerpt: a test fot the decap
-coverImage: /images/uploads/16570362211682616913.jpg
-image_credit: john does
+coverImage: /images/uploads/andrea-botta-jxenbtq88m8-unsplash.jpg
 ---
+
 La convergencia de medios ha transformado radicalmente la forma en que contamos historias. En el Núcleo Universitario Rafael Rangel, nuestros investigadores están a la vanguardia de este cambio.
 
 ## El contexto actual
 
 Las plataformas digitales han democratizado la producción de contenido, pero también han planteado nuevos desafíos éticos y narrativos que los comunicadores sociales deben abordar con rigor académico.
 
-![sda](haryo-setyadi-acn5eraesb4-unsplash.jpg "asdada")
+![sda](/images/uploadsharyo-setyadi-acn5eraesb4-unsplash.jpg "asdada")
 
 ![](/images/uploads/sanmeet-chahil-in078aknh34-unsplash.jpg)
 *Foto: Juan Pérez*
