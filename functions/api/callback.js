@@ -39,8 +39,8 @@ export async function onRequest(context) {
         }),
       },
     );
-
-    const result = await response.json();
+try{
+    // ... const result = await response.json();
 
     if (result.error) {
       return new Response(renderBody('error', result), {
