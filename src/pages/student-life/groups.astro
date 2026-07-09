@@ -18,15 +18,21 @@ import {
   PhRocket,
   PhArrowRight,
 } from 'phosphor-icons-astro';
-import { getEntry } from 'astro:content';
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { tinaField } from '@tinacms/astro/tina-field';
+import { client } from '../../../tina/__generated__/client';
 
-const pageEntry = await getEntry('pages', 'student-life-groups');
+const enriched = await requestWithMetadata(
+  client.queries.pageGroups({ relativePath: 'student-life-groups.md' })
+);
 
-if (!pageEntry) {
+const pageData = enriched.data.pageGroups;
+
+if (!pageData) {
   throw new Error('Groups page entry not found');
 }
 
-const { title, body, groups, workshops, cta } = pageEntry.data;
+const { title, body, groups, workshops, cta } = pageData;
 
 const iconMap: Record<string, any> = {
   FilmStrip: PhFilmStrip,
@@ -49,13 +55,13 @@ const iconMap: Record<string, any> = {
 const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
 ---
 
-<ContentLayout title={title} breadcrumb={breadcrumb} sectionTheme="student-life">
+<ContentLayout title={title} breadcrumb={breadcrumb} sectionTheme="student-life" data-tina-field={tinaField(pageData, 'title')}>
   <div class="py-4 md:py-8">
 
     <!-- Intro -->
     {body && (
       <div class="mb-10 md:mb-14 max-w-2xl">
-        <p class="text-slate-500 leading-relaxed text-lg">{body}</p>
+        <p class="text-slate-500 leading-relaxed text-lg" data-tina-field={tinaField(pageData, 'body')}>{body}</p>
       </div>
     )}
 
@@ -65,7 +71,7 @@ const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
         <h2 class="text-[10px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-6 md:mb-8">Grupos Activos</h2>
 
         <div class="divide-y divide-slate-100">
-          {groups.map((group: { title: string; description?: string; detail?: string; icon?: string }) => {
+          {groups.map((group: { title: string; description?: string; detail?: string; icon?: string }, gi: number) => {
             const Icon = iconMap[group.icon ?? 'Users'] ?? PhUsers;
             return (
               <div class="group py-6 md:py-8 first:pt-0">
@@ -75,14 +81,14 @@ const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
                   </div>
 
                   <div class="flex-1 min-w-0">
-                    <h3 class="text-lg md:text-xl font-bold text-slate-900 tracking-tight mb-1.5 group-hover:text-primary transition-colors duration-300">
+                    <h3 class="text-lg md:text-xl font-bold text-slate-900 tracking-tight mb-1.5 group-hover:text-primary transition-colors duration-300" data-tina-field={tinaField(group, 'title')}>
                       {group.title}
                     </h3>
                     {group.description && (
-                      <p class="text-sm md:text-base text-slate-500 leading-relaxed mb-3 max-w-xl">{group.description}</p>
+                      <p class="text-sm md:text-base text-slate-500 leading-relaxed mb-3 max-w-xl" data-tina-field={tinaField(group, 'description')}>{group.description}</p>
                     )}
                     <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-                      {group.detail && <span class="text-xs text-slate-400 font-medium">{group.detail}</span>}
+                      {group.detail && <span class="text-xs text-slate-400 font-medium" data-tina-field={tinaField(group, 'detail')}>{group.detail}</span>}
                       <a href="/contact" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-primary-deep transition-colors group/link">
                         Cómo participar
                         <PhArrowRight size={12} weight="light" class="transition-transform duration-200 group-hover/link:translate-x-0.5" />
@@ -103,7 +109,7 @@ const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
         <h2 class="text-[10px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-6 md:mb-8">Talleres</h2>
 
         <div class="divide-y divide-slate-100">
-          {workshops.map((workshop: { title: string; description?: string; detail?: string; icon?: string }) => {
+          {workshops.map((workshop: { title: string; description?: string; detail?: string; icon?: string }, wi: number) => {
             const Icon = iconMap[workshop.icon ?? 'Users'] ?? PhUsers;
             return (
               <div class="group py-6 md:py-8 first:pt-0">
@@ -113,14 +119,14 @@ const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
                   </div>
 
                   <div class="flex-1 min-w-0">
-                    <h3 class="text-lg md:text-xl font-bold text-slate-900 tracking-tight mb-1.5 group-hover:text-primary transition-colors duration-300">
+                    <h3 class="text-lg md:text-xl font-bold text-slate-900 tracking-tight mb-1.5 group-hover:text-primary transition-colors duration-300" data-tina-field={tinaField(workshop, 'title')}>
                       {workshop.title}
                     </h3>
                     {workshop.description && (
-                      <p class="text-sm md:text-base text-slate-500 leading-relaxed mb-3 max-w-xl">{workshop.description}</p>
+                      <p class="text-sm md:text-base text-slate-500 leading-relaxed mb-3 max-w-xl" data-tina-field={tinaField(workshop, 'description')}>{workshop.description}</p>
                     )}
                     <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
-                      {workshop.detail && <span class="text-xs text-slate-400 font-medium">{workshop.detail}</span>}
+                      {workshop.detail && <span class="text-xs text-slate-400 font-medium" data-tina-field={tinaField(workshop, 'detail')}>{workshop.detail}</span>}
                       <a href="/contact" class="inline-flex items-center gap-1 text-xs font-bold text-primary hover:text-primary/80 transition-colors group/link">
                         Inscribirse
                         <PhArrowRight size={12} weight="light" class="transition-transform duration-200 group-hover/link:translate-x-0.5" />
@@ -143,14 +149,14 @@ const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
             <PhUsers size={20} weight="light" class="text-primary" />
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-base font-medium text-slate-700 mb-1">{cta.title}</h3>
-            {cta.body && <p class="text-slate-400 leading-relaxed text-sm mb-4">{cta.body}</p>}
+            <h3 class="text-base font-medium text-slate-700 mb-1" data-tina-field={tinaField(cta, 'title')}>{cta.title}</h3>
+            {cta.body && <p class="text-slate-400 leading-relaxed text-sm mb-4" data-tina-field={tinaField(cta, 'body')}>{cta.body}</p>}
             <div class="flex flex-wrap gap-3">
               <a
                 href="/contact"
                 class="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary-deep transition-colors"
               >
-                {cta.label ?? 'Proponer una actividad'}
+                <span data-tina-field={tinaField(cta, 'label')}>{cta.label ?? 'Proponer una actividad'}</span>
                 <PhArrowRight size={14} weight="light" class="transition-transform duration-200 hover:translate-x-0.5" />
               </a>
             </div>

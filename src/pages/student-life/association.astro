@@ -1,26 +1,32 @@
 ---
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import { PhUsersThree, PhEnvelopeSimple, PhArrowRight } from 'phosphor-icons-astro';
-import { getEntry } from 'astro:content';
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { tinaField } from '@tinacms/astro/tina-field';
+import { client } from '../../../tina/__generated__/client';
 
-const pageEntry = await getEntry('pages', 'student-life-association');
+const enriched = await requestWithMetadata(
+  client.queries.pageAssociation({ relativePath: 'student-life-association.md' })
+);
 
-if (!pageEntry) {
+const pageData = enriched.data.pageAssociation;
+
+if (!pageData) {
   throw new Error('Association page entry not found');
 }
 
-const { title, body, activities, participationText, alert } = pageEntry.data;
+const { title, body, activities, participationText, alert } = pageData;
 
 const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
 ---
 
-<ContentLayout title={title} breadcrumb={breadcrumb} sectionTheme="student-life">
+<ContentLayout title={title} breadcrumb={breadcrumb} sectionTheme="student-life" data-tina-field={tinaField(pageData, 'title')}>
   <div class="max-w-3xl py-4 md:py-8">
 
     <!-- Intro -->
     {body && (
       <div class="mb-10 md:mb-14">
-        <p class="text-slate-500 leading-relaxed text-lg">{body}</p>
+        <p class="text-slate-500 leading-relaxed text-lg" data-tina-field={tinaField(pageData, 'body')}>{body}</p>
       </div>
     )}
 
@@ -29,7 +35,7 @@ const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
       <div class="mb-10">
         <h2 class="text-lg font-bold text-slate-900 mb-4">¿Qué hace la Asociación?</h2>
         <div class="space-y-3 text-slate-500 leading-relaxed">
-          {activities.map((text: string) => <p>{text}</p>)}
+          {activities.map((text: string, i: number) => <p data-tina-field={tinaField(pageData, 'activities', i)}>{text}</p>)}
         </div>
       </div>
     )}
@@ -38,7 +44,7 @@ const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
     {participationText && (
       <div class="mb-10">
         <h2 class="text-lg font-bold text-slate-900 mb-4">¿Cómo participar?</h2>
-        <p class="text-slate-500 leading-relaxed mb-6">{participationText}</p>
+        <p class="text-slate-500 leading-relaxed mb-6" data-tina-field={tinaField(pageData, 'participationText')}>{participationText}</p>
         <div class="flex flex-wrap gap-3">
           <a href="/contact" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded-full hover:shadow-luma hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300">
             <PhEnvelopeSimple size={14} weight="light" />
@@ -57,8 +63,8 @@ const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
             <PhUsersThree size={20} weight="light" class="text-primary" />
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-base font-medium text-slate-700 mb-1">{alert.title}</h3>
-            <p class="text-slate-400 leading-relaxed text-sm">{alert.body}</p>
+            <h3 class="text-base font-medium text-slate-700 mb-1" data-tina-field={tinaField(alert, 'title')}>{alert.title}</h3>
+            <p class="text-slate-400 leading-relaxed text-sm" data-tina-field={tinaField(alert, 'body')}>{alert.body}</p>
           </div>
         </div>
       </div>

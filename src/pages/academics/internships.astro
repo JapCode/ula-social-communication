@@ -1,5 +1,7 @@
 ---
-import { getEntry } from 'astro:content';
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { tinaField } from '@tinacms/astro/tina-field';
+import { client } from '../../../tina/__generated__/client';
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import {
   PhCheckCircle,
@@ -36,18 +38,21 @@ const iconMap: Record<string, any> = {
   BookOpen: PhBookOpen,
 };
 
-const pageEntry = await getEntry('pages', 'academics-internships');
+const enriched = await requestWithMetadata(
+  client.queries.pageInternships({ relativePath: 'academics-internships.md' })
+);
+const pageData = enriched.data.pageInternships;
 
-if (!pageEntry) {
+if (!pageData) {
   throw new Error('Internships page entry not found');
 }
 
-const { title, body, requirements, modalities, formUrl, contact } = pageEntry.data;
+const { title, body, requirements, modalities, formUrl, contact } = pageData;
 
 const breadcrumb = [{ label: "Académico", href: "/academics" }];
 ---
 
-<ContentLayout title={title} breadcrumb={breadcrumb} sectionTheme="academic">
+<ContentLayout title={title} breadcrumb={breadcrumb} sectionTheme="academic" data-tina-field={tinaField(pageData, 'title')}>
   <section class="internships-page">
 
     <!-- Opening -->
@@ -56,7 +61,7 @@ const breadcrumb = [{ label: "Académico", href: "/academics" }];
         <div class="ip-opening__accent" aria-hidden="true">
           <span class="ip-opening__line"></span>
         </div>
-        <p class="ip-opening__text">{body}</p>
+        <p class="ip-opening__text" data-tina-field={tinaField(pageData, 'body')}>{body}</p>
       </div>
     )}
 
@@ -70,10 +75,10 @@ const breadcrumb = [{ label: "Académico", href: "/academics" }];
         <h2 class="ip-section-title">Requisitos</h2>
 
         <div class="ip-requirements__list">
-          {requirements.map((req: string) => (
+          {requirements.map((req: string, i: number) => (
             <div class="ip-requirement">
               <PhCheckCircle size={18} weight="duotone" class="ip-requirement__icon" />
-              <span class="ip-requirement__text">{req}</span>
+              <span class="ip-requirement__text" data-tina-field={tinaField(pageData, 'requirements', i)}>{req}</span>
             </div>
           ))}
         </div>
@@ -95,8 +100,8 @@ const breadcrumb = [{ label: "Académico", href: "/academics" }];
             return (
               <div class="ip-modality">
                 <Icon size={22} weight="duotone" class="ip-modality__icon" />
-                <h3 class="ip-modality__title">{mod.title}</h3>
-                {mod.description && <p class="ip-modality__desc">{mod.description}</p>}
+                <h3 class="ip-modality__title" data-tina-field={tinaField(mod, 'title')}>{mod.title}</h3>
+                {mod.description && <p class="ip-modality__desc" data-tina-field={tinaField(mod, 'description')}>{mod.description}</p>}
               </div>
             );
           })}
@@ -121,23 +126,23 @@ const breadcrumb = [{ label: "Académico", href: "/academics" }];
         {contact && (
           <div class="ip-contact">
             <h3 class="ip-contact__title">¿Necesitas orientación?</h3>
-            <p class="ip-contact__person">{contact.name}</p>
-            {contact.role && <p class="ip-contact__role">{contact.role}</p>}
+            <p class="ip-contact__person" data-tina-field={tinaField(contact, 'name')}>{contact.name}</p>
+            {contact.role && <p class="ip-contact__role" data-tina-field={tinaField(contact, 'role')}>{contact.role}</p>}
             <div class="ip-contact__details">
               {contact.email && (
-                <a href={`mailto:${contact.email}`} class="ip-contact__link">
+                <a href={`mailto:${contact.email}`} class="ip-contact__link" data-tina-field={tinaField(contact, 'email')}>
                   <PhEnvelope size={14} weight="light" />
                   {contact.email}
                 </a>
               )}
               {contact.phone && (
-                <span class="ip-contact__detail">
+                <span class="ip-contact__detail" data-tina-field={tinaField(contact, 'phone')}>
                   <PhPhone size={14} weight="light" />
                   {contact.phone}
                 </span>
               )}
               {contact.office && (
-                <span class="ip-contact__detail">
+                <span class="ip-contact__detail" data-tina-field={tinaField(contact, 'office')}>
                   <PhMapPin size={14} weight="light" />
                   {contact.office}
                 </span>

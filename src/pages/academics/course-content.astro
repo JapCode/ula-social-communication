@@ -4,12 +4,18 @@ import {
   PhDownloadSimple,
   PhFileText,
 } from 'phosphor-icons-astro';
-import { getCollection, getEntry } from 'astro:content';
+import { getCollection } from 'astro:content';
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { tinaField } from '@tinacms/astro/tina-field';
+import { client } from '../../../tina/__generated__/client';
 
 const DEFAULT_INTRO = "Material de estudio, programas y recursos de cada materia del pénsum — organizados por semestre para que encuentres lo que necesitas rápidamente.";
 
-const pageEntry = await getEntry('pages', 'academics-course-content');
-const { title, body } = pageEntry?.data ?? {};
+const enriched = await requestWithMetadata(
+  client.queries.pageCourseContent({ relativePath: 'academics-course-content.md' })
+);
+const pageData = enriched.data.pageCourseContent;
+const { title, body } = pageData ?? {};
 const pageTitle = title ?? "Contenido de Cursos";
 const breadcrumb = [{ label: "Académico", href: "/academics" }];
 
@@ -32,7 +38,7 @@ const semesters = sortedCourses.reduce<Record<number, typeof sortedCourses>>((ac
 const semesterKeys = Object.keys(semesters).map(Number).sort((a, b) => a - b);
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic">
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic" data-tina-field={tinaField(pageData, 'title')}>
   <section class="courses-page">
 
     <!-- Opening -->
@@ -40,7 +46,7 @@ const semesterKeys = Object.keys(semesters).map(Number).sort((a, b) => a - b);
       <div class="cp-opening__accent" aria-hidden="true">
         <span class="cp-opening__line"></span>
       </div>
-      <p class="cp-opening__text">{intro}</p>
+      <p class="cp-opening__text" data-tina-field={tinaField(pageData, 'body')}>{intro}</p>
     </div>
 
     {bodyHtml && (

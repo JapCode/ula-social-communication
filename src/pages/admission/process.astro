@@ -9,11 +9,15 @@ import {
   PhQuestion,
   PhArrowRight,
 } from "phosphor-icons-astro";
-import { getEntry } from 'astro:content';
-
-const pageEntry = await getEntry('pages', 'admission-process');
-const { title, subtitle, items = [] } = pageEntry?.data ?? {};
-const body = pageEntry?.data?.body ?? pageEntry?.body ?? "";
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { tinaField } from '@tinacms/astro/tina-field';
+import { client } from '../../../tina/__generated__/client';
+const enriched = await requestWithMetadata(
+  client.queries.pageAdmissionProcess({ relativePath: 'admission-process.md' })
+);
+const pageData = enriched.data.pageAdmissionProcess;
+const { title, subtitle, items = [] } = pageData;
+const body = pageData.body ?? "";
 
 const pageTitle = title ?? "Proceso de Admisión";
 const pageSubtitle = subtitle ?? "Pasos y fechas para realizar tu inscripción en Comunicación Social";
@@ -44,11 +48,13 @@ const steps = items.map((item, i) => ({
 const breadcrumb = [{ label: "Admisión" }];
 ---
 
-<ContentLayout title={pageTitle} subtitle={pageSubtitle} breadcrumb={breadcrumb} eyebrow="Admisión" sectionTheme="admission">
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} breadcrumb={breadcrumb} eyebrow="Admisión" sectionTheme="admission"
+  data-tina-field={tinaField(pageData, 'title')}
+>
   <div class="py-8 md:py-12">
     <!-- Intro -->
     <div class="mb-10 md:mb-14 max-w-2xl reveal-intro">
-      <p class="text-slate-500 leading-relaxed text-lg">
+      <p class="text-slate-500 leading-relaxed text-lg" data-tina-field={tinaField(pageData, 'body')}>
         {introText}
       </p>
     </div>
@@ -143,6 +149,7 @@ const breadcrumb = [{ label: "Admisión" }];
                             ? "text-slate-900"
                             : "text-slate-700",
                         ]}
+                        data-tina-field={tinaField(items[index], 'title')}
                       >
                         {step.title}
                       </h2>
@@ -154,6 +161,7 @@ const breadcrumb = [{ label: "Admisión" }];
                           ? "text-slate-500"
                           : "text-slate-400",
                       ]}
+                      data-tina-field={tinaField(items[index], 'description')}
                     >
                       {step.description}
                     </p>
@@ -177,6 +185,7 @@ const breadcrumb = [{ label: "Admisión" }];
                             ? "text-primary/60"
                             : "text-slate-300",
                         ]}
+                        data-tina-field={tinaField(items[index], 'detail')}
                       >
                         {step.date}
                       </p>

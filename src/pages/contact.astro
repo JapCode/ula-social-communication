@@ -9,10 +9,15 @@ import {
   PhXLogo,
   PhArrowRight,
 } from "phosphor-icons-astro";
-import { getEntry } from 'astro:content';
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { client } from '../../tina/__generated__/client';
+import { tinaField } from '@tinacms/astro/tina-field';
 
-const pageEntry = await getEntry('pages', 'contact');
-const { title, subtitle, items = [] } = pageEntry?.data ?? {};
+const enriched = await requestWithMetadata(
+  client.queries.pageContact({ relativePath: 'contact.md' })
+);
+const pageData = enriched.data.pageContact;
+const { title, subtitle, items = [] } = pageData;
 
 const pageTitle = title ?? "Contacto";
 const pageSubtitle = subtitle ?? "Canales de comunicación con la Escuela de Comunicación Social del NURR";
@@ -39,18 +44,22 @@ const contactMethods = items.slice(0, 3).map((item, i) => ({
   href: item.href ?? "#",
   detail: item.detail ?? "",
   external: item.href?.startsWith("http") ?? false,
+  _item: item,
+  _index: i,
 }));
 
 const socialLinks = items.slice(3).map((item, i) => ({
   icon: (item.icon && iconLookup[item.icon]) || socialFallback[i] || PhInstagramLogo,
   label: item.title ?? "",
   href: item.href ?? "#",
+  _item: item,
+  _index: 3 + i,
 }));
 
 const breadcrumb = [{ label: "Inicio", href: "/" }];
 ---
 
-<ContentLayout title={pageTitle} subtitle={pageSubtitle} breadcrumb={breadcrumb} narrow={true} sectionTheme="admission">
+<ContentLayout title={pageTitle} subtitle={pageSubtitle} breadcrumb={breadcrumb} narrow={true} sectionTheme="admission" data-tina-field={tinaField(pageData, 'title')}>
   <div class="contact-grid">
 
     <!-- Contact Methods -->
@@ -64,14 +73,15 @@ const breadcrumb = [{ label: "Inicio", href: "/" }];
               class="contact-method group"
               target={method.external ? "_blank" : undefined}
               rel={method.external ? "noopener noreferrer" : undefined}
+              data-tina-field={tinaField(method._item, 'href')}
             >
               <div class="contact-method-icon">
                 <Icon size={22} weight="duotone" class="text-primary" />
               </div>
               <div class="contact-method-content">
-                <span class="contact-method-label">{method.label}</span>
-                <span class="contact-method-value">{method.value}</span>
-                <span class="contact-method-detail">{method.detail}</span>
+                <span class="contact-method-label" data-tina-field={tinaField(method._item, 'title')}>{method.label}</span>
+                <span class="contact-method-value" data-tina-field={tinaField(method._item, 'description')}>{method.value}</span>
+                <span class="contact-method-detail" data-tina-field={tinaField(method._item, 'detail')}>{method.detail}</span>
               </div>
               <PhArrowRight
                 size={16}
@@ -97,9 +107,10 @@ const breadcrumb = [{ label: "Inicio", href: "/" }];
                   rel="noopener noreferrer"
                   class="contact-social-link group"
                   aria-label={social.label}
+                  data-tina-field={tinaField(social._item, 'href')}
                 >
                   <Icon size={20} weight="regular" />
-                  <span>{social.label}</span>
+                  <span data-tina-field={tinaField(social._item, 'title')}>{social.label}</span>
                 </a>
               );
             })

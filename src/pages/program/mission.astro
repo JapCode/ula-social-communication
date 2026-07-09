@@ -1,9 +1,13 @@
 ---
 import ContentLayout from '@/layouts/ContentLayout.astro';
-import { getEntry } from 'astro:content';
-
-const pageEntry = await getEntry('pages', 'program-mission');
-const { title, headings = [], items = [] } = pageEntry?.data ?? {};
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { tinaField } from '@tinacms/astro/tina-field';
+import { client } from '../../../tina/__generated__/client';
+const enriched = await requestWithMetadata(
+  client.queries.pageMission({ relativePath: 'program-mission.md' })
+);
+const pageData = enriched.data.pageMission;
+const { title, headings = [], items = [] } = pageData;
 
 const pageTitle = title ?? "Misión y Visión";
 const missionHeading = headings[0] ?? { title: "Misión", description: "", eyebrow: "Propósito" };
@@ -17,7 +21,7 @@ const missionText = missionHeading.description || "Formar profesionales de la co
 const visionText = visionHeading.description || "Ser un programa de referencia nacional en la formación de comunicadores sociales, reconocido por su producción académica, su vinculación con la comunidad y su contribución al democratización de la comunicación en el estado Trujillo y la región andina.";
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic">
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic" data-tina-field={tinaField(pageData, "title")}>
   <div>
 
     <!-- Misión — foundation, subtle background -->
@@ -25,10 +29,10 @@ const visionText = visionHeading.description || "Ser un programa de referencia n
       <span class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-2">
         {missionHeading.eyebrow || "Propósito"}
       </span>
-      <h2 class="text-2xl md:text-3xl font-display font-bold text-ink tracking-tight mb-5 leading-[1.1]">
+      <h2 class="text-2xl md:text-3xl font-display font-bold text-ink tracking-tight mb-5 leading-[1.1]" data-tina-field={tinaField(missionHeading, "title")}>
         {missionHeading.title}
       </h2>
-      <p class="text-base md:text-lg text-slate-600 leading-relaxed max-w-prose">
+      <p class="text-base md:text-lg text-slate-600 leading-relaxed max-w-prose" data-tina-field={tinaField(missionHeading, "description")}>
         {missionText}
       </p>
     </div>
@@ -38,10 +42,10 @@ const visionText = visionHeading.description || "Ser un programa de referencia n
       <span class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-2">
         {visionHeading.eyebrow || "Aspiración"}
       </span>
-      <h2 class="text-2xl md:text-3xl font-display font-bold text-ink tracking-tight mb-5 leading-[1.1]">
+      <h2 class="text-2xl md:text-3xl font-display font-bold text-ink tracking-tight mb-5 leading-[1.1]" data-tina-field={tinaField(visionHeading, "title")}>
         {visionHeading.title}
       </h2>
-      <p class="text-base md:text-lg text-slate-600 leading-relaxed max-w-prose">
+      <p class="text-base md:text-lg text-slate-600 leading-relaxed max-w-prose" data-tina-field={tinaField(visionHeading, "description")}>
         {visionText}
       </p>
     </div>
@@ -62,10 +66,10 @@ const visionText = visionHeading.description || "Ser un programa de referencia n
               {String(i + 1).padStart(2, '0')}
             </span>
             <div>
-              <h3 class="text-lg font-display font-bold text-slate-900 tracking-tight mb-1">
+              <h3 class="text-lg font-display font-bold text-slate-900 tracking-tight mb-1" data-tina-field={tinaField(value, "title")}>
                 {value.title}
               </h3>
-              <p class="text-sm text-slate-500 leading-relaxed">
+              <p class="text-sm text-slate-500 leading-relaxed" data-tina-field={tinaField(value, "description")}>
                 {value.description}
               </p>
             </div>

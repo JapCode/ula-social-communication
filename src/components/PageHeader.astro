@@ -7,9 +7,10 @@ interface Props {
   eyebrow?: string;
   breadcrumb?: Array<{ label: string; href: string }>;
   readingTime?: number;
+  "data-tina-field"?: string;
 }
 
-const { title, subtitle, eyebrow, breadcrumb = [], readingTime } = Astro.props;
+const { title, subtitle, eyebrow, breadcrumb = [], readingTime, "data-tina-field": dataTinaField } = Astro.props;
 ---
 
 <section
@@ -68,6 +69,7 @@ const { title, subtitle, eyebrow, breadcrumb = [], readingTime } = Astro.props;
     <!-- Title — editorial heading -->
     <h1
       class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-ink leading-[1.05] tracking-tighter text-wrap balance"
+      data-tina-field={dataTinaField}
     >
       {title}
     </h1>

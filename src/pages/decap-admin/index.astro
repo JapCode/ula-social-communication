@@ -1,0 +1,17 @@
+---
+// Decap CMS admin panel — serves at /admin/
+// Script must be in <body> so document.body exists when Decap initializes
+// Config is served from public/admin/config.yml at /admin/config.yml
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Panel de Administración</title>
+  </head>
+  <body>
+    <script is:inline src="/admin/decap-cms.js"></script>
+    <script is:inline src="/admin/cms-preview-fix.js"></script>
+  </body>
+</html>

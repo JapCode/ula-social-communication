@@ -1,0 +1,44 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+import HeroSection from '../HeroSection.astro';
+import QuickAccessSection from '../QuickAccessSection.astro';
+import NewsSection from '../NewsSection.astro';
+import VideoSection from '../VideoSection.astro';
+import Footer from '../Footer.astro';
+
+interface Props {
+  data: Record<string, unknown>;
+}
+
+const { data } = Astro.props;
+const hero = data?.hero as Record<string, unknown> | undefined;
+const quickAccess = data?.quickAccess as Record<string, unknown> | undefined;
+const news = data?.news as Record<string, unknown> | undefined;
+const video = data?.video as Record<string, unknown> | undefined;
+const footer = data?.footer as Record<string, unknown> | undefined;
+---
+
+<main id="main-content" class="relative" role="main">
+  <!-- Hero section -->
+  <section data-tina-field={hero ? tinaField(hero, 'eyebrow') : undefined}>
+    <HeroSection hero={hero} />
+  </section>
+
+  <!-- QuickAccess section -->
+  <section data-tina-field={quickAccess ? tinaField(quickAccess, 'title') : undefined}>
+    <QuickAccessSection quickAccess={quickAccess} />
+  </section>
+
+  <!-- News section -->
+  <section data-tina-field={news ? tinaField(news, 'title') : undefined}>
+    <NewsSection news={news} />
+  </section>
+
+  <!-- Video section -->
+  <section data-tina-field={video ? tinaField(video, 'title') : undefined}>
+    <VideoSection video={video} />
+  </section>
+
+  <!-- Footer section -->
+  <Footer footer={footer} />
+</main>

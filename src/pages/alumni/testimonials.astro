@@ -2,12 +2,16 @@
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import TestimonialCard from '@/components/TestimonialCard.astro';
 import { PhQuotes, PhEnvelopeSimple, PhArrowRight } from 'phosphor-icons-astro';
-import { getCollection, getEntry } from 'astro:content';
-
+import { getCollection } from 'astro:content';
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { tinaField } from '@tinacms/astro/tina-field';
+import { client } from '../../../tina/__generated__/client';
 const testimonials = await getCollection('testimonials');
-
-const pageEntry = await getEntry('pages', 'alumni-testimonials');
-const { title, subtitle, body: introBody } = pageEntry?.data ?? {};
+const enriched = await requestWithMetadata(
+  client.queries.pageAlumniTestimonials({ relativePath: 'alumni-testimonials.md' })
+);
+const pageData = enriched.data.pageAlumniTestimonials;
+const { title, subtitle, body: introBody } = pageData ?? {};
 
 const pageTitle = title ?? "Testimonios de Egresados";
 const pageSubtitle = subtitle ?? "Voces de quienes transformaron su formación en impacto real";
@@ -17,6 +21,7 @@ const introText = introBody ?? "La Escuela de Comunicación Social del NURR ha f
 <ContentLayout 
   title={pageTitle} 
   subtitle={pageSubtitle} 
+  data-tina-field={tinaField(pageData, 'title')}
   eyebrow="Egresados"
   breadcrumb={[
     { label: "Egresados", href: "/alumni" }
@@ -28,7 +33,7 @@ const introText = introBody ?? "La Escuela de Comunicación Social del NURR ha f
     <div class="testimonial-intro__accent" aria-hidden="true">
       <span class="testimonial-intro__line"></span>
     </div>
-    <p class="testimonial-intro__text">
+    <p class="testimonial-intro__text" data-tina-field={tinaField(pageData, 'body')}>
       {introText}
     </p>
   </div>

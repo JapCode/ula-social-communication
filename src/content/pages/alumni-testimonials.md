@@ -5,5 +5,5 @@ pageId: alumni-testimonials
 subtitle: Voces de quienes transformaron su formación en impacto real
 eyebrow: Egresados
 items: []
+body: "La Escuela de Comunicación Social del NURR ha formado profesionales que hoy ejercen con rigor y compromiso en medios, instituciones y organizaciones. Estas son sus historias."
 ---
-La Escuela de Comunicación Social del NURR ha formado profesionales que hoy ejercen con rigor y compromiso en medios, instituciones y organizaciones. Estas son sus historias.

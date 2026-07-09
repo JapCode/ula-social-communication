@@ -1,19 +1,19 @@
 ---
 import ContentLayout from '@/layouts/ContentLayout.astro';
-import { getCollection, render } from 'astro:content';
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { client } from '../../../../tina/__generated__/client';
+import TinaMarkdown from '@tinacms/astro/TinaMarkdown.astro';
 import { PhArrowRight } from 'phosphor-icons-astro';
 import { getTypeLabel, getTypeColors } from '@/lib/events';
 
-export async function getStaticPaths() {
-  const events = await getCollection('events');
-  return events.map(event => ({
-    params: { slug: event.id },
-    props: { event },
-  }));
+const { slug } = Astro.params;
+const enriched = await requestWithMetadata(
+  client.queries.events({ relativePath: `${slug}.md` })
+);
+const event = enriched.data.events;
+if (!event) {
+  return new Response('Evento no encontrado', { status: 404 });
 }
-
-const { event } = Astro.props;
-const { Content } = await render(event);
 
 // Normalize image paths from Decap CMS
 function normalizeImagePath(path: string | undefined | null): string | undefined {
@@ -22,9 +22,9 @@ function normalizeImagePath(path: string | undefined | null): string | undefined
   return `/images/uploads/${path}`;
 }
 
-const coverImageUrl = normalizeImagePath(event.data.coverImage);
+const coverImageUrl = normalizeImagePath(event.coverImage);
 
-const eventDate = new Date(event.data.date);
+const eventDate = new Date(event.date);
 const formattedDate = eventDate.toLocaleDateString('es-VE', {
   weekday: 'long',
   day: 'numeric',
@@ -32,14 +32,14 @@ const formattedDate = eventDate.toLocaleDateString('es-VE', {
   year: 'numeric',
 });
 
-const pageTitle = event.data.title;
+const pageTitle = event.title;
 const pageSubtitle = formattedDate;
 ---
 
 <ContentLayout 
   title={pageTitle} 
   subtitle={pageSubtitle}
-  eyebrow={getTypeLabel(event.data.type) || "Evento"}
+  eyebrow={getTypeLabel(event.type) || "Evento"}
   sectionTheme="student-life"
   breadcrumb={[
     { label: "Vida Estudiantil", href: "/student-life" },
@@ -50,23 +50,23 @@ const pageSubtitle = formattedDate;
 
     <!-- Event info bar — minimal, no icons -->
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-8 text-sm">
-      <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${getTypeColors(event.data.type)}`}>
-        {getTypeLabel(event.data.type)}
+      <span class={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${getTypeColors(event.type)}`}>
+        {getTypeLabel(event.type)}
       </span>
       <span class="text-slate-300">·</span>
-      <span class="text-slate-500">{event.data.location}</span>
+      <span class="text-slate-500">{event.location}</span>
     </div>
 
     <!-- Cover Image -->
     {coverImageUrl && (
       <div class="mb-8">
-        <img src={coverImageUrl} alt={`Imagen del evento: ${event.data.title}`} class="w-full rounded-[var(--radius-luma)]" loading="lazy" />
+        <img src={coverImageUrl} alt={`Imagen del evento: ${event.title}`} class="w-full rounded-[var(--radius-luma)]" loading="lazy" />
       </div>
     )}
 
     <!-- Event Content -->
     <div class="content-area">
-      <Content />
+      {event.body && <TinaMarkdown content={event.body} />}
     </div>
 
     <!-- CTA -->

@@ -1,11 +1,15 @@
 ---
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import { PhDownloadSimple, PhInfo } from 'phosphor-icons-astro';
-import { getEntry } from 'astro:content';
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { tinaField } from '@tinacms/astro/tina-field';
+import { client } from '../../../tina/__generated__/client';
 
-const pageEntry = await getEntry('pages', 'academics-curriculum');
-const { title, headings = [], pdfUrl } = pageEntry?.data ?? {};
-const body = pageEntry?.data?.body ?? pageEntry?.body ?? "";
+const enriched = await requestWithMetadata(
+  client.queries.pageCurriculum({ relativePath: 'academics-curriculum.md' })
+);
+const pageData = enriched.data.pageCurriculum;
+const { title, headings = [], pdfUrl } = pageData;
 
 const pageTitle = title ?? "Currículo";
 
@@ -54,7 +58,7 @@ const breadcrumb = [
 ];
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic">
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic" data-tina-field={tinaField(pageData, 'title')}>
 
   <!-- Download CTA -->
   <div class="mb-12 flex justify-end">
@@ -86,9 +90,9 @@ const breadcrumb = [
       <section aria-label={cycle.name} class="timeline-cycle">
         <!-- Cycle header -->
         <div class="timeline-cycle-header">
-          <span class="timeline-cycle-label">{cycle.name}</span>
+          <span class="timeline-cycle-label" data-tina-field={tinaField(headings[ci], 'title')}>{cycle.name}</span>
           <span class="timeline-cycle-count">{cycle.semesters.length} semestres</span>
-          <p class="timeline-cycle-desc">{cycle.description}</p>
+          <p class="timeline-cycle-desc" data-tina-field={tinaField(headings[ci], 'description')}>{cycle.description}</p>
         </div>
 
         <!-- Semester nodes -->

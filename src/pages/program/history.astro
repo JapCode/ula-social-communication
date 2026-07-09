@@ -12,11 +12,15 @@ import {
   PhArrowRight,
   PhQuestion
 } from 'phosphor-icons-astro';
-import { getEntry } from 'astro:content';
-
-const pageEntry = await getEntry('pages', 'program-history');
-const { title, items = [], stats = [] } = pageEntry?.data ?? {};
-const body = pageEntry?.data?.body ?? pageEntry?.body ?? "";
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { tinaField } from '@tinacms/astro/tina-field';
+import { client } from '../../../tina/__generated__/client';
+const enriched = await requestWithMetadata(
+  client.queries.pageHistory({ relativePath: 'program-history.md' })
+);
+const pageData = enriched.data.pageHistory;
+const { title, items = [], stats = [] } = pageData;
+const body = pageData.body ?? "";
 
 const pageTitle = title ?? "Historia del Programa";
 const introText = body || "El programa de Comunicación Social en el Núcleo Universitario Rafael Rangel (NURR) de la Universidad de los Andes fue creado con el propósito de formar profesionales de la comunicación en la región andina venezolana, respondiendo a las necesidades de desarrollo cultural y comunicacional del estado Trujillo y sus alrededores.";
@@ -44,11 +48,11 @@ const breadcrumb = [
 ];
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic">
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic" data-tina-field={tinaField(pageData, "title")}>
   <div class="py-8 md:py-12">
     <!-- Intro -->
     <div class="mb-10 md:mb-14 max-w-2xl reveal-intro">
-      <p class="text-slate-500 leading-relaxed text-lg">
+      <p class="text-slate-500 leading-relaxed text-lg" data-tina-field={tinaField(pageData, "body")}>
         {introText}
       </p>
     </div>
@@ -126,6 +130,7 @@ const breadcrumb = [
                             ? "text-slate-900"
                             : "text-slate-700",
                         ]}
+                        data-tina-field={tinaField(items[index], "title")}
                       >
                         {item.title}
                       </h2>
@@ -137,6 +142,7 @@ const breadcrumb = [
                           ? "text-slate-500"
                           : "text-slate-400",
                       ]}
+                      data-tina-field={tinaField(items[index], "description")}
                     >
                       {item.description}
                     </p>
@@ -159,6 +165,7 @@ const breadcrumb = [
                           ? "text-primary/60"
                           : "text-slate-300",
                       ]}
+                      data-tina-field={tinaField(items[index], "detail")}
                     >
                       {item.year}
                     </p>
@@ -197,8 +204,8 @@ const breadcrumb = [
         <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           {displayStats.map(stat => (
             <div class="text-center">
-              <div class="text-3xl md:text-4xl font-display font-bold text-primary mb-1">{stat.value}</div>
-              <div class="text-xs md:text-sm text-slate-500 font-medium">{stat.label}</div>
+              <div class="text-3xl md:text-4xl font-display font-bold text-primary mb-1" data-tina-field={tinaField(stat, "value")}>{stat.value}</div>
+              <div class="text-xs md:text-sm text-slate-500 font-medium" data-tina-field={tinaField(stat, "label")}>{stat.label}</div>
             </div>
           ))}
         </div>

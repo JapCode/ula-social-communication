@@ -1,18 +1,18 @@
 ---
-import { getCollection, render } from 'astro:content';
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { client } from '../../../../tina/__generated__/client';
+import TinaMarkdown from '@tinacms/astro/TinaMarkdown.astro';
 import ContentLayout from '@/layouts/ContentLayout.astro';
-import { PhArrowLeft, PhClock, PhUser, PhCalendar, PhNewspaper } from 'phosphor-icons-astro';
+import { PhArrowLeft, PhUser, PhCalendar } from 'phosphor-icons-astro';
 
-export async function getStaticPaths() {
-  const articles = await getCollection('articles');
-  return articles.map(article => ({
-    params: { slug: article.id },
-    props: article,
-  }));
+const { slug } = Astro.params;
+const enriched = await requestWithMetadata(
+  client.queries.articles({ relativePath: `${slug}.md` })
+);
+const article = enriched.data.articles;
+if (!article) {
+  return new Response('Artículo no encontrado', { status: 404 });
 }
-
-const article = Astro.props;
-const { Content } = await render(article);
 
 const categoryLabels: Record<string, string> = {
   investigacion: 'Investigación',
@@ -21,7 +21,7 @@ const categoryLabels: Record<string, string> = {
   cronica: 'Crónica',
 };
 
-const formattedDate = new Date(article.data.date).toLocaleDateString('es-VE', {
+const formattedDate = new Date(article.date).toLocaleDateString('es-VE', {
   day: 'numeric',
   month: 'long',
   year: 'numeric',
@@ -34,14 +34,14 @@ function normalizeImagePath(path: string | undefined | null): string | undefined
   return `/images/uploads/${path}`;
 }
 
-const pageTitle = article.data.title;
-const pageSubtitle = `${article.data.author} · ${formattedDate}`;
+const pageTitle = article.title;
+const pageSubtitle = `${article.author} · ${formattedDate}`;
 ---
 
 <ContentLayout
   title={pageTitle}
   subtitle={pageSubtitle}
-  eyebrow={categoryLabels[article.data.category] || article.data.category}
+  eyebrow={categoryLabels[article.category] || article.category}
   breadcrumb={[{ label: 'Portafolio', href: '/portfolio' }, { label: 'Artículos', href: '/portfolio/articles' }]}
   narrow
   sectionTheme="portfolio"
@@ -50,27 +50,27 @@ const pageSubtitle = `${article.data.author} · ${formattedDate}`;
   <div class="article-meta mb-8 flex flex-wrap items-center gap-4 text-sm text-slate-400">
     <div class="flex items-center gap-2">
       <PhUser size={14} weight="regular" />
-      <span>{article.data.author}</span>
+      <span>{article.author}</span>
     </div>
     <div class="flex items-center gap-2">
       <PhCalendar size={14} weight="regular" />
       <span>{formattedDate}</span>
     </div>
     <span class="inline-flex items-center px-2 py-0.5 rounded-full bg-primary/10 text-[10px] font-bold text-primary uppercase tracking-wider">
-      {categoryLabels[article.data.category] || article.data.category}
+      {categoryLabels[article.category] || article.category}
     </span>
   </div>
 
   <!-- Cover Image -->
-  {normalizeImagePath(article.data.coverImage) && (
+  {normalizeImagePath(article.coverImage) && (
     <div class="mb-6">
-      <img src={normalizeImagePath(article.data.coverImage)} alt={`Portada del artículo: ${article.data.title}`} class="w-full rounded-[var(--radius-luma)]" />
+      <img src={normalizeImagePath(article.coverImage)} alt={`Portada del artículo: ${article.title}`} class="w-full rounded-[var(--radius-luma)]" />
     </div>
   )}
 
   <!-- Article Content -->
   <article class="article-content">
-    <Content />
+    {article.body && <TinaMarkdown content={article.body} />}
   </article>
 
   <!-- Back to articles -->

@@ -20,11 +20,15 @@ import {
   PhStar,
   PhArrowRight,
 } from 'phosphor-icons-astro';
-import { getEntry } from 'astro:content';
-
-const pageEntry = await getEntry('pages', 'program-graduate-profile');
-const { title, items = [], headings = [] } = pageEntry?.data ?? {};
-const body = pageEntry?.data?.body ?? pageEntry?.body ?? "";
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { tinaField } from '@tinacms/astro/tina-field';
+import { client } from '../../../tina/__generated__/client';
+const enriched = await requestWithMetadata(
+  client.queries.pageGraduateProfile({ relativePath: 'program-graduate-profile.md' })
+);
+const pageData = enriched.data.pageGraduateProfile;
+const { title, items = [], headings = [] } = pageData;
+const body = pageData.body ?? "";
 
 const pageTitle = title ?? "Perfil del Egresado";
 const introText = body || "Formamos comunicadores capaces de interpretar la realidad, construir narrativas y transformar la sociedad a través de la palabra, la imagen y el pensamiento crítico.";
@@ -68,7 +72,7 @@ const breadcrumb = [
 ];
 ---
 
-<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic">
+<ContentLayout title={pageTitle} breadcrumb={breadcrumb} sectionTheme="academic" data-tina-field={tinaField(pageData, "title")}>
   <section class="graduate-profile-page">
 
     <!-- Aspirational opening -->
@@ -76,7 +80,7 @@ const breadcrumb = [
       <div class="gp-opening__accent" aria-hidden="true">
         <span class="gp-opening__line"></span>
       </div>
-      <p class="gp-opening__text">
+      <p class="gp-opening__text" data-tina-field={tinaField(pageData, "body")}>
         {introText}
       </p>
     </div>
@@ -99,9 +103,9 @@ const breadcrumb = [
             <div class="gp-competency__content">
               <div class="gp-competency__header">
                 <comp.Icon size={i === 0 ? 22 : 18} weight={i === 0 ? "duotone" : "light"} class="gp-competency__icon" />
-                <h3 class="gp-competency__title">{comp.title}</h3>
+                <h3 class="gp-competency__title" data-tina-field={tinaField(items[i], "title")}>{comp.title}</h3>
               </div>
-              <p class="gp-competency__desc">{comp.description}</p>
+              <p class="gp-competency__desc" data-tina-field={tinaField(items[i], "description")}>{comp.description}</p>
             </div>
           </div>
         ))}
@@ -121,10 +125,10 @@ const breadcrumb = [
 
       <div class="gp-fields__grid">
         <div class="gp-fields__group gp-fields__group--primary">
-          <h3 class="gp-fields__group-title">{primariosHeading?.title || "Áreas Principales"}</h3>
+          <h3 class="gp-fields__group-title" data-tina-field={tinaField(primariosHeading, "title")}>{primariosHeading?.title || "Áreas Principales"}</h3>
           <div class="gp-fields__items">
-            {camposPrimarios.map(field => (
-              <div class="gp-field gp-field--primary">
+            {camposPrimarios.map((field, i) => (
+              <div class="gp-field gp-field--primary" data-tina-field={tinaField(primariosHeading, "items", i)}>
                 <span class="gp-field__dot"></span>
                 {field}
               </div>
@@ -132,10 +136,10 @@ const breadcrumb = [
           </div>
         </div>
         <div class="gp-fields__group gp-fields__group--secondary">
-          <h3 class="gp-fields__group-title">{secundariosHeading?.title || "Áreas Complementarias"}</h3>
+          <h3 class="gp-fields__group-title" data-tina-field={tinaField(secundariosHeading, "title")}>{secundariosHeading?.title || "Áreas Complementarias"}</h3>
           <div class="gp-fields__items">
-            {camposSecundarios.map(field => (
-              <div class="gp-field gp-field--secondary">
+            {camposSecundarios.map((field, i) => (
+              <div class="gp-field gp-field--secondary" data-tina-field={tinaField(secundariosHeading, "items", i)}>
                 <span class="gp-field__dot"></span>
                 {field}
               </div>

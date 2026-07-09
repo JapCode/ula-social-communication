@@ -1,0 +1,11 @@
+name = "ula-social-communication"
+main = "./dist/_worker.js/index.js"
+compatibility_date = "2026-07-09"
+compatibility_flags = [ "nodejs_compat" ]
+
+[assets]
+binding = "ASSETS"
+directory = "./dist"
+
+[observability]
+enabled = true

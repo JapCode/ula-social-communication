@@ -1,26 +1,32 @@
 ---
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import { PhHeart, PhEnvelopeSimple, PhArrowRight } from 'phosphor-icons-astro';
-import { getEntry } from 'astro:content';
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { tinaField } from '@tinacms/astro/tina-field';
+import { client } from '../../../tina/__generated__/client';
 
-const pageEntry = await getEntry('pages', 'student-life-community');
+const enriched = await requestWithMetadata(
+  client.queries.pageCommunity({ relativePath: 'student-life-community.md' })
+);
 
-if (!pageEntry) {
+const pageData = enriched.data.pageCommunity;
+
+if (!pageData) {
   throw new Error('Community page entry not found');
 }
 
-const { title, body, descriptionItems, requirements, cta, alert } = pageEntry.data;
+const { title, body, descriptionItems, requirements, cta, alert } = pageData;
 
 const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
 ---
 
-<ContentLayout title={title} breadcrumb={breadcrumb} sectionTheme="student-life">
+<ContentLayout title={title} breadcrumb={breadcrumb} sectionTheme="student-life" data-tina-field={tinaField(pageData, 'title')}>
   <div class="max-w-3xl py-4 md:py-8">
 
     <!-- Intro -->
     {body && (
       <div class="mb-10 md:mb-14">
-        <p class="text-slate-500 leading-relaxed text-lg">{body}</p>
+        <p class="text-slate-500 leading-relaxed text-lg" data-tina-field={tinaField(pageData, 'body')}>{body}</p>
       </div>
     )}
 
@@ -29,7 +35,7 @@ const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
       <div class="mb-10">
         <h2 class="text-lg font-bold text-slate-900 mb-4">¿En qué consiste?</h2>
         <div class="space-y-3 text-slate-500 leading-relaxed">
-          {descriptionItems.map((text: string) => <p>{text}</p>)}
+          {descriptionItems.map((text: string, i: number) => <p data-tina-field={tinaField(pageData, 'descriptionItems', i)}>{text}</p>)}
         </div>
       </div>
     )}
@@ -39,7 +45,7 @@ const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
       <div class="mb-10">
         <h2 class="text-lg font-bold text-slate-900 mb-4">Requisitos</h2>
         <ul class="space-y-2 text-slate-500 leading-relaxed list-disc pl-5">
-          {requirements.map((text: string) => <li>{text}</li>)}
+          {requirements.map((text: string, i: number) => <li data-tina-field={tinaField(pageData, 'requirements', i)}>{text}</li>)}
         </ul>
       </div>
     )}
@@ -47,12 +53,12 @@ const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
     <!-- CTA -->
     {cta && (
       <div class="mb-10">
-        <h2 class="text-lg font-bold text-slate-900 mb-4">{cta.title}</h2>
-        {cta.body && <p class="text-slate-500 leading-relaxed mb-6">{cta.body}</p>}
+        <h2 class="text-lg font-bold text-slate-900 mb-4" data-tina-field={tinaField(cta, 'title')}>{cta.title}</h2>
+        {cta.body && <p class="text-slate-500 leading-relaxed mb-6" data-tina-field={tinaField(cta, 'body')}>{cta.body}</p>}
         <div class="flex flex-wrap gap-3">
           <a href="/contact" class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-xs font-bold uppercase tracking-wider rounded-full hover:shadow-luma hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300">
             <PhEnvelopeSimple size={14} weight="light" />
-            {cta.label ?? 'Contactar Coordinación'}
+            <span data-tina-field={tinaField(cta, 'label')}>{cta.label ?? 'Contactar Coordinación'}</span>
             <PhArrowRight size={14} weight="regular" />
           </a>
         </div>
@@ -67,8 +73,8 @@ const breadcrumb = [{ label: "Vida Estudiantil", href: "/student-life" }];
             <PhHeart size={20} weight="light" class="text-primary" />
           </div>
           <div class="flex-1 min-w-0">
-            <h3 class="text-base font-medium text-slate-700 mb-1">{alert.title}</h3>
-            <p class="text-slate-400 leading-relaxed text-sm">{alert.body}</p>
+            <h3 class="text-base font-medium text-slate-700 mb-1" data-tina-field={tinaField(alert, 'title')}>{alert.title}</h3>
+            <p class="text-slate-400 leading-relaxed text-sm" data-tina-field={tinaField(alert, 'body')}>{alert.body}</p>
           </div>
         </div>
       </div>

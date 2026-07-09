@@ -1,0 +1,68 @@
+---
+import { tinaField } from '@tinacms/astro/tina-field';
+import TinaMarkdown from '@tinacms/astro/TinaMarkdown.astro';
+
+interface Props {
+  data: Record<string, unknown>;
+}
+
+const { data } = Astro.props;
+
+function normalizeImagePath(path: string | undefined | null): string | undefined {
+  if (!path) return undefined;
+  if (path.startsWith('/') || path.startsWith('http://') || path.startsWith('https://')) return path;
+  return `/images/uploads/${path}`;
+}
+
+const formattedDate = data?.date
+  ? new Date(data.date as string).toLocaleDateString('es-VE', {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    })
+  : '';
+---
+
+<article>
+  <!-- Title -->
+  <h1 data-tina-field={data ? tinaField(data, 'title') : undefined}>
+    {data?.title as string}
+  </h1>
+
+  <!-- Date -->
+  <p data-tina-field={data ? tinaField(data, 'date') : undefined}>
+    {formattedDate}
+  </p>
+
+  <!-- Location -->
+  <p data-tina-field={data ? tinaField(data, 'location') : undefined}>
+    {data?.location as string}
+  </p>
+
+  <!-- Type -->
+  <p data-tina-field={data ? tinaField(data, 'type') : undefined}>
+    {data?.type as string}
+  </p>
+
+  <!-- Description -->
+  {data?.description && (
+    <p data-tina-field={data ? tinaField(data, 'description') : undefined}>
+      {data.description as string}
+    </p>
+  )}
+
+  <!-- Cover image -->
+  {data?.coverImage && (
+    <div data-tina-field={data ? tinaField(data, 'coverImage') : undefined}>
+      <img src={normalizeImagePath(data.coverImage as string)} alt={(data.title as string) || ''} class="w-full rounded-lg" />
+    </div>
+  )}
+
+  <!-- Body -->
+  {data?.body && (
+    <div data-tina-field={data ? tinaField(data, 'body') : undefined}>
+      <TinaMarkdown content={data.body} />
+    </div>
+  )}
+</article>

@@ -10,11 +10,15 @@ import {
   PhArrowRight,
   PhCaretRight,
 } from 'phosphor-icons-astro';
-import { getEntry } from 'astro:content';
-
-const pageEntry = await getEntry('pages', 'alumni-continuing-education');
-const { title, subtitle, items = [] } = pageEntry?.data ?? {};
-const body = pageEntry?.data?.body ?? pageEntry?.body ?? "";
+import { requestWithMetadata } from '@tinacms/astro/data';
+import { tinaField } from '@tinacms/astro/tina-field';
+import { client } from '../../../tina/__generated__/client';
+const enriched = await requestWithMetadata(
+  client.queries.pageContinuingEducation({ relativePath: 'alumni-continuing-education.md' })
+);
+const pageData = enriched.data.pageContinuingEducation;
+const { title, subtitle, items = [] } = pageData;
+const body = pageData.body ?? "";
 
 const pageTitle = title ?? "Formación Continua";
 const pageSubtitle = subtitle ?? "Cursos, talleres y programas de actualización para egresados";
@@ -36,12 +40,14 @@ const courses = items.map((item, i) => ({
   description: item.description ?? "",
   hours: item.detail ?? "",
   href: item.href ?? "#",
+  _raw: item,
 }));
 ---
 
 <ContentLayout
   title={pageTitle}
   subtitle={pageSubtitle}
+  data-tina-field={tinaField(pageData, 'title')}
   eyebrow="Egresados"
   breadcrumb={[
     { label: "Egresados", href: "/alumni" }
@@ -50,7 +56,7 @@ const courses = items.map((item, i) => ({
 >
   <!-- Intro — editorial, not boxed -->
   <div class="ce-intro">
-    <p>
+    <p data-tina-field={tinaField(pageData, 'body')}>
       {body || "La Escuela de Comunicación Social ofrece programas diseñados para actualizar y profundizar los conocimientos de nuestros egresados y profesionales del área. Cada programa combina teoría y práctica con enfoque en las demandas actuales del campo comunicacional."}
     </p>
   </div>
@@ -58,15 +64,15 @@ const courses = items.map((item, i) => ({
   <!-- Course Grid -->
   <div class="ce-grid">
     {courses.map((course) => (
-      <a href={course.href} class="ce-card group">
+      <a href={course.href} class="ce-card group" data-tina-field={tinaField(course._raw, 'href')}>
         <div class="ce-card-icon">
           <course.icon size={22} weight="light" class="text-primary" />
         </div>
         <div class="ce-card-content">
-          <h3 class="ce-card-title">{course.title}</h3>
-          <p class="ce-card-desc">{course.description}</p>
+          <h3 class="ce-card-title" data-tina-field={tinaField(course._raw, 'title')}>{course.title}</h3>
+          <p class="ce-card-desc" data-tina-field={tinaField(course._raw, 'description')}>{course.description}</p>
           <div class="ce-card-meta">
-            <span class="ce-card-meta-item">
+            <span class="ce-card-meta-item" data-tina-field={tinaField(course._raw, 'detail')}>
               <PhClock size={14} weight="regular" />
               {course.hours}
             </span>
