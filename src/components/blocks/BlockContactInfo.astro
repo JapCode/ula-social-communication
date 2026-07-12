@@ -1,0 +1,40 @@
+---
+import { tinaField } from "@tinacms/astro/tina-field";
+import { getIcon } from "@/lib/phosphorIcons";
+import BlockContactInfoMap from "./BlockContactInfoMap.astro";
+import BlockContactInfoGrid from "./BlockContactInfoGrid.astro";
+
+export interface Props {
+  block: {
+    _template: 'contactInfo';
+    heading?: string;
+    mapEmbed?: string;
+    contacts: Array<{
+      title: string;
+      value: string;
+      detail?: string;
+      icon?: string;
+      href?: string;
+    }>;
+  };
+}
+
+const { block } = Astro.props;
+
+const contacts = (block.contacts || []).map(c => ({
+  ...c,
+  Icon: c.icon ? getIcon(c.icon) : null,
+}));
+---
+
+{contacts.length > 0 && <section>
+  <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 py-8 md:py-12 lg:py-16">
+  {block.heading && (
+    <h2 class="text-[10px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-6 md:mb-8" data-tina-field={tinaField(block, 'heading')}>
+      {block.heading}
+    </h2>
+  )}
+  {block.mapEmbed && <BlockContactInfoMap contacts={contacts} mapEmbed={block.mapEmbed} />}
+  {!block.mapEmbed && <BlockContactInfoGrid contacts={contacts} />}
+  </div>
+</section>}

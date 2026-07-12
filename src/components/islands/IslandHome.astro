@@ -4,8 +4,6 @@ import HeroSection from '../HeroSection.astro';
 import QuickAccessSection from '../QuickAccessSection.astro';
 import NewsSection from '../NewsSection.astro';
 import VideoSection from '../VideoSection.astro';
-import Footer from '../Footer.astro';
-
 interface Props {
   data: Record<string, unknown>;
 }
@@ -15,7 +13,6 @@ const hero = data?.hero as Record<string, unknown> | undefined;
 const quickAccess = data?.quickAccess as Record<string, unknown> | undefined;
 const news = data?.news as Record<string, unknown> | undefined;
 const video = data?.video as Record<string, unknown> | undefined;
-const footer = data?.footer as Record<string, unknown> | undefined;
 ---
 
 <main id="main-content" class="relative" role="main">
@@ -39,6 +36,4 @@ const footer = data?.footer as Record<string, unknown> | undefined;
     <VideoSection video={video} />
   </section>
 
-  <!-- Footer section -->
-  <Footer footer={footer} />
 </main>

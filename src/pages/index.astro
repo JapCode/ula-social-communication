@@ -1,49 +1,43 @@
 ---
-import { requestWithMetadata } from "@tinacms/astro/data";
-import { client } from "../../tina/__generated__/client";
 import Layout from "../layouts/Layout.astro";
 import TopNav from "../components/TopNav.astro";
-import HeroSection from "../components/HeroSection.astro";
-import NewsSection from "../components/NewsSection.astro";
-import VideoSection from "../components/VideoSection.astro";
-import QuickAccessSection from "../components/QuickAccessSection.astro";
+import BlockRenderer from "../components/blocks/BlockRenderer.astro";
 import Footer from "../components/Footer.astro";
-import BackToTop from "../components/BackToTop.astro";
 import WhatsAppButton from "../components/WhatsAppButton.astro";
 import SearchModal from "../components/SearchModal.astro";
+import BackToTop from "../components/BackToTop.astro";
 import TinaIsland from "@tinacms/astro/TinaIsland.astro";
 import "../styles/global.css";
+import { requestWithMetadata } from "@tinacms/astro/data";
+import { client } from "../../tina/__generated__/client";
 
 const enriched = await requestWithMetadata(
-  client.queries.pageHome({ relativePath: 'home.md' }),
+  client.queries.pages({ relativePath: 'home.md' }),
   { priority: 'primary' }
 );
-const page = enriched.data.pageHome;
-if (!page) {
-  throw new Error(
-    '[index.astro] Tina query for "pages/home" returned no data.'
-  );
-}
-const { hero, quickAccess, news, video, footer } = page;
+const pageData = enriched.data.pages;
+
+// Pass raw blocks directly — BlockRenderer resolves component from __typename
+// No data transformation needed, preserving Tina proxy metadata for live preview
+const blocks = pageData?.blocks || [];
 ---
 
 <Layout title="Comunicación Social ULA NURR | Discovery">
-	<TopNav />
-	<TinaIsland name="pageHome" wrapper={{ tag: 'main' }} params={{}} primary>
+	<TinaIsland name="navigation" wrapper={{ tag: 'header' }}>
+		<TopNav />
+	</TinaIsland>
+	<TinaIsland name="pages" wrapper={{ tag: 'main' }} params={{}} primary>
 		<main id="main-content" class="relative" role="main">
-			<HeroSection hero={hero} />
-			<QuickAccessSection quickAccess={quickAccess} />
-			<NewsSection news={news} />
-			<VideoSection video={video} />
+			<BlockRenderer blocks={blocks} />
 		</main>
 	</TinaIsland>
-	<Footer footer={footer} />
+	<TinaIsland name="footer" wrapper={{ tag: 'div' }}>
+		<Footer />
+	</TinaIsland>
 	<WhatsAppButton />
 	<BackToTop />
 	<SearchModal />
 </Layout>
-
-<!-- GSAP/Lenis animations removed — CSS-native hover/scroll effects used instead. Saved ~55KB gzipped. -->
 
 <style is:global>
 	#inicio,

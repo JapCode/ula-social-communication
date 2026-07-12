@@ -1,0 +1,286 @@
+---
+import { tinaField } from "@tinacms/astro/tina-field";
+import { getIcon } from "@/lib/phosphorIcons";
+import { PhArrowRight, PhUsers, PhWrench } from "phosphor-icons-astro";
+
+export interface Props {
+  block: {
+    _template: 'groupsWorkshops';
+    groups?: Array<{ title: string; description?: string; detail?: string; icon?: string }>;
+    workshops?: Array<{ title: string; description?: string; detail?: string; icon?: string }>;
+    cta?: { title?: string; body?: string; label?: string };
+  };
+}
+
+const { block } = Astro.props;
+const groups = (block.groups || []).map(g => ({ ...g, Icon: g.icon ? getIcon(g.icon) : null }));
+const workshops = (block.workshops || []).map(w => ({ ...w, Icon: w.icon ? getIcon(w.icon) : null }));
+const hasCta = block.cta?.label;
+---
+
+{(groups.length > 0 || workshops.length > 0) && (
+  <section class="gp-gw">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 py-16 md:py-24">
+
+    {groups.length > 0 && (
+      <div class="gp-gw__section gp-gw__section--groups">
+        <div class="gp-gw__section-header">
+          <PhUsers size={16} weight="light" class="text-primary" />
+          <h2 class="gp-gw__section-title">Grupos</h2>
+          <span class="gp-gw__count">{groups.length}</span>
+        </div>
+        <div class="gp-gw__list">
+          {groups.map((group, i) => (
+            <div key={i} class="gp-gw__card gp-gw__card--group" data-tina-field={tinaField(block, 'groups', i)}>
+              {group.Icon && (
+                <div class="gp-gw__card-icon" aria-hidden="true">
+                  <group.Icon size={18} weight="light" />
+                </div>
+              )}
+              <div class="gp-gw__card-body">
+                <h3 class="gp-gw__card-title" data-tina-field={tinaField(group, 'title')}>{group.title}</h3>
+                {group.description && <p class="gp-gw__card-desc" data-tina-field={tinaField(group, 'description')}>{group.description}</p>}
+                {group.detail && <p class="gp-gw__card-detail" data-tina-field={tinaField(group, 'detail')}>{group.detail}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {workshops.length > 0 && (
+      <div class="gp-gw__section gp-gw__section--workshops">
+        <div class="gp-gw__section-header">
+          <PhWrench size={16} weight="light" class="text-accent" />
+          <h2 class="gp-gw__section-title">Talleres</h2>
+          <span class="gp-gw__count">{workshops.length}</span>
+        </div>
+        <div class="gp-gw__grid">
+          {workshops.map((ws, i) => (
+            <div key={i} class="gp-gw__card gp-gw__card--workshop" data-tina-field={tinaField(block, 'workshops', i)}>
+              {ws.Icon && (
+                <div class="gp-gw__card-icon" aria-hidden="true">
+                  <ws.Icon size={18} weight="light" />
+                </div>
+              )}
+              <h3 class="gp-gw__card-title" data-tina-field={tinaField(ws, 'title')}>{ws.title}</h3>
+              {ws.description && <p class="gp-gw__card-desc" data-tina-field={tinaField(ws, 'description')}>{ws.description}</p>}
+              {ws.detail && <p class="gp-gw__card-detail" data-tina-field={tinaField(ws, 'detail')}>{ws.detail}</p>}
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {hasCta && (
+      <div class="gp-gw__cta">
+        <div class="gp-gw__cta-body">
+          {block.cta!.title && <h3 class="gp-gw__cta-title" data-tina-field={tinaField(block.cta!, 'title')}>{block.cta.title}</h3>}
+          {block.cta!.body && <p class="gp-gw__cta-text" data-tina-field={tinaField(block.cta!, 'body')}>{block.cta.body}</p>}
+        </div>
+        <a href="/contact" class="gp-gw__cta-btn" data-tina-field={tinaField(block.cta!, 'label')}>
+          {block.cta!.label}
+          <PhArrowRight size={14} weight="bold" />
+        </a>
+      </div>
+    )}
+    </div>
+  </section>
+)}
+
+<style>
+  .gp-gw__section {
+    margin-bottom: 3rem;
+  }
+
+  .gp-gw__section:last-of-type {
+    margin-bottom: 0;
+  }
+
+  .gp-gw__section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .gp-gw__section-title {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-ink, #0f172a);
+    margin: 0;
+  }
+
+  .gp-gw__count {
+    margin-left: auto;
+    font-size: 0.625rem;
+    font-weight: 700;
+    color: var(--color-ink-faint, #94a3b8);
+    background: rgba(226, 232, 240, 0.4);
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+  }
+
+  /* ── Groups: Vertical list (structured) ── */
+  .gp-gw__list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .gp-gw__card--group {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.25rem 1.5rem;
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.5);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .gp-gw__card--group:hover {
+    border-color: rgba(0, 93, 170, 0.12);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.03);
+  }
+
+  .gp-gw__card-icon {
+    flex-shrink: 0;
+    width: 2.25rem;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    color: #ffffff;
+  }
+
+  .gp-gw__card--group .gp-gw__card-icon {
+    background: var(--color-primary);
+  }
+
+  .gp-gw__card--workshop .gp-gw__card-icon {
+    background: var(--color-accent, #0ea5e9);
+  }
+
+  .gp-gw__card-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .gp-gw__card-title {
+    font-size: 0.9375rem;
+    font-weight: 650;
+    color: var(--color-ink);
+    margin: 0 0 0.25rem;
+    line-height: 1.3;
+  }
+
+  .gp-gw__card-desc {
+    font-size: 0.8125rem;
+    color: var(--color-ink-muted, #64748b);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .gp-gw__card-detail {
+    font-size: 0.75rem;
+    color: var(--color-ink-faint, #94a3b8);
+    margin-top: 0.25rem;
+  }
+
+  /* ── Workshops: Grid (exploratory) ── */
+  .gp-gw__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
+  @media (min-width: 640px) {
+    .gp-gw__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .gp-gw__card--workshop {
+    padding: 1.5rem;
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.5);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .gp-gw__card--workshop:hover {
+    border-color: var(--color-accent, #0ea5e9);
+    box-shadow: 0 4px 16px rgba(14, 165, 233, 0.06);
+    transform: translateY(-2px);
+  }
+
+  .gp-gw__card--workshop .gp-gw__card-title {
+    margin-top: 0.75rem;
+  }
+
+  /* ── CTA ── */
+  .gp-gw__cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: 3rem;
+    padding: 1.5rem 2rem;
+    background: linear-gradient(135deg, rgba(0, 93, 170, 0.03), rgba(14, 165, 233, 0.03));
+    border: 1px solid rgba(0, 93, 170, 0.08);
+    border-radius: 16px;
+  }
+
+  .gp-gw__cta-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .gp-gw__cta-title {
+    font-size: 1rem;
+    font-weight: 650;
+    color: var(--color-ink);
+    margin: 0 0 0.25rem;
+  }
+
+  .gp-gw__cta-text {
+    font-size: 0.8125rem;
+    color: var(--color-ink-muted, #64748b);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .gp-gw__cta-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--color-primary);
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    border-radius: 9999px;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 93, 170, 0.12);
+  }
+
+  .gp-gw__cta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 93, 170, 0.2);
+  }
+
+  @media (max-width: 640px) {
+    .gp-gw__cta {
+      flex-direction: column;
+      text-align: center;
+      padding: 1.5rem;
+    }
+  }
+</style>

@@ -1,5 +1,5 @@
 ---
-name: Departamento de Ciencias Sociales
+name: Prof. Yherdyn Peña
 role: Jefe (E)
-department: Prof. Yherdyn Peña
+department: Departamento de Ciencias Sociales
 ---

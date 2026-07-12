@@ -1,0 +1,435 @@
+---
+import { tinaField } from "@tinacms/astro/tina-field";
+
+export interface Props {
+  block: {
+    _template: 'sectionsList';
+    heading?: string;
+    intro?: string;
+    eyebrow?: string;
+    constrainWidth?: boolean;
+    variant?: 'default' | 'fields' | 'curriculum';
+    sections: Array<{
+      title: string;
+      items?: string[];
+      description?: string;
+      eyebrow?: string;
+      style?: 'card' | 'highlight' | 'plain';
+    }>;
+  };
+}
+
+const { block } = Astro.props;
+const variant = block.variant || 'default';
+---
+
+{block.sections && block.sections.length > 0 && (
+  <section>
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 py-8 md:py-12 lg:py-16">
+
+    {variant === 'fields' ? (
+      <>
+        <div class="mb-10 md:mb-14 gp-section-header">
+          <span class="block w-8 h-px bg-primary/40"></span>
+          {block.eyebrow && (
+            <span class="text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400" data-tina-field={tinaField(block, 'eyebrow')}>
+              {block.eyebrow}
+            </span>
+          )}
+        </div>
+        {block.heading && (
+          <h2 class="gp-section-title" data-tina-field={tinaField(block, 'heading')}>{block.heading}</h2>
+        )}
+        {block.intro && (
+          <p class:list={["gp-section-intro", block.constrainWidth ? "gp-constrain" : ""]} data-tina-field={tinaField(block, 'intro')}>{block.intro}</p>
+        )}
+
+        <div class="gp-fields__grid">
+          {block.sections.map((section, i) => {
+            const isPrimary = i === 0;
+            return (
+              <div class:list={["gp-fields__group", isPrimary ? "gp-fields__group--primary" : "gp-fields__group--secondary"]}>
+                {section.title && (
+                  <h3 class="gp-fields__group-title" data-tina-field={tinaField(section, 'title')}>{section.title}</h3>
+                )}
+                {section.items && section.items.length > 0 && (
+                  <div class="gp-fields__items">
+                    {section.items.map((item, j) => (
+                      <div class:list={["gp-field", isPrimary ? "gp-field--primary" : "gp-field--secondary"]} data-tina-field={tinaField(section, 'items', j)}>
+                        <span class="gp-field__dot"></span>
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </>
+    ) : variant === 'curriculum' ? (
+      <>
+        <div class="mb-10 md:mb-14 gp-section-header">
+          <span class="block w-8 h-px bg-primary/40"></span>
+          {block.heading && (
+            <h2 class="text-xl md:text-2xl font-display font-bold text-slate-900 tracking-tight" data-tina-field={tinaField(block, 'heading')}>{block.heading}</h2>
+          )}
+        </div>
+
+        <div class="curriculum-timeline">
+          {(() => {
+            const defaultCycles = [
+              {
+                semesters: [
+                  { num: 1, courses: ["Introducción a la Comunicación Social", "Teoría General de Sistemas", "Lingüística", "Historia de Venezuela", "Introducción a la Investigación"] },
+                  { num: 2, courses: ["Comunicación Oral y Escrita", "Semiología", "Historia del Periodismo", "Matemáticas", "Estadística I"] },
+                  { num: 3, courses: ["Teoría de la Comunicación", "Periodismo I", "Producción Gráfica", "Sociología", "Estadística II"] },
+                  { num: 4, courses: ["Comunicación Organizacional", "Periodismo II", "Fotografía", "Psicología Social", "Legislación Comunicacional"] },
+                ]
+              },
+              {
+                semesters: [
+                  { num: 5, courses: ["Investigación Comunicacional I", "Radio I", "Televisión I", "Comunicación Digital", "Ética Profesional"] },
+                  { num: 6, courses: ["Investigación Comunicacional II", "Radio II", "Televisión II", "Relaciones Públicas", "Optativa I"] },
+                  { num: 7, courses: ["Producción Audiovisual I", "Cine", "Comunicación Comunitaria", "Optativa II", "Optativa III"] },
+                  { num: 8, courses: ["Producción Audiovisual II", "Gerencia de Medios", "Tesis I", "Pasantía", "Optativa IV"] },
+                ]
+              },
+              {
+                semesters: [
+                  { num: 9, courses: ["Proyecto Comunicacional", "Tesis II", "Pasantía II", "Optativa V"] },
+                  { num: 10, courses: ["Seminario de Grado", "Tesis III", "Práctica Profesional"] },
+                ]
+              }
+            ];
+
+            return block.sections.map((cycle, ci) => {
+              const cycleData = defaultCycles[ci];
+              return (
+                <div class="curriculum-cycle">
+                  <div class="curriculum-cycle__header">
+                    <div class="curriculum-cycle__line"></div>
+                    <div>
+                      <span class="curriculum-cycle__eyebrow">{cycle.eyebrow || `Semestres 1–4`}</span>
+                      <h3 class="curriculum-cycle__title">{cycle.title}</h3>
+                      {cycle.description && <p class="curriculum-cycle__desc">{cycle.description}</p>}
+                    </div>
+                  </div>
+                  <div class="curriculum-cycle__semesters">
+                    {cycleData?.semesters.map((sem) => (
+                      <div class="curriculum-semester">
+                        <div class="curriculum-semester__dot" aria-hidden="true"></div>
+                        <div class="curriculum-semester__line" aria-hidden="true"></div>
+                        <div class="curriculum-semester__label">Semestre {sem.num}</div>
+                        <ul class="curriculum-semester__courses">
+                          {sem.courses.map((course) => (
+                            <li class="curriculum-course">{course}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              );
+            });
+          })()}
+
+          {/* Disclaimer */}
+          <div class="curriculum-disclaimer">
+            <div class="flex items-start gap-3">
+              <svg class="w-5 h-5 mt-0.5 flex-shrink-0 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              <div>
+                <p class="font-semibold text-slate-900 text-sm">Malla Curricular Referencial</p>
+                <p class="text-sm text-slate-500 mt-1 leading-relaxed">Esta estructura curricular es referencial y puede estar sujeta a modificaciones por parte de la Universidad de Los Andes. Para información oficial actualizada, consulte la Coordinación del Programa.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </>
+    ) : (
+      <>
+        {block.heading && (
+          <h2 class="text-[10px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-6 md:mb-8" data-tina-field={tinaField(block, 'heading')}>
+            {block.heading}
+          </h2>
+        )}
+        <div class="space-y-8 md:space-y-10">
+          {block.sections.map((section, i) => {
+            const style = section.style || 'card';
+            const wrapperClass =
+              style === 'highlight' ? 'bg-primary/5 rounded-luma p-8 md:p-10'
+              : style === 'plain' ? ''
+              : 'bg-white border border-tinted rounded-luma p-6 md:p-8';
+
+            const textClass = style === 'highlight' ? 'text-base md:text-lg text-slate-600' : 'text-sm text-slate-500';
+
+            return (
+              <div class={wrapperClass} data-tina-field={tinaField(block, 'sections', i)}>
+                {section.eyebrow && (
+                  <span class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-2" data-tina-field={tinaField(section, 'eyebrow')}>
+                    {section.eyebrow}
+                  </span>
+                )}
+                {section.title && (
+                  <h3 class="text-2xl md:text-3xl font-display font-bold text-ink tracking-tight mb-4 md:mb-5 leading-[1.1]" data-tina-field={tinaField(section, 'title')}>
+                    {section.title}
+                  </h3>
+                )}
+                {section.description && (
+                  <p class={`${textClass} leading-relaxed max-w-prose`} data-tina-field={tinaField(section, 'description')}>
+                    {section.description}
+                  </p>
+                )}
+                {section.items && section.items.length > 0 && (
+                  <ul class="space-y-2 text-sm text-slate-500 leading-relaxed list-disc pl-5 mt-4">
+                    {section.items.map((item, j) => (
+                      <li key={j} data-tina-field={tinaField(section, 'items', j)}>{item}</li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </>
+    )}
+
+    </div>
+  </section>
+)}
+
+<style>
+  /* ── Shared section header (match itemsList) ── */
+  .gp-section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .gp-section-title {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    margin: 0 0 0.75rem;
+    line-height: 1.2;
+  }
+
+  .gp-section-intro {
+    font-size: 0.9375rem;
+    color: var(--color-ink-muted);
+    line-height: 1.7;
+    margin: 0 0 2.5rem;
+  }
+
+  .gp-section-intro.gp-constrain {
+    max-width: 40rem;
+  }
+
+  /* ── Fields grid ── */
+  .gp-fields__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .gp-fields__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+    }
+  }
+
+  .gp-fields__group-title {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    margin: 0 0 1rem;
+  }
+
+  .gp-fields__items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+  }
+
+  .gp-field {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    font-size: 0.9375rem;
+    line-height: 1.5;
+  }
+
+  .gp-field__dot {
+    display: block;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .gp-field--primary {
+    color: var(--color-ink);
+    font-weight: 500;
+  }
+
+  .gp-field--primary .gp-field__dot {
+    background: var(--color-primary);
+  }
+
+  .gp-field--secondary {
+    color: var(--color-ink-muted);
+  }
+
+  .gp-field--secondary .gp-field__dot {
+    background: var(--color-primary);
+    opacity: 0.35;
+  }
+
+  /* ── Curriculum Timeline ── */
+  .curriculum-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .curriculum-cycle__header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .curriculum-cycle__line {
+    width: 3px;
+    min-height: 3rem;
+    background: linear-gradient(to bottom, var(--color-primary), rgba(0, 93, 170, 0.2));
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .curriculum-cycle__eyebrow {
+    display: block;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--color-ink-faint);
+    margin-bottom: 0.25rem;
+  }
+
+  .curriculum-cycle__title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--color-ink);
+    margin: 0 0 0.25rem;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  .curriculum-cycle__desc {
+    font-size: 0.875rem;
+    color: var(--color-ink-muted);
+    line-height: 1.5;
+    margin: 0;
+    max-width: 36rem;
+  }
+
+  .curriculum-cycle__semesters {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding-left: 2.25rem;
+    position: relative;
+  }
+
+  .curriculum-cycle__semesters::before {
+    content: '';
+    position: absolute;
+    left: 13px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background: rgba(226, 232, 240, 0.7);
+  }
+
+  .curriculum-semester {
+    position: relative;
+    padding-bottom: 1.5rem;
+  }
+
+  .curriculum-semester:last-child {
+    padding-bottom: 0;
+  }
+
+  .curriculum-semester__dot {
+    position: absolute;
+    left: 9px;
+    top: 0.35rem;
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--color-primary);
+    border: 2px solid white;
+    box-shadow: 0 0 0 2px var(--color-primary);
+    z-index: 1;
+  }
+
+  .curriculum-semester__label {
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.02em;
+  }
+
+  .curriculum-semester__courses {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  .curriculum-course {
+    display: inline-block;
+    padding: 0.25rem 0.625rem;
+    background: rgba(0, 93, 170, 0.04);
+    border: 1px solid rgba(0, 93, 170, 0.1);
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    color: var(--color-ink-muted);
+    line-height: 1.4;
+  }
+
+  .curriculum-course:hover {
+    background: rgba(0, 93, 170, 0.08);
+    border-color: rgba(0, 93, 170, 0.2);
+    color: var(--color-primary);
+  }
+
+  .curriculum-disclaimer {
+    margin-top: 2rem;
+    padding: 1rem 1.25rem;
+    background: rgba(0, 93, 170, 0.03);
+    border: 1px solid rgba(0, 93, 170, 0.1);
+    border-radius: var(--radius-luma);
+    max-width: 40rem;
+  }
+
+  @media (max-width: 768px) {
+    .curriculum-cycle__semesters {
+      padding-left: 1.75rem;
+    }
+    .curriculum-semester__dot {
+      left: 5px;
+    }
+    .curriculum-cycle__semesters::before {
+      left: 9px;
+    }
+  }
+</style>

@@ -1,0 +1,170 @@
+---
+import { tinaField } from "@tinacms/astro/tina-field";
+import { PhArrowRight } from "phosphor-icons-astro";
+
+export interface Props {
+  block: {
+    _template: 'cta';
+    variant?: 'default' | 'banner';
+    eyebrow?: string;
+    heading?: string;
+    body?: string;
+    label: string;
+    href?: string;
+  };
+}
+
+const { block } = Astro.props;
+const variant = block.variant || 'default';
+---
+
+{block.label && variant === 'banner' ? (
+  <section>
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 py-8 md:py-12 lg:py-16">
+      <div class="gp-cta">
+        <div class="gp-cta__content">
+          {block.heading && (
+            <h3 class="gp-cta__title" data-tina-field={tinaField(block, 'heading')}>{block.heading}</h3>
+          )}
+          {block.body && (
+            <p class="gp-cta__text" data-tina-field={tinaField(block, 'body')}>{block.body}</p>
+          )}
+          <a
+            href={block.href || '/contact'}
+            class="gp-cta__button"
+            data-tina-field={tinaField(block, 'label')}
+          >
+            {block.label}
+            <PhArrowRight size={16} weight="regular" class="gp-cta__icon" />
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+) : block.label && (
+  <section>
+    <div class="max-w-2xl mx-auto text-center p-10 md:p-12 bg-white border border-primary/10 rounded-luma shadow-luma">
+      {block.eyebrow && (
+        <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-primary mb-3 block" data-tina-field={tinaField(block, 'eyebrow')}>
+          {block.eyebrow}
+        </span>
+      )}
+      {block.heading && (
+        <h2 class="text-xl md:text-2xl font-display font-bold text-ink mb-3" data-tina-field={tinaField(block, 'heading')}>
+          {block.heading}
+        </h2>
+      )}
+      {block.body && (
+        <p class="text-sm text-slate-500 leading-relaxed mb-6 max-w-md mx-auto" data-tina-field={tinaField(block, 'body')}>
+          {block.body}
+        </p>
+      )}
+      <a
+        href={block.href || '/contact'}
+        class="inline-flex items-center gap-2.5 bg-primary text-white pl-6 pr-5 py-3 rounded-full text-xs font-bold shadow-md hover:shadow-xl hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300"
+        data-tina-field={tinaField(block, 'label')}
+      >
+        <span>{block.label}</span>
+        <span class="w-5 h-5 rounded-full bg-white/15 flex items-center justify-center">
+          <PhArrowRight size={10} weight="bold" />
+        </span>
+      </a>
+    </div>
+  </section>
+)}
+
+<style>
+  /* ── Banner CTA ── */
+  .gp-cta {
+    position: relative;
+    background: var(--color-primary);
+    border-radius: var(--radius-luma);
+    padding: 2.5rem 2rem;
+    overflow: hidden;
+  }
+
+  .gp-cta::before {
+    content: '';
+    position: absolute;
+    right: -3rem;
+    top: -3rem;
+    width: 12rem;
+    height: 12rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .gp-cta::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    bottom: -2rem;
+    width: 8rem;
+    height: 8rem;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .gp-cta__content {
+    position: relative;
+    z-index: 1;
+    max-width: 32rem;
+  }
+
+  .gp-cta__title {
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 0.5rem;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+
+  .gp-cta__text {
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.75);
+    line-height: 1.65;
+    margin: 0 0 1.5rem;
+  }
+
+  .gp-cta__button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: #ffffff;
+    color: var(--color-primary);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-radius: 9999px;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  }
+
+  .gp-cta__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+  }
+
+  .gp-cta__button:active {
+    transform: translateY(0);
+  }
+
+  .gp-cta__icon {
+    transition: transform 0.3s ease;
+  }
+
+  .gp-cta__button:hover .gp-cta__icon {
+    transform: translateX(3px);
+  }
+
+  @media (max-width: 768px) {
+    .gp-cta {
+      padding: 2rem 1.5rem;
+    }
+  }
+</style>

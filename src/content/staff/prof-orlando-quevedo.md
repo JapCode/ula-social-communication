@@ -1,5 +1,5 @@
 ---
-name: Prof. Víctor Molina
-role: Coordinador de Pasantías
+name: Prof. Orlando Quevedo
+role: Coordinador
 department: Comunicación Social
 ---

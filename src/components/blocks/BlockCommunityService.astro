@@ -1,0 +1,180 @@
+---
+import { tinaField } from "@tinacms/astro/tina-field";
+import { PhHandsClapping, PhClipboardText } from "phosphor-icons-astro";
+
+export interface Props {
+  block: {
+    _template: 'communityService';
+    descriptionItems?: string[];
+    requirements?: string[];
+  };
+}
+
+const { block } = Astro.props;
+const hasDescription = block.descriptionItems && block.descriptionItems.length > 0;
+const hasRequirements = block.requirements && block.requirements.length > 0;
+---
+
+{(hasDescription || hasRequirements) && (
+  <section class="gp-cs">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 py-16 md:py-24">
+
+    <div class="gp-cs__grid">
+      {hasDescription && (
+        <div class="gp-cs__panel gp-cs__panel--desc">
+          <div class="gp-cs__panel-header">
+            <div class="gp-cs__panel-icon" aria-hidden="true">
+              <PhHandsClapping size={20} weight="light" />
+            </div>
+            <h2 class="gp-cs__panel-title">¿En qué consiste?</h2>
+          </div>
+          <div class="gp-cs__panel-body">
+            {block.descriptionItems!.map((text, i) => (
+              <p key={i} data-tina-field={tinaField(block, 'descriptionItems', i)}>{text}</p>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {hasRequirements && (
+        <div class="gp-cs__panel gp-cs__panel--reqs">
+          <div class="gp-cs__panel-header">
+            <div class="gp-cs__panel-icon" aria-hidden="true">
+              <PhClipboardText size={20} weight="light" />
+            </div>
+            <h2 class="gp-cs__panel-title">Requisitos</h2>
+          </div>
+          <ul class="gp-cs__panel-list">
+            {block.requirements!.map((req, i) => (
+              <li key={i} data-tina-field={tinaField(block, 'requirements', i)}>
+                <span class="gp-cs__panel-check" aria-hidden="true">
+                  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                    <path d="M2.5 6L5 8.5L9.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                </span>
+                {req}
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </div>
+
+    </div>
+  </section>
+)}
+
+<style>
+  .gp-cs__grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .gp-cs__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .gp-cs__panel {
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .gp-cs__panel--desc {
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.5);
+  }
+
+  .gp-cs__panel--reqs {
+    background: linear-gradient(135deg, rgba(0, 93, 170, 0.04), rgba(14, 165, 233, 0.03));
+    border: 1px solid rgba(0, 93, 170, 0.08);
+  }
+
+  .gp-cs__panel-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .gp-cs__panel-icon {
+    flex-shrink: 0;
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+  }
+
+  .gp-cs__panel--desc .gp-cs__panel-icon {
+    background: rgba(0, 93, 170, 0.08);
+    color: var(--color-primary);
+  }
+
+  .gp-cs__panel--reqs .gp-cs__panel-icon {
+    background: var(--color-primary);
+    color: #ffffff;
+  }
+
+  .gp-cs__panel-title {
+    font-size: 1.05rem;
+    font-weight: 650;
+    color: var(--color-ink);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .gp-cs__panel-body {
+    font-size: 0.875rem;
+    color: var(--color-ink-muted, #64748b);
+    line-height: 1.7;
+  }
+
+  .gp-cs__panel-body p {
+    margin: 0 0 0.75rem;
+  }
+
+  .gp-cs__panel-body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .gp-cs__panel-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .gp-cs__panel-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.625rem;
+    font-size: 0.875rem;
+    color: var(--color-ink-muted, #64748b);
+    line-height: 1.55;
+  }
+
+  .gp-cs__panel-check {
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(0, 93, 170, 0.1);
+    color: var(--color-primary);
+    margin-top: 0.125rem;
+  }
+
+  @media (max-width: 640px) {
+    .gp-cs__panel {
+      padding: 1.5rem;
+    }
+  }
+</style>

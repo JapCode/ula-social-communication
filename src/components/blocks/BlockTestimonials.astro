@@ -1,0 +1,198 @@
+---
+import { tinaField } from "@tinacms/astro/tina-field";
+import { requestWithMetadata } from "@tinacms/astro/data";
+import { client } from "../../../tina/__generated__/client";
+import TestimonialCard from "@/components/TestimonialCard.astro";
+import { PhQuotes } from 'phosphor-icons-astro';
+
+export interface Props {
+  block: {
+    _template: 'testimonialsList';
+    heading?: string;
+    intro?: string;
+    featuredTestimonialName?: string;
+  };
+}
+
+const { block } = Astro.props;
+
+// Fetch testimonials through Tina client so data has metadata for tinaField()
+let testimonials: any[] = [];
+try {
+  const result = await requestWithMetadata(
+    client.queries.testimonialsConnection()
+  );
+  testimonials = result.data.testimonialsConnection.edges?.map((e: any) => e.node) || [];
+} catch {
+  // Fallback to Astro content collection if Tina backend is unavailable
+  const { getCollection } = await import('astro:content');
+  testimonials = await getCollection('testimonials');
+}
+
+function tData(t: any) { return t.data || t; }
+
+function fullName(t: any) { return tData(t).name || ''; }
+function gradYear(t: any) { return tData(t).graduationYear || 0; }
+function currRole(t: any) { return tData(t).currentRole || ''; }
+function testimonialQuote(t: any) { return tData(t).quote || ''; }
+function testimonialPhoto(t: any) { return tData(t).photo || ''; }
+
+// Sort by graduationYear descending (most recent first)
+testimonials.sort((a, b) => gradYear(b) - gradYear(a));
+
+// Determine featured testimonial
+let featured: any = undefined;
+let rest: any[] = [];
+
+if (block.featuredTestimonialName) {
+  const target = block.featuredTestimonialName.toLowerCase().trim();
+  const idx = testimonials.findIndex(
+    (t: any) => fullName(t).toLowerCase().trim() === target
+  );
+  if (idx !== -1) {
+    featured = testimonials[idx];
+    rest = testimonials.filter((_, i) => i !== idx);
+  }
+}
+
+if (!featured && testimonials.length > 0) {
+  // No specific pick — use the most recent
+  featured = testimonials[0];
+  rest = testimonials.slice(1);
+}
+---
+
+
+{testimonials.length === 0 && (
+  <section>
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 py-8 md:py-12 lg:py-16">
+      <div class="text-center py-16 bg-white rounded-2xl border border-slate-200">
+        <PhQuotes size={40} weight="fill" class="text-slate-300 mx-auto mb-4" />
+        <p class="text-lg font-bold text-slate-900 mb-2">Aún no hay testimonios publicados.</p>
+        <p class="text-sm text-slate-400">
+          ¿Eres egresado?{' '}
+          <a href="/contact" class="text-primary underline underline-offset-2 hover:text-primary-deep transition-colors">
+            Comparte tu historia
+          </a>{' '}
+          y aparece aquí.
+        </p>
+      </div>
+    </div>
+  </section>
+)}
+
+{featured && (
+  <section>
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 py-8 md:py-12 lg:py-16">
+      <!-- Intro — editorial opening with left accent bar -->
+      {(block.heading || block.intro) && (
+        <div class="testimonial-intro">
+          <div class="testimonial-intro__accent" aria-hidden="true">
+            <span class="testimonial-intro__line"></span>
+          </div>
+          <div>
+            {block.heading && (
+              <h2
+                class="text-2xl md:text-3xl font-display font-semibold tracking-tight text-slate-900 mb-3"
+                data-tina-field={tinaField(block, 'heading')}
+              >
+                {block.heading}
+              </h2>
+            )}
+            {block.intro && (
+              <p
+                class="testimonial-intro__text"
+                data-tina-field={tinaField(block, 'intro')}
+              >
+                {block.intro}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
+
+      <!-- Featured testimonial — prominent -->
+      <div class="featured-testimonial-wrapper" data-tina-field={tinaField(featured, 'name')}>
+        <TestimonialCard
+          quote={testimonialQuote(featured)}
+          author={fullName(featured)}
+          role={currRole(featured)}
+          year={gradYear(featured)}
+          image={testimonialPhoto(featured)}
+          featured={true}
+        />
+      </div>
+
+      <!-- Remaining testimonials — staggered grid -->
+      {rest.length > 0 && (
+        <div class="testimonials-grid">
+          {rest.map((t: any) => (
+            <div key={fullName(t)} data-tina-field={tinaField(t, 'name')}>
+              <TestimonialCard
+                quote={testimonialQuote(t)}
+                author={fullName(t)}
+                role={currRole(t)}
+                year={gradYear(t)}
+                image={testimonialPhoto(t)}
+              />
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+)}
+
+<style>
+  /* ============================================================
+     Intro — editorial opening with left accent bar
+     ============================================================ */
+  .testimonial-intro {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .testimonial-intro__accent {
+    position: absolute;
+    left: 0;
+    top: 0.25rem;
+    bottom: 0.25rem;
+    width: 3px;
+    background: linear-gradient(to bottom, #005daa, rgba(0, 93, 170, 0.15));
+    border-radius: 2px;
+  }
+
+  .testimonial-intro__text {
+    font-size: clamp(1.05rem, 1.5vw, 1.25rem);
+    line-height: 1.7;
+    color: var(--color-ink, #07294a);
+    font-weight: 400;
+    max-width: 48rem;
+    margin: 0;
+  }
+
+  /* ============================================================
+     Featured testimonial wrapper
+     ============================================================ */
+  .featured-testimonial-wrapper {
+    margin-bottom: 2.5rem;
+  }
+
+  /* ============================================================
+     Remaining testimonials — responsive grid
+     ============================================================ */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    margin-bottom: 0;
+  }
+
+  @media (min-width: 640px) {
+    .testimonials-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.75rem;
+    }
+  }
+</style>

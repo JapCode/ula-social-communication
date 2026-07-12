@@ -1,12 +1,5 @@
 ---
-import { PhUser, PhEnvelope, PhGraduationCap } from 'phosphor-icons-astro';
-
-// Normalize image paths from Decap CMS
-function normalizeImagePath(path: string | undefined | null): string | undefined {
-  if (!path) return undefined;
-  if (path.startsWith('/') || path.startsWith('http://') || path.startsWith('https://')) return path;
-  return `/images/uploads/${path}`;
-}
+import { PhEnvelope, PhGraduationCap, PhBookOpenText } from 'phosphor-icons-astro';
 
 interface Props {
   name: string;
@@ -15,36 +8,37 @@ interface Props {
   email?: string;
   bio?: string;
   status?: "active" | "retired";
-  photo?: string;
+  classification?: string;
+  subjects?: string[];
 }
 
-const { name, title, specialization, email, bio, status = "active", photo } = Astro.props;
+const { name, title, specialization, email, bio, status = "active", classification, subjects = [] } = Astro.props;
 const isRetired = status === "retired";
-const photoUrl = normalizeImagePath(photo);
+
+const classificationLabels: Record<string, string> = {
+  ordinario: 'Ordinario',
+  contratado: 'Contratado',
+  jubilado: 'Jubilado',
+  invitado: 'Invitado',
+};
+const classificationLabel = classification ? classificationLabels[classification] || classification : '';
+const hasSubjects = subjects.length > 0;
 ---
+
 
 <article class:list={[
   'faculty-card',
   isRetired && 'faculty-card--retired',
-]} data-faculty-name={name.toLowerCase()} data-faculty-spec={specialization.toLowerCase()} data-faculty-title={title.toLowerCase()}>
+]} data-faculty-name={name.toLowerCase()} data-faculty-spec={specialization.toLowerCase()} data-faculty-title={title.toLowerCase()} data-faculty-classification={(classification || '').toLowerCase()} data-faculty-subjects={(subjects || []).map(s => s.toLowerCase()).join(' ')}>
   <div class="faculty-card__inner">
-    <!-- Avatar / Photo -->
-    {photoUrl ? (
-      <div class="faculty-card__avatar faculty-card__avatar--photo">
-        <img src={photoUrl} alt={`Foto de ${name}`} class="faculty-card__photo" loading="lazy" />
-      </div>
-    ) : (
-      <div class="faculty-card__avatar">
-        <PhUser size={22} weight="light" class="faculty-card__avatar-icon" />
-      </div>
-    )}
-
-    <!-- Info -->
     <div class="faculty-card__info">
       <div class="faculty-card__header">
         <h3 class="faculty-card__name">{name}</h3>
         {isRetired && (
           <span class="faculty-card__badge">Jubilado</span>
+        )}
+        {classification && classification !== 'jubilado' && (
+          <span class="faculty-card__badge faculty-card__classification">{classificationLabel}</span>
         )}
       </div>
       <p class="faculty-card__title">{title}</p>
@@ -54,6 +48,18 @@ const photoUrl = normalizeImagePath(photo);
         <PhGraduationCap size={12} weight="light" />
         <span>{specialization}</span>
       </div>
+
+      <!-- Subjects -->
+      {hasSubjects && (
+        <div class="faculty-card__subjects">
+          <PhBookOpenText size={12} weight="light" />
+          <div class="faculty-card__subject-list">
+            {subjects.map(subject => (
+              <span class="faculty-card__subject-tag">{subject}</span>
+            ))}
+          </div>
+        </div>
+      )}
 
       <!-- Bio (clamped to 3 lines) -->
       {bio && (
@@ -98,42 +104,11 @@ const photoUrl = normalizeImagePath(photo);
   }
 
   .faculty-card__inner {
-    display: flex;
-    align-items: flex-start;
-    gap: 1rem;
     padding: 1.5rem;
-  }
-
-  .faculty-card__avatar {
-    flex-shrink: 0;
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 50%;
-    background: rgba(0, 93, 170, 0.08);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .faculty-card__avatar--photo {
-    overflow: hidden;
-    padding: 0;
-  }
-
-  .faculty-card__photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 50%;
-  }
-
-  .faculty-card__avatar-icon {
-    color: var(--color-primary);
   }
 
   .faculty-card__info {
     min-width: 0;
-    flex: 1;
   }
 
   .faculty-card__header {
@@ -166,6 +141,11 @@ const photoUrl = normalizeImagePath(photo);
     letter-spacing: 0.05em;
   }
 
+  .faculty-card__classification {
+    background: rgba(0, 93, 170, 0.08);
+    color: var(--color-primary);
+  }
+
   .faculty-card__title {
     font-size: 0.8125rem;
     font-weight: 600;
@@ -185,6 +165,35 @@ const photoUrl = normalizeImagePath(photo);
     font-size: 0.6875rem;
     font-weight: 500;
     color: var(--color-ink-muted);
+  }
+
+  .faculty-card__subjects {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.375rem;
+    margin-top: 0.625rem;
+    font-size: 0.6875rem;
+    color: var(--color-ink-muted);
+  }
+
+  .faculty-card__subjects svg {
+    margin-top: 0.175rem;
+    flex-shrink: 0;
+  }
+
+  .faculty-card__subject-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.375rem;
+  }
+
+  .faculty-card__subject-tag {
+    display: inline-block;
+    padding: 0.125rem 0.5rem;
+    border-radius: 9999px;
+    background: rgba(231, 115, 74, 0.08);
+    color: var(--color-accent, #e8734a);
+    font-weight: 500;
   }
 
   .faculty-card__bio {

@@ -1,6 +1,9 @@
 ---
 import DropdownNav from "@/components/DropdownNav.astro";
-import { dropdownGroups, type DropdownSection } from "@/data/navigation";
+import { requestWithMetadata } from "@tinacms/astro/data";
+import { tinaField } from "@tinacms/astro/tina-field";
+import { client } from "../../tina/__generated__/client";
+import type { DropdownSection } from "@/data/navigation";
 import {
   PhMagnifyingGlass,
   PhList,
@@ -13,6 +16,7 @@ import {
   PhCalendar,
   PhWhatsappLogo,
 } from "phosphor-icons-astro";
+import { getIcon } from "@/lib/phosphorIcons";
 
 // Get current path for active state
 const currentPath = Astro.url.pathname;
@@ -31,6 +35,19 @@ const isGroupActive = (sections: DropdownSection[]) =>
 // Generate a stable slug from a label for data-attributes
 const slugify = (text: string) =>
   text.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "");
+
+
+
+// Optional: receive nav data from parent (island). If not provided, fetch from Tina.
+const { navData: propNavData } = Astro.props;
+const navData = propNavData ?? (await requestWithMetadata(
+  client.queries.navigation({ relativePath: 'navigation.json' })
+)).data.navigation;
+const dropdownGroups = navData?.groups ?? [];
+const searchLabel = navData?.searchLabel ?? 'Buscar';
+const homeLabel = navData?.homeLabel ?? 'Inicio';
+const ctaLabel = navData?.ctaLabel ?? 'Contacto';
+const ctaHref = navData?.ctaHref ?? '/contact';
 ---
 
 <nav
@@ -63,9 +80,10 @@ const slugify = (text: string) =>
         ]}
         href="/"
         aria-current={isActive("/") ? "page" : undefined}
+        data-tina-field={tinaField(navData, 'homeLabel')}
       >
         <span class="relative">
-          Inicio
+          {homeLabel}
           {
             isActive("/") && (
               <span class="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary rounded-full" />
@@ -75,8 +93,13 @@ const slugify = (text: string) =>
       </a>
 
       {
-        dropdownGroups.map((group) => (
-          <DropdownNav label={group.label} sections={group.sections} />
+        dropdownGroups.map((group, gi) => (
+          <DropdownNav
+            label={group.label}
+            sections={group.sections}
+            groupIndex={gi}
+            data-tina-field={tinaField(navData, `groups.${gi}`)}
+          />
         ))
       }
     </div>
@@ -94,14 +117,15 @@ const slugify = (text: string) =>
           weight="bold"
           class="text-[var(--color-ink)]"
         />
-        <span class="text-[10px] md:text-[11px] font-bold tracking-[0.12em] uppercase text-[var(--color-ink)]">Buscar</span>
+        <span class="text-[10px] md:text-[11px] font-bold tracking-[0.12em] uppercase text-[var(--color-ink)]" data-tina-field={tinaField(navData, 'searchLabel')}>{searchLabel}</span>
       </button>
 
       <a
-        href="/contact"
+        href={ctaHref}
         class="hidden lg:inline-flex items-center justify-center bg-accent text-white text-[10px] md:text-[11px] font-bold tracking-[0.12em] uppercase px-4 md:px-5 py-2 md:py-2.5 rounded-none hover:bg-accent-hover hover:-translate-y-0.5 active:bg-accent-active active:translate-y-0 transition-all duration-300 border border-transparent"
+        data-tina-field={tinaField(navData, 'ctaLabel')}
       >
-        Contacto
+        {ctaLabel}
       </a>
 
       <!-- Animated hamburger (morphs between list and X) -->
@@ -338,7 +362,7 @@ const slugify = (text: string) =>
                         <a
                           href={item.href}
                           class:list={[
-                            "block py-2 pl-3 text-[12px] rounded-r-lg transition-all duration-200 border-l-2",
+                            "flex items-center gap-2.5 py-2 pl-3 text-[12px] rounded-r-lg transition-all duration-200 border-l-2",
                             itemActive
                               ? "text-primary border-primary bg-primary/5"
                               : "text-[var(--color-ink-muted)] hover:text-primary border-transparent hover:border-primary",
@@ -349,9 +373,20 @@ const slugify = (text: string) =>
                               : undefined
                           }
                         >
-                          {item.label}
+                          {item.icon && (
+                            <span class:list={[
+                              "flex-shrink-0 w-5 h-5 flex items-center justify-center",
+                              itemActive ? "text-primary" : "text-primary/60",
+                            ]}>
+                              {(() => {
+                                const IconComponent = getIcon(item.icon);
+                                return IconComponent ? <IconComponent size={16} weight="duotone" /> : null;
+                              })()}
+                            </span>
+                          )}
+                          <span>{item.label}</span>
                           {itemActive && (
-                            <span class="ml-2 w-1.5 h-1.5 rounded-full bg-primary inline-block" />
+                            <span class="ml-auto w-1.5 h-1.5 rounded-full bg-primary flex-shrink-0" />
                           )}
                         </a>
                       );

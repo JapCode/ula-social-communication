@@ -1,0 +1,341 @@
+---
+import { tinaField } from "@tinacms/astro/tina-field";
+import { getIcon } from "@/lib/phosphorIcons";
+import { PhEnvelopeSimple, PhPhone, PhMapPin, PhArrowRight, PhCheckCircle } from "phosphor-icons-astro";
+
+export interface Props {
+  block: {
+    _template: 'modalitiesList';
+    heading?: string;
+    requirements?: string[];
+    modalities?: Array<{ title: string; description?: string; icon?: string }>;
+    formUrl?: string;
+    contact?: { name?: string; role?: string; email?: string; phone?: string; office?: string };
+  };
+}
+
+const { block } = Astro.props;
+const modalities = (block.modalities || []).map(m => ({ ...m, Icon: m.icon ? getIcon(m.icon) : null }));
+---
+
+{(block.requirements?.length > 0 || block.modalities?.length > 0) && (
+  <section class="gp-mod">
+    <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 py-16 md:py-24">
+    {block.heading && (
+      <h2 class="gp-mod__heading" data-tina-field={tinaField(block, 'heading')}>
+        {block.heading}
+      </h2>
+    )}
+
+    <div class="gp-mod__layout">
+      <div class="gp-mod__main">
+        {modalities.length > 0 && (
+          <div class="gp-mod__steps">
+            {modalities.map((mod, i) => (
+              <div key={i} class="gp-mod__step" data-tina-field={tinaField(block, 'modalities', i)}>
+                <div class="gp-mod__step-line" aria-hidden="true">
+                  <span class="gp-mod__step-dot">{i + 1}</span>
+                  {i < modalities.length - 1 && <span class="gp-mod__step-connector"></span>}
+                </div>
+                <div class="gp-mod__step-body">
+                  {mod.Icon && (
+                    <div class="gp-mod__step-icon" aria-hidden="true">
+                      <mod.Icon size={20} weight="light" />
+                    </div>
+                  )}
+                  <h3 class="gp-mod__step-title" data-tina-field={tinaField(mod, 'title')}>{mod.title}</h3>
+                  {mod.description && <p class="gp-mod__step-desc" data-tina-field={tinaField(mod, 'description')}>{mod.description}</p>}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {block.formUrl && (
+          <div class="gp-mod__form-cta">
+            <a href={block.formUrl} class="gp-mod__btn">
+              Solicitar Pasantía
+              <PhArrowRight size={16} weight="bold" />
+            </a>
+          </div>
+        )}
+      </div>
+
+      <aside class="gp-mod__sidebar">
+        {block.requirements && block.requirements.length > 0 && (
+          <div class="gp-mod__reqs">
+            <div class="gp-mod__reqs-header">
+              <PhCheckCircle size={16} weight="light" />
+              <h3>Requisitos</h3>
+            </div>
+            <ul class="gp-mod__reqs-list">
+              {block.requirements.map((req, i) => (
+                <li key={i} data-tina-field={tinaField(block, 'requirements', i)}>
+                  {req}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        {block.contact && block.contact.name && (
+          <div class="gp-mod__contact">
+            <h3 class="gp-mod__contact-title">Contacto</h3>
+            <div class="gp-mod__contact-body">
+              <p class="gp-mod__contact-name" data-tina-field={tinaField(block.contact, 'name')}>{block.contact.name}</p>
+              {block.contact.role && <p class="gp-mod__contact-role" data-tina-field={tinaField(block.contact, 'role')}>{block.contact.role}</p>}
+              {block.contact.email && (
+                <p><PhEnvelopeSimple size={13} weight="light" /><a href={`mailto:${block.contact.email}`} data-tina-field={tinaField(block.contact, 'email')}>{block.contact.email}</a></p>
+              )}
+              {block.contact.phone && (
+                <p><PhPhone size={13} weight="light" /><span data-tina-field={tinaField(block.contact, 'phone')}>{block.contact.phone}</span></p>
+              )}
+              {block.contact.office && (
+                <p><PhMapPin size={13} weight="light" /><span data-tina-field={tinaField(block.contact, 'office')}>{block.contact.office}</span></p>
+              )}
+            </div>
+          </div>
+        )}
+      </aside>
+    </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .gp-mod__heading {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    margin: 0 0 2.5rem;
+    line-height: 1.2;
+  }
+
+  .gp-mod__layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  @media (min-width: 768px) {
+    .gp-mod__layout {
+      grid-template-columns: 1fr 320px;
+    }
+  }
+
+  /* ── Steps (process flow) ── */
+  .gp-mod__steps {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .gp-mod__step {
+    display: flex;
+    gap: 1.25rem;
+  }
+
+  .gp-mod__step-line {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 2rem;
+  }
+
+  .gp-mod__step-dot {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .gp-mod__step-connector {
+    width: 1px;
+    flex: 1;
+    min-height: 1rem;
+    background: linear-gradient(to bottom, rgba(0, 93, 170, 0.3), rgba(0, 93, 170, 0.05));
+  }
+
+  .gp-mod__step-body {
+    flex: 1;
+    min-width: 0;
+    padding-bottom: 2rem;
+  }
+
+  .gp-mod__step:last-child .gp-mod__step-body {
+    padding-bottom: 0;
+  }
+
+  .gp-mod__step-icon {
+    width: 2.25rem;
+    height: 2.25rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: rgba(0, 93, 170, 0.06);
+    color: var(--color-primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .gp-mod__step-title {
+    font-size: 1.05rem;
+    font-weight: 650;
+    color: var(--color-ink);
+    margin: 0 0 0.25rem;
+    line-height: 1.3;
+  }
+
+  .gp-mod__step-desc {
+    font-size: 0.875rem;
+    color: var(--color-ink-muted, #64748b);
+    line-height: 1.65;
+    margin: 0;
+    max-width: 40rem;
+  }
+
+  .gp-mod__form-cta {
+    margin-top: 1.5rem;
+  }
+
+  .gp-mod__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.75rem;
+    background: var(--color-primary);
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    border-radius: 9999px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 93, 170, 0.12);
+  }
+
+  .gp-mod__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 93, 170, 0.2);
+  }
+
+  /* ── Sidebar ── */
+  .gp-mod__sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .gp-mod__reqs {
+    background: #ffffff;
+    border: 1px solid rgba(226, 232, 240, 0.6);
+    border-radius: 14px;
+    padding: 1.5rem;
+  }
+
+  .gp-mod__reqs-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-ink);
+  }
+
+  .gp-mod__reqs-header h3 {
+    margin: 0;
+  }
+
+  .gp-mod__reqs-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .gp-mod__reqs-list li {
+    position: relative;
+    padding-left: 1rem;
+    font-size: 0.8125rem;
+    color: var(--color-ink-muted, #64748b);
+    line-height: 1.5;
+  }
+
+  .gp-mod__reqs-list li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--color-primary);
+    font-weight: 700;
+  }
+
+  .gp-mod__contact {
+    background: rgba(0, 93, 170, 0.03);
+    border: 1px solid rgba(0, 93, 170, 0.08);
+    border-radius: 14px;
+    padding: 1.5rem;
+  }
+
+  .gp-mod__contact-title {
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    margin: 0 0 0.75rem;
+  }
+
+  .gp-mod__contact-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    color: var(--color-ink-muted, #64748b);
+    line-height: 1.5;
+  }
+
+  .gp-mod__contact-body p {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+  }
+
+  .gp-mod__contact-body a {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  .gp-mod__contact-body a:hover {
+    text-decoration: underline;
+  }
+
+  .gp-mod__contact-name {
+    font-weight: 600;
+    color: var(--color-ink);
+  }
+
+  .gp-mod__contact-role {
+    font-size: 0.75rem;
+    color: var(--color-ink-faint, #94a3b8);
+  }
+
+  @media (max-width: 768px) {
+    .gp-mod__step-body {
+      padding-bottom: 1.5rem;
+    }
+  }
+</style>

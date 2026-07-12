@@ -1,0 +1,454 @@
+---
+import { tinaField } from "@tinacms/astro/tina-field";
+import { requestWithMetadata } from "@tinacms/astro/data";
+import { client } from "../../../tina/__generated__/client";
+import {
+  PhUsers, PhMagnifyingGlass, PhClock, PhMapPin,
+  PhCaretLeft, PhCaretRight, PhFunnel,
+} from 'phosphor-icons-astro';
+import FacultyCard from '@/components/FacultyCard.astro';
+
+export interface Props {
+  block: {
+    _template: 'facultyDirectory';
+    heading?: string;
+    description?: string;
+    contactHeading?: string;
+    contactBody?: string;
+    contactHours?: string;
+    contactLocation?: string;
+  };
+}
+
+const { block } = Astro.props;
+
+const ITEMS_PER_PAGE = 12;
+
+// Fetch faculty through Tina client so data has metadata for tinaField()
+let allFaculty: any[] = [];
+try {
+  const facultyResult = await requestWithMetadata(
+    client.queries.facultyConnection()
+  );
+  allFaculty = facultyResult.data.facultyConnection.edges?.map((e: any) => e.node) || [];
+} catch {
+  const { getCollection } = await import('astro:content');
+  allFaculty = await getCollection('faculty');
+}
+
+const activeFaculty = allFaculty.filter((f: any) => (f.data?.status || f.status) === 'active');
+const retiredFaculty = allFaculty.filter((f: any) => (f.data?.status || f.status) === 'retired');
+const activeTotalPages = Math.max(1, Math.ceil(activeFaculty.length / ITEMS_PER_PAGE));
+const retiredTotalPages = Math.max(1, Math.ceil(retiredFaculty.length / ITEMS_PER_PAGE));
+
+// Collect unique classifications from all faculty
+const allClassifications = new Set<string>();
+allFaculty.forEach((f: any) => {
+  const c = f.data?.classification || f.classification;
+  if (c) allClassifications.add(c);
+});
+const classificationOptions = ['all', ...Array.from(allClassifications).sort()];
+
+const classificationLabels: Record<string, string> = {
+  all: 'Todos',
+  ordinario: 'Ordinario',
+  contratado: 'Contratado',
+  jubilado: 'Jubilado',
+  invitado: 'Invitado',
+};
+
+// Normalize faculty props regardless of data source
+function fName(s: any) { return s.data?.name || s.name || ''; }
+function fTitle(s: any) { return s.data?.title || s.title || ''; }
+function fSpec(s: any) { return s.data?.specialization || s.specialization || ''; }
+function fEmail(s: any) { return s.data?.email || s.email || ''; }
+function fBio(s: any) { return s.data?.bio || s.bio || ''; }
+function fStatus(s: any) { return s.data?.status || s.status || 'active'; }
+function fClassification(s: any) { return s.data?.classification || s.classification || ''; }
+function fSubjects(s: any) { return s.data?.subjects || s.subjects || []; }
+function fPeriods(s: any) { return s.data?.academicPeriods || s.academicPeriods || []; }
+---
+
+
+<section>
+  <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 py-8 md:py-12 lg:py-16">
+    {block.heading && (
+      <h2 class="text-2xl md:text-3xl font-display font-semibold tracking-tight text-slate-900 mb-4" data-tina-field={tinaField(block, 'heading')}>
+        {block.heading}
+      </h2>
+    )}
+    {block.description && (
+      <p class="text-base md:text-lg text-slate-500 leading-relaxed max-w-2xl mb-8" data-tina-field={tinaField(block, 'description')}>
+        {block.description}
+      </p>
+    )}
+
+    {allFaculty.length === 0 && (
+      <div class="text-center py-16">
+        <PhUsers size={40} weight="light" class="text-slate-300 mx-auto mb-4" />
+        <h3 class="text-lg font-bold text-slate-900 mb-2">Sin docentes registrados</h3>
+        <p class="text-sm text-slate-400 max-w-sm mx-auto">
+          Aún no se ha registrado información sobre el cuerpo docente. Contacta a secretaría para más detalles.
+        </p>
+      </div>
+    )}
+
+    {allFaculty.length > 0 && (
+      <>
+        <!-- Search + Filter -->
+        <div class="mb-8 flex flex-col sm:flex-row gap-3">
+          <div class="relative flex-1 max-w-sm">
+            <PhMagnifyingGlass size={18} weight="light" class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+            <input
+              type="search"
+              id="faculty-search"
+              class="w-full pl-10 pr-4 py-2.5 bg-surface-elevated border border-tinted rounded-full text-sm text-slate-900 placeholder-slate-400 focus:outline-none focus:border-primary/30 focus:ring-2 focus:ring-primary/10 transition-all"
+              placeholder="Buscar por nombre, especialidad o cargo..."
+              aria-label="Buscar docentes"
+            />
+          </div>
+
+          <!-- Classification filter buttons -->
+          {classificationOptions.length > 1 && (
+            <div class="flex flex-wrap items-center gap-1.5 flex-shrink-0" role="group" aria-label="Filtrar por clasificación">
+              {classificationOptions.map(opt => (
+                <button
+                  type="button"
+                  class={`classification-btn text-xs font-medium px-3 py-1.5 rounded-full border transition-colors ${opt === 'all' ? 'bg-primary text-white border-primary' : 'bg-surface-elevated text-slate-600 border-tinted hover:border-primary/30 hover:text-primary'}`}
+                  data-classification={opt}
+                  aria-pressed={opt === 'all' ? 'true' : 'false'}
+                >
+                  {classificationLabels[opt] || opt}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <!-- Active Faculty -->
+        {activeFaculty.length > 0 && (
+          <div class="mb-12 faculty-section" data-section="active">
+            <span class="inline-block text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400 mb-4">
+              Planta Activa
+            </span>
+            <div id="faculty-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {activeFaculty.map((teacher: any, i: number) => {
+                const pageNum = Math.floor(i / ITEMS_PER_PAGE) + 1;
+                return (
+                  <div data-page={pageNum} class="faculty-grid-item" data-tina-field={tinaField(teacher, 'name')}>
+                    <FacultyCard
+                      name={fName(teacher)}
+                      title={fTitle(teacher)}
+                      specialization={fSpec(teacher)}
+                      email={fEmail(teacher)}
+                      bio={fBio(teacher)}
+                      status={fStatus(teacher)}
+                      classification={fClassification(teacher)}
+                      subjects={fSubjects(teacher)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            <div id="active-pagination-info" class="text-xs text-slate-400 mt-6 text-center">
+              Mostrando {Math.min(ITEMS_PER_PAGE, activeFaculty.length)}-{Math.min(ITEMS_PER_PAGE * 2, activeFaculty.length)} de {activeFaculty.length} docentes
+            </div>
+
+            {activeTotalPages > 1 && (
+              <nav id="active-pagination-controls" class="flex items-center justify-center gap-1.5 mt-3" aria-label="Paginación de planta activa">
+                <button id="active-page-prev" class="pagination-btn inline-flex items-center justify-center w-9 h-9 rounded-full text-sm text-slate-500 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors" aria-label="Página anterior" disabled>
+                  <PhCaretLeft size={16} weight="bold" />
+                </button>
+                <div id="active-page-numbers" class="flex items-center gap-1.5"></div>
+                <button id="active-page-next" class="pagination-btn inline-flex items-center justify-center w-9 h-9 rounded-full text-sm text-slate-500 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors" aria-label="Página siguiente">
+                  <PhCaretRight size={16} weight="bold" />
+                </button>
+              </nav>
+            )}
+
+            <p id="active-no-results" class="hidden text-center py-12 text-sm text-slate-400">
+              No se encontraron docentes con ese criterio de búsqueda.
+            </p>
+          </div>
+        )}
+
+        <!-- Retired Faculty -->
+        {retiredFaculty.length > 0 && (
+          <div class="mt-12 pt-10 border-t border-tinted faculty-section" data-section="retired">
+            <span class="inline-block text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400 mb-4">
+              Jubilados
+            </span>
+            <div id="retired-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {retiredFaculty.map((teacher: any, i: number) => {
+                const pageNum = Math.floor(i / ITEMS_PER_PAGE) + 1;
+                return (
+                  <div data-retired-page={pageNum} class="retired-grid-item" data-tina-field={tinaField(teacher, 'name')}>
+                    <FacultyCard
+                      name={fName(teacher)}
+                      title={fTitle(teacher)}
+                      specialization={fSpec(teacher)}
+                      bio={fBio(teacher)}
+                      status={fStatus(teacher)}
+                      classification={fClassification(teacher)}
+                      subjects={fSubjects(teacher)}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+
+            <div id="retired-pagination-info" class="text-xs text-slate-400 mt-6 text-center">
+              Mostrando {Math.min(ITEMS_PER_PAGE, retiredFaculty.length)}-{Math.min(ITEMS_PER_PAGE * 2, retiredFaculty.length)} de {retiredFaculty.length} docentes
+            </div>
+
+            {retiredTotalPages > 1 && (
+              <nav id="retired-pagination-controls" class="flex items-center justify-center gap-1.5 mt-3" aria-label="Paginación de jubilados">
+                <button id="retired-page-prev" class="pagination-btn inline-flex items-center justify-center w-9 h-9 rounded-full text-sm text-slate-500 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors" aria-label="Página anterior" disabled>
+                  <PhCaretLeft size={16} weight="bold" />
+                </button>
+                <div id="retired-page-numbers" class="flex items-center gap-1.5"></div>
+                <button id="retired-page-next" class="pagination-btn inline-flex items-center justify-center w-9 h-9 rounded-full text-sm text-slate-500 hover:bg-slate-100 disabled:opacity-30 disabled:pointer-events-none transition-colors" aria-label="Página siguiente">
+                  <PhCaretRight size={16} weight="bold" />
+                </button>
+              </nav>
+            )}
+
+            <p id="retired-no-results" class="hidden text-center py-12 text-sm text-slate-400">
+              No se encontraron docentes con ese criterio de búsqueda.
+            </p>
+          </div>
+        )}
+
+        <!-- Contact Guidance -->
+        {(block.contactHeading || block.contactBody || block.contactHours || block.contactLocation) && (
+        <div class="mt-10 p-6 md:p-8 bg-surface-elevated border border-tinted rounded-luma" data-tina-field={tinaField(block, 'contactHeading')}>
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <PhClock size={20} weight="light" class="text-primary" />
+            </div>
+            <div>
+              {(block.contactHeading || block.contactBody) && (
+                <>
+                  {block.contactHeading && <h3 class="text-sm font-bold text-slate-900 mb-1">{block.contactHeading}</h3>}
+                  {block.contactBody && <p class="text-sm text-slate-500 leading-relaxed">{block.contactBody}</p>}
+                </>
+              )}
+              {(block.contactHours || block.contactLocation) && (
+                <div class="flex flex-col gap-1.5 mt-3">
+                  {block.contactHours && (
+                    <span class="inline-flex items-center gap-2 text-xs text-slate-400" data-tina-field={tinaField(block, 'contactHours')}>
+                      <PhClock size={14} weight="light" />
+                      {block.contactHours}
+                    </span>
+                  )}
+                  {block.contactLocation && (
+                    <span class="inline-flex items-center gap-2 text-xs text-slate-400" data-tina-field={tinaField(block, 'contactLocation')}>
+                      <PhMapPin size={14} weight="light" />
+                      {block.contactLocation}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        )}
+      </>
+    )}
+  </div>
+</section>
+
+<script is:inline>
+  document.addEventListener('DOMContentLoaded', () => {
+    const PER_PAGE = 12;
+    const searchInput = document.getElementById('faculty-search');
+    const classificationBtns = Array.from(document.querySelectorAll('.classification-btn'));
+
+    function getActiveClassification() {
+      var active = classificationBtns.find(function(b) { return b.getAttribute('aria-pressed') === 'true'; });
+      return active ? active.getAttribute('data-classification') : 'all';
+    }
+
+    function getPageRange(totalPages, currentPage) {
+      const WINDOW = 5;
+      const pages = [];
+      if (totalPages <= WINDOW + 2) {
+        for (let i = 1; i <= totalPages; i++) pages.push(i);
+        return pages;
+      }
+      pages.push(1);
+      const half = Math.floor((WINDOW - 1) / 2);
+      let start = currentPage - half;
+      let end = currentPage + half;
+      if (start <= 2) { start = 2; end = Math.min(start + WINDOW - 1, totalPages - 1); }
+      if (end >= totalPages - 1) { end = totalPages - 1; start = Math.max(end - WINDOW + 1, 2); }
+      if (start > 2) pages.push('...');
+      for (let i = start; i <= end; i++) pages.push(i);
+      if (end < totalPages - 1) pages.push('...');
+      pages.push(totalPages);
+      return pages;
+    }
+
+    function createPaginator(config) {
+      const { gridId, itemSelector, infoId, prevId, nextId, pageNumbersId, noResultsId } = config;
+      const grid = document.getElementById(gridId);
+      const infoEl = document.getElementById(infoId);
+      const prevBtn = document.getElementById(prevId);
+      const nextBtn = document.getElementById(nextId);
+      const pageNumbersEl = document.getElementById(pageNumbersId);
+      const noResultsEl = document.getElementById(noResultsId);
+      const allItems = grid ? Array.from(grid.querySelectorAll('.' + itemSelector)) : [];
+      let currentPage = 1;
+      let totalPages = 1;
+      let filteredItems = [];
+
+      function cardFromItem(item) { return item.querySelector('.faculty-card'); }
+
+      function cardMatchesQuery(card, query) {
+        if (!query) return true;
+        const name = (card.getAttribute('data-faculty-name') || '').toLowerCase();
+        const spec = (card.getAttribute('data-faculty-spec') || '').toLowerCase();
+        const title = (card.getAttribute('data-faculty-title') || '').toLowerCase();
+        return name.includes(query) || spec.includes(query) || title.includes(query);
+      }
+
+      function cardMatchesClassification(card, classification) {
+        if (!classification || classification === 'all') return true;
+        return (card.getAttribute('data-faculty-classification') || '') === classification;
+      }
+
+      function goToPage(page, query, classification) {
+        currentPage = Math.max(1, Math.min(page, totalPages));
+        const start = (currentPage - 1) * PER_PAGE;
+        const end = start + PER_PAGE;
+        let visibleOnPage = 0;
+        allItems.forEach(item => {
+          const card = cardFromItem(item);
+          if (!card) { item.style.display = 'none'; return; }
+          const matchesSearch = cardMatchesQuery(card, query);
+          const matchesClassification = cardMatchesClassification(card, classification);
+          if (!matchesSearch || !matchesClassification) { item.style.display = 'none'; return; }
+          const itemIndex = filteredItems.indexOf(item);
+          const onPage = itemIndex >= start && itemIndex < end;
+          item.style.display = onPage ? '' : 'none';
+          if (onPage) visibleOnPage++;
+        });
+        if (infoEl) {
+          infoEl.textContent = filteredItems.length === 0
+            ? ''
+            : 'Mostrando ' + (start + 1) + '-' + Math.min(end, filteredItems.length) + ' de ' + filteredItems.length + ' docentes';
+        }
+        if (noResultsEl) noResultsEl.classList.toggle('hidden', visibleOnPage > 0);
+        renderPageNumbers();
+        if (prevBtn) prevBtn.disabled = currentPage <= 1;
+        if (nextBtn) nextBtn.disabled = currentPage >= totalPages;
+      }
+
+      function renderPageNumbers() {
+        if (!pageNumbersEl) return;
+        pageNumbersEl.innerHTML = '';
+        const range = getPageRange(totalPages, currentPage);
+        range.forEach(item => {
+          if (item === '...') {
+            const span = document.createElement('span');
+            span.className = 'inline-flex items-center justify-center w-9 h-9 text-xs text-slate-300 select-none';
+            span.textContent = '...';
+            pageNumbersEl.appendChild(span);
+          } else {
+            const btn = document.createElement('button');
+            const isActive = item === currentPage;
+            btn.className = 'pagination-btn inline-flex items-center justify-center w-9 h-9 rounded-full text-sm font-medium transition-colors' +
+              (isActive ? ' bg-primary text-white' : ' text-slate-500 hover:bg-slate-100');
+            btn.textContent = item;
+            btn.setAttribute('aria-label', 'P\u00e1gina ' + item);
+            if (isActive) btn.setAttribute('aria-current', 'page');
+            const pageNum = item;
+            btn.addEventListener('click', function() {
+              var q = (searchInput ? searchInput.value.toLowerCase().trim() : '');
+              var c = getActiveClassification();
+              goToPage(pageNum, q, c);
+            });
+            pageNumbersEl.appendChild(btn);
+          }
+        });
+      }
+
+      function applyFilter(query, classification) {
+        filteredItems = [];
+        allItems.forEach(item => {
+          const card = cardFromItem(item);
+          if (!card) return;
+          if (cardMatchesQuery(card, query) && cardMatchesClassification(card, classification)) {
+            filteredItems.push(item);
+          }
+        });
+        totalPages = Math.max(1, Math.ceil(filteredItems.length / PER_PAGE));
+        if (currentPage > totalPages) currentPage = totalPages;
+        goToPage(currentPage, query, classification);
+        return filteredItems.length;
+      }
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function() {
+          var q = (searchInput ? searchInput.value.toLowerCase().trim() : '');
+          var c = getActiveClassification();
+          goToPage(currentPage - 1, q, c);
+        });
+      }
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+          var q = (searchInput ? searchInput.value.toLowerCase().trim() : '');
+          var c = getActiveClassification();
+          goToPage(currentPage + 1, q, c);
+        });
+      }
+      return { applyFilter, goToPage };
+    }
+
+    function applyFilters() {
+      var query = (searchInput ? searchInput.value.toLowerCase().trim() : '');
+      var classification = getActiveClassification();
+      activePaginator.applyFilter(query, classification);
+      retiredPaginator.applyFilter(query, classification);
+    }
+
+    // Update button active state and re-filter
+    function setActiveClassification(value) {
+      classificationBtns.forEach(function(btn) {
+        var isActive = btn.getAttribute('data-classification') === value;
+        btn.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+        btn.className = 'classification-btn text-xs font-medium px-3 py-1.5 rounded-full border transition-colors' +
+          (isActive ? ' bg-primary text-white border-primary' : ' bg-surface-elevated text-slate-600 border-tinted hover:border-primary/30 hover:text-primary');
+      });
+      applyFilters();
+    }
+
+    var activePaginator = createPaginator({
+      gridId: 'faculty-grid', itemSelector: 'faculty-grid-item',
+      infoId: 'active-pagination-info', prevId: 'active-page-prev',
+      nextId: 'active-page-next', pageNumbersId: 'active-page-numbers',
+      noResultsId: 'active-no-results',
+    });
+    var retiredPaginator = createPaginator({
+      gridId: 'retired-grid', itemSelector: 'retired-grid-item',
+      infoId: 'retired-pagination-info', prevId: 'retired-page-prev',
+      nextId: 'retired-page-next', pageNumbersId: 'retired-page-numbers',
+      noResultsId: 'retired-no-results',
+    });
+
+    if (searchInput) {
+      searchInput.addEventListener('input', applyFilters);
+    }
+
+    // Click handlers for classification buttons
+    classificationBtns.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        var value = this.getAttribute('data-classification');
+        setActiveClassification(value);
+      });
+    });
+
+    applyFilters();
+  });
+</script>

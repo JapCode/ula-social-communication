@@ -1,0 +1,49 @@
+---
+import { tinaField } from "@tinacms/astro/tina-field";
+import { getIcon } from "@/lib/phosphorIcons";
+
+interface ItemsListItem {
+  title: string;
+  description?: string;
+  detail?: string;
+  icon?: string;
+  href?: string;
+  emphasis?: boolean;
+}
+
+interface Props {
+  items: ItemsListItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="space-y-6 md:space-y-8">
+  {items.map((item, i) => {
+    const Icon = item.icon ? getIcon(item.icon) : null;
+    return (
+    <div class="flex items-start gap-6 pl-6 border-l-2 border-primary/20 hover:border-primary transition-colors duration-300">
+      <span class="text-xs font-mono font-bold text-slate-300 tabular-nums mt-0.5">
+        {String(i + 1).padStart(2, '0')}
+      </span>
+      <div>
+        <div class="flex items-center gap-2.5 mb-1">
+          {Icon && <Icon size={16} weight="light" class="text-primary flex-shrink-0" />}
+          <h3 class="text-lg font-display font-bold text-slate-900 tracking-tight" data-tina-field={tinaField(item, 'title')}>
+            {item.title}
+          </h3>
+        </div>
+        {item.description && (
+          <p class="text-sm text-slate-500 leading-relaxed" data-tina-field={tinaField(item, 'description')}>
+            {item.description}
+          </p>
+        )}
+        {item.detail && (
+          <p class="text-xs text-slate-400 mt-1.5 font-medium" data-tina-field={tinaField(item, 'detail')}>
+            {item.detail}
+          </p>
+        )}
+      </div>
+    </div>
+  )})}
+</div>

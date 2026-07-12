@@ -1,0 +1,45 @@
+{
+  "brandDescription": "Universidad de los Andes — Núcleo Universitario \"Rafael Rangel\".",
+  "social_instagram": "https://www.instagram.com/comunicacionsocialulanurr/",
+  "social_twitter": "https://x.com/ulanurr_cs",
+  "social_youtube": "https://youtube.com/@comunicacionsocialulanurr",
+  "social_tiktok": "https://www.tiktok.com/@comunicacionsocialnurr",
+  "contactHeading": "Contacto",
+  "email": "comunicacion@nurr.ula.ve",
+  "emailLabel": "Email",
+  "phone": "+58 412 263-2750",
+  "phoneLabel": "Teléfono",
+  "schedule": "Lun–Vie 8:00 AM – 4:00 PM",
+  "scheduleLabel": "Horario",
+  "linkColumns": [
+    {
+      "heading": "Admisión",
+      "links": [
+        { "label": "Proceso de Admisión", "href": "/admission/process" },
+        { "label": "Requisitos", "href": "/admission/requirements" },
+        { "label": "Egresados de Éxito", "href": "/alumni/testimonials" },
+        { "label": "Contacto", "href": "/contact" }
+      ]
+    },
+    {
+      "heading": "Académico",
+      "links": [
+        { "label": "Currículo", "href": "/academics/curriculum" },
+        { "label": "Contenido de Cursos", "href": "/academics/course-content" },
+        { "label": "Eventos", "href": "/student-life/events" },
+        { "label": "Investigación", "href": "/academics/research" }
+      ]
+    }
+  ],
+  "secondaryLinks": [
+    { "label": "La Carrera", "href": "/program/mission" },
+    { "label": "Vida Estudiantil", "href": "/student-life/association" },
+    { "label": "NURR en Medios", "href": "/portfolio/articles" },
+    { "label": "Revista Digital", "href": "/portfolio/magazine" },
+    { "label": "Educación Continua", "href": "/alumni/continuing-education" }
+  ],
+  "whatsappPhone": "584120000000",
+  "whatsappMessage": "Hola, necesito ayuda con informaci\u00f3n sobre Comunicaci\u00f3n Social ULA NURR",
+  "whatsappTooltip": "Soporte",
+  "copyright": "ULA NURR \u2013 Comunicaci\u00f3n Social. Todos los derechos reservados."
+}

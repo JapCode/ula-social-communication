@@ -1,0 +1,40 @@
+---
+import { tinaField } from "@tinacms/astro/tina-field";
+import { getIcon } from "@/lib/phosphorIcons";
+
+interface ItemsListItem {
+  title: string;
+  description?: string;
+  detail?: string;
+  icon?: string;
+  href?: string;
+  emphasis?: boolean;
+}
+
+interface Props {
+  items: ItemsListItem[];
+  constrainWidth?: boolean;
+}
+
+const { items, constrainWidth } = Astro.props;
+---
+
+<div class="gp-competencies__list">
+  {items.map((item, i) => {
+    const Icon = item.icon ? getIcon(item.icon) : null;
+    return (
+      <div class:list={["gp-competency", i === 0 ? "gp-competency--featured" : ""]} data-tina-field={tinaField(item, 'title')}>
+        <div class="gp-competency__number">{String(i + 1).padStart(2, '0')}</div>
+        <div class="gp-competency__content">
+          <div class="gp-competency__header">
+            {Icon && <Icon size={i === 0 ? 22 : 18} weight={i === 0 ? "duotone" : "light"} class="gp-competency__icon" />}
+            <h3 class="gp-competency__title" data-tina-field={tinaField(item, 'title')}>{item.title}</h3>
+          </div>
+          {item.description ? (
+            <p class:list={["gp-competency__desc", constrainWidth ? "gp-constrain" : ""]} data-tina-field={tinaField(item, 'description')}>{item.description}</p>
+          ) : null}
+        </div>
+      </div>
+    );
+  })}
+</div>

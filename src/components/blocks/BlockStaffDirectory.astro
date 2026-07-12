@@ -1,0 +1,183 @@
+---
+import { tinaField } from "@tinacms/astro/tina-field";
+import { requestWithMetadata } from "@tinacms/astro/data";
+import { client } from "../../../tina/__generated__/client";
+import { PhBuildingOffice, PhClock, PhMapPin, PhEnvelope, PhPhone } from 'phosphor-icons-astro';
+import StaffCard from '@/components/StaffCard.astro';
+
+export interface Props {
+  block: {
+    _template: 'staffDirectory';
+    heading?: string;
+    description?: string;
+    featuredStaffName?: string;
+    direccionHeading?: string;
+    equipoHeading?: string;
+    contactHeading?: string;
+    contactBody?: string;
+    contactHours?: string;
+    contactLocation?: string;
+    contactEmail?: string;
+    contactPhone?: string;
+  };
+}
+
+const { block } = Astro.props;
+
+// Fetch staff through Tina client so data has metadata for tinaField()
+let staff: any[] = [];
+try {
+  const staffResult = await requestWithMetadata(
+    client.queries.staffConnection()
+  );
+  staff = staffResult.data.staffConnection.edges?.map((e: any) => e.node) || [];
+} catch {
+  // Fallback to Astro content collection if Tina backend is unavailable
+  const { getCollection } = await import('astro:content');
+  staff = await getCollection('staff');
+}
+
+// Featured director: match by name if specified, otherwise fall back to department 'Dirección'
+let director: any = undefined;
+if (block.featuredStaffName) {
+  const nameMatch = block.featuredStaffName.toLowerCase().trim();
+  director = staff.find((s: any) => (s.data?.name || s.name || '').toLowerCase().trim() === nameMatch);
+}
+if (!director) {
+  director = staff.find((s: any) => (s.data?.department || s.department || '') === 'Dirección');
+}
+
+const supportingStaff = staff.filter((s: any) => s !== director);
+
+const direccionLabel = block.direccionHeading || 'Dirección';
+const equipoLabel = block.equipoHeading || 'Equipo Directivo';
+
+// Normalize staff props regardless of data source
+function staffName(s: any) { return s.data?.name || s.name || ''; }
+function staffRole(s: any) { return s.data?.role || s.role || ''; }
+function staffDept(s: any) { return s.data?.department || s.department || ''; }
+function staffEmail(s: any) { return s.data?.email || s.email || ''; }
+function staffPhone(s: any) { return s.data?.phone || s.phone || ''; }
+function staffPhoto(s: any) { return s.data?.photo || s.photo || ''; }
+function staffSlug(s: any) { return s._sys?.filename || s.id?.replace(/\.md$/, '') || ''; }
+---
+
+<section>
+  <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 py-8 md:py-12 lg:py-16">
+    {block.heading && (
+      <h2 class="text-2xl md:text-3xl font-display font-semibold tracking-tight text-slate-900 mb-4" data-tina-field={tinaField(block, 'heading')}>
+        {block.heading}
+      </h2>
+    )}
+    {block.description && (
+      <p class="text-base md:text-lg text-slate-500 leading-relaxed max-w-2xl mb-8" data-tina-field={tinaField(block, 'description')}>
+        {block.description}
+      </p>
+    )}
+
+    {staff.length === 0 && (
+      <div class="text-center py-16">
+        <PhBuildingOffice size={40} weight="light" class="text-slate-300 mx-auto mb-4" />
+        <h3 class="text-lg font-bold text-slate-900 mb-2">Sin autoridades registradas</h3>
+        <p class="text-sm text-slate-400 max-w-sm mx-auto">
+          Aún no se ha registrado información sobre el equipo directivo. Contacta a secretaría para más detalles.
+        </p>
+      </div>
+    )}
+
+    {staff.length > 0 && (
+      <>
+        {director && (
+          <div class="mb-10">
+            <span class="inline-block text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400 mb-4" data-tina-field={tinaField(block, 'direccionHeading')}>
+              {direccionLabel}
+            </span>
+            <div data-tina-field={tinaField(director, 'name')}>
+            <StaffCard
+              name={staffName(director)}
+              role={staffRole(director)}
+              department={staffDept(director)}
+              email={staffEmail(director)}
+              phone={staffPhone(director)}
+              photo={staffPhoto(director)}
+              featured
+            />
+            </div>
+          </div>
+        )}
+
+        {supportingStaff.length > 0 && (
+          <div>
+            <span class="inline-block text-[10px] font-bold tracking-[0.35em] uppercase text-slate-400 mb-4" data-tina-field={tinaField(block, 'equipoHeading')}>
+              {equipoLabel}
+            </span>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {supportingStaff.map((person: any) => (
+                <div data-tina-field={tinaField(person, 'name')}>
+                <StaffCard
+                  name={staffName(person)}
+                  role={staffRole(person)}
+                  department={staffDept(person)}
+                  email={staffEmail(person)}
+                  phone={staffPhone(person)}
+                  photo={staffPhoto(person)}
+                />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {(block.contactHeading || block.contactBody || block.contactHours || block.contactLocation) && (
+        <div class="mt-10 p-6 md:p-8 bg-surface-elevated border border-tinted rounded-luma" data-tina-field={tinaField(block, 'contactHeading')}>
+          <div class="flex items-start gap-4">
+            <div class="flex-shrink-0 w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <PhClock size={20} weight="light" class="text-primary" />
+            </div>
+            <div>
+              {(block.contactHeading || block.contactBody) && (
+                <>
+                  {block.contactHeading && <h3 class="text-sm font-bold text-slate-900 mb-1">{block.contactHeading}</h3>}
+                  {block.contactBody && <p class="text-sm text-slate-500 leading-relaxed">{block.contactBody}</p>}
+                </>
+              )}
+              {(block.contactHours || block.contactLocation) && (
+                <div class="flex flex-col gap-1.5 mt-3">
+                  {block.contactHours && (
+                    <span class="inline-flex items-center gap-2 text-xs text-slate-400" data-tina-field={tinaField(block, 'contactHours')}>
+                      <PhClock size={14} weight="light" />
+                      {block.contactHours}
+                    </span>
+                  )}
+                  {block.contactLocation && (
+                    <span class="inline-flex items-center gap-2 text-xs text-slate-400" data-tina-field={tinaField(block, 'contactLocation')}>
+                      <PhMapPin size={14} weight="light" />
+                      {block.contactLocation}
+                    </span>
+                  )}
+                </div>
+              )}
+              {(block.contactEmail || block.contactPhone) && (
+                <div class="flex flex-col gap-1.5 mt-3">
+                  {block.contactEmail && (
+                    <a href={`mailto:${block.contactEmail}`} class="inline-flex items-center gap-2 text-xs text-slate-400 hover:text-primary transition-colors" data-tina-field={tinaField(block, 'contactEmail')}>
+                      <PhEnvelope size={14} weight="light" />
+                      {block.contactEmail}
+                    </a>
+                  )}
+                  {block.contactPhone && (
+                    <span class="inline-flex items-center gap-2 text-xs text-slate-400" data-tina-field={tinaField(block, 'contactPhone')}>
+                      <PhPhone size={14} weight="light" />
+                      {block.contactPhone}
+                    </span>
+                  )}
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+        )}
+      </>
+    )}
+  </div>
+</section>

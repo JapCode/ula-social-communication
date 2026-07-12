@@ -1,0 +1,71 @@
+---
+import { tinaField } from "@tinacms/astro/tina-field";
+import { getIcon } from "@/lib/phosphorIcons";
+
+interface ContactItem {
+  title: string;
+  value: string;
+  detail?: string;
+  icon?: string;
+  href?: string;
+  Icon?: any;
+}
+
+interface Props {
+  contacts: ContactItem[];
+  mapEmbed: string;
+}
+
+const { contacts, mapEmbed } = Astro.props;
+---
+
+<div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+  <div class="lg:col-span-3 grid sm:grid-cols-2 gap-4 md:gap-6">
+    {contacts.map((contact, i) => (
+      contact.href ? (
+        <a key={i} href={contact.href} class="group block bg-white border border-tinted rounded-luma p-5 md:p-6 transition-all duration-300 hover:shadow-luma hover:border-tinted-strong hover:-translate-y-1">
+          {contact.Icon && (
+            <div class="w-10 h-10 bg-primary/5 rounded-xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110">
+              <contact.Icon size={18} weight="light" class="text-primary" />
+            </div>
+          )}
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-0.5">
+            {contact.title}
+          </h3>
+          <p class="text-sm font-medium text-ink">
+            {contact.value}
+          </p>
+          {contact.detail && (
+            <p class="text-xs text-slate-400 mt-0.5">
+              {contact.detail}
+            </p>
+          )}
+        </a>
+      ) : (
+        <div key={i} class="bg-white border border-tinted rounded-luma p-5 md:p-6">
+          {contact.Icon && (
+            <div class="w-10 h-10 bg-primary/5 rounded-xl flex items-center justify-center mb-3">
+              <contact.Icon size={18} weight="light" class="text-primary" />
+            </div>
+          )}
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-0.5">
+            {contact.title}
+          </h3>
+          <p class="text-sm font-medium text-ink">
+            {contact.value}
+          </p>
+          {contact.detail && (
+            <p class="text-xs text-slate-400 mt-0.5">
+              {contact.detail}
+            </p>
+          )}
+        </div>
+      )
+    ))}
+  </div>
+  <div class="lg:col-span-2">
+    <div class="sticky top-24 h-full min-h-[300px] rounded-luma overflow-hidden border border-tinted bg-slate-100">
+      {mapEmbed}
+    </div>
+  </div>
+</div>

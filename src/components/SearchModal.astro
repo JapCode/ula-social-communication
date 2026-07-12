@@ -1,25 +1,19 @@
 ---
 import { getCollection } from 'astro:content';
 import { PhX, PhMagnifyingGlass } from 'phosphor-icons-astro';
+import { client } from "../../tina/__generated__/client";
+import { pages2route } from '@/lib/routeMap';
 
 const faculty = await getCollection('faculty');
 const events = await getCollection('events');
 const articles = await getCollection('articles');
-const pages = await getCollection('pages');
 const staff = await getCollection('staff');
 const courses = await getCollection('courses');
 const testimonials = await getCollection('testimonials');
 
-// ── Convert pageId to actual site URL ─────────────────────
-function pageUrl(pageId: string): string {
-  if (pageId === 'home') return '/';
-  const parts = pageId.split('-');
-  if (parts.length > 1 && parts[parts.length - 1] === 'index') {
-    return '/' + parts.slice(0, -1).join('/') + '/';
-  }
-  if (pageId === 'student-life-events-listing') return '/student-life/events';
-  return '/' + parts.join('/');
-}
+// ── Fetch all pages from TinaCMS ──────────────────────────
+const pagesResponse = await client.queries.pagesConnection();
+const tinaPages = pagesResponse.data.pagesConnection.edges?.map(e => e?.node).filter(Boolean) || [];
 
 // ── Build search index ─────────────────────────────────────
 type SearchEntry = {
@@ -54,12 +48,12 @@ const searchIndex: SearchEntry[] = [
     keywords: ['artículo', a.data.title, a.data.author, a.data.category, a.data.excerpt],
   })),
 
-  // ── Pages (title pages) ──
-  ...pages.filter(p => p.data.pageType !== 'home').map(p => ({
-    title: p.data.title,
-    subtitle: '',
-    href: pageUrl(p.data.pageId),
-    keywords: [p.data.pageId, 'página', p.data.title, (p.data as any).subtitle || '', (p.data as any).body || ''].filter(Boolean),
+  // ── Pages (from TinaCMS) ──
+  ...tinaPages.filter(p => p._sys.filename !== 'home').map(p => ({
+    title: p.title,
+    subtitle: p.description || '',
+    href: pages2route[p._sys.filename] || `/${p._sys.filename}`,
+    keywords: ['página', p.title, p.description || '', p._sys.filename].filter(Boolean),
   })),
 
   // ── Staff (authorities) ──

@@ -1,25 +1,6 @@
 ---
-import {
-  PhCaretDown,
-  PhEye,
-  PhGraduationCap,
-  PhBookOpenText,
-  PhGear,
-  PhUsers,
-  PhTreeStructure,
-  PhBookOpen,
-  PhFlask,
-  PhBriefcase,
-  PhHeart,
-  PhCalendar,
-  PhNewspaper,
-  PhNotebook,
-  PhVideo,
-  PhFileText,
-  PhMedal,
-  PhTrendUp,
-  PhUserPlus,
-} from "phosphor-icons-astro";
+import { PhCaretDown } from "phosphor-icons-astro";
+import { getIcon } from "@/lib/phosphorIcons";
 import type { DropdownSection } from "@/data/navigation";
 
 const currentPath = Astro.url.pathname;
@@ -27,32 +8,13 @@ const currentPath = Astro.url.pathname;
 interface Props {
   label: string;
   sections: DropdownSection[];
+  groupIndex?: number;
+  "data-tina-field"?: string;
 }
 
-const { label, sections } = Astro.props;
+const { label, sections, groupIndex = 0, "data-tina-field": dataTinaField } = Astro.props;
 
-// Icon component mapping (runtime lookup)
-const iconMap: Record<string, any> = {
-  eye: PhEye,
-  "graduation-cap": PhGraduationCap,
-  "book-open-text": PhBookOpenText,
-  gear: PhGear,
-  users: PhUsers,
-  "tree-structure": PhTreeStructure,
-  "book-open": PhBookOpen,
-  flask: PhFlask,
-  briefcase: PhBriefcase,
-  masks: PhHeart,
-  heart: PhHeart,
-  calendar: PhCalendar,
-  newspaper: PhNewspaper,
-  notebook: PhNotebook,
-  video: PhVideo,
-  "file-text": PhFileText,
-  medal: PhMedal,
-  "trend-up": PhTrendUp,
-  "user-plus": PhUserPlus,
-};
+
 
 // Helper to check if path is active
 const isActive = (href: string) => currentPath.startsWith(href);
@@ -72,6 +34,7 @@ const hasActiveItem = sections.some((section) =>
     aria-haspopup="true"
     aria-expanded={hasActiveItem ? "true" : "false"}
     data-dropdown-trigger
+    data-tina-field={dataTinaField}
   >
     <span class="relative">
       {label}
@@ -124,7 +87,7 @@ const hasActiveItem = sections.some((section) =>
                       : "hover:bg-primary/[0.03]",
                   ]}
                 >
-                  {item.icon && iconMap[item.icon] && (
+                  {item.icon && (
                     <div
                       class:list={[
                         "mt-0.5 flex-shrink-0 transition-colors duration-200",
@@ -134,7 +97,7 @@ const hasActiveItem = sections.some((section) =>
                       ]}
                     >
                       {(() => {
-                        const IconComponent = iconMap[item.icon];
+                        const IconComponent = getIcon(item.icon);
                         return IconComponent ? (
                           <IconComponent size={18} weight="duotone" />
                         ) : null;

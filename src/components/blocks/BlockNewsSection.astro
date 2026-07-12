@@ -1,0 +1,313 @@
+---
+import { tinaField } from "@tinacms/astro/tina-field";
+import { PhArrowRight } from "phosphor-icons-astro";
+
+export interface Props {
+  block: {
+    _template: 'newsSection';
+    tag?: string;
+    category?: string;
+    title?: string;
+    description?: string;
+    image?: string;
+    imageAlt?: string;
+    linkText?: string;
+    linkHref?: string;
+    secondary?: Array<{
+      category?: string;
+      title?: string;
+      date?: string;
+      href?: string;
+    }>;
+  };
+}
+
+const { block } = Astro.props;
+const showSection = block.title || block.tag || block.secondary?.length;
+
+/**
+ * Converts a date string (YYYY-MM-DD) to a relative time string in Spanish.
+ */
+function timeAgo(dateStr: string): string {
+  const date = new Date(dateStr + "T00:00:00");
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 0) return "Próximamente";
+  if (diffDays === 0) return "Hoy";
+  if (diffDays === 1) return "Ayer";
+  if (diffDays < 7) return `Hace ${diffDays} días`;
+  if (diffDays < 30) {
+    const weeks = Math.floor(diffDays / 7);
+    return `Hace ${weeks} ${weeks === 1 ? "semana" : "semanas"}`;
+  }
+  if (diffDays < 365) {
+    const months = Math.floor(diffDays / 30);
+    return `Hace ${months} ${months === 1 ? "mes" : "meses"}`;
+  }
+  const years = Math.floor(diffDays / 365);
+  return `Hace ${years} ${years === 1 ? "año" : "años"}`;
+}
+---
+
+{showSection && (
+  <section class="news-section" id="noticias" aria-labelledby="news-title">
+    <div class="news-container">
+
+      <!-- Main card — split layout with image -->
+      <div class="news-card">
+        <!-- Image side -->
+        {(block.image || block.tag) && (
+          <div class="news-card-image" data-tina-field={tinaField(block, 'image')}>
+            {block.image && (
+              <img
+                alt={block.imageAlt || ''}
+                src={block.image}
+                loading="lazy"
+                width="800"
+                height="600"
+              />
+            )}
+          </div>
+        )}
+
+        <!-- Text side -->
+        <div class="news-card-content">
+          {block.tag && (
+            <span class="news-tag" data-tina-field={tinaField(block, 'tag')}>{block.tag}</span>
+          )}
+
+          {block.category && (
+            <span class="text-[10px] font-bold tracking-[0.4em] uppercase text-slate-400 block" data-tina-field={tinaField(block, 'category')}>
+              {block.category}
+            </span>
+          )}
+
+          {block.title && (
+            <h2 id="news-title" class="text-2xl md:text-4xl font-display font-bold text-ink tracking-tight text-wrap balance leading-[1.05]" data-tina-field={tinaField(block, 'title')}>
+              {block.title}
+            </h2>
+          )}
+
+          {block.description && (
+            <p class="text-sm md:text-base text-slate-500 font-normal leading-relaxed" data-tina-field={tinaField(block, 'description')}>
+              {block.description}
+            </p>
+          )}
+
+          {block.linkText && block.linkHref && (
+            <div class="pt-2">
+              <a
+                href={block.linkHref}
+                class="inline-flex items-center gap-2 text-sm font-bold text-primary hover:text-primary-deep transition-colors duration-300 group"
+                data-tina-field={tinaField(block, 'linkText')}
+              >
+                <span>{block.linkText}</span>
+                <PhArrowRight
+                  size={16}
+                  weight="regular"
+                  class="transition-transform duration-300 group-hover:translate-x-1"
+                  aria-hidden="true"
+                />
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <!-- Secondary articles -->
+      {block.secondary && block.secondary.length > 0 && (
+        <div class="news-secondary">
+          {block.secondary.map((item, i) => (
+            <a key={i} href={item.href || '#'} class="news-secondary-item group" data-tina-field={tinaField(block, 'secondary', i)}>
+              {item.category && (
+                <span class="text-[9px] font-bold tracking-[0.25em] uppercase text-primary/70 block mb-2" data-tina-field={tinaField(item, 'category')}>{item.category}</span>
+              )}
+              {item.title && (
+                <h3 class="text-base md:text-lg font-display font-bold text-ink group-hover:text-primary transition-colors duration-300 leading-snug tracking-tight" data-tina-field={tinaField(item, 'title')}>
+                  {item.title}
+                </h3>
+              )}
+              {item.date && (
+                <time class="text-xs text-slate-400 mt-1 block" datetime={item.date} data-tina-field={tinaField(item, 'date')}>{timeAgo(item.date)}</time>
+              )}
+            </a>
+          ))}
+        </div>
+      )}
+
+    </div>
+  </section>
+)}
+
+<style>
+  .news-section {
+    padding: 5rem 2rem;
+  }
+
+  .news-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  /* Simple text label with left border accent */
+  .news-tag {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+    padding-left: 0.75rem;
+    border-left: 2px solid var(--color-primary);
+    line-height: 1.4;
+  }
+
+  /* Main card — split layout */
+  .news-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface-elevated);
+    border-radius: var(--radius-luma);
+    overflow: hidden;
+    box-shadow: var(--shadow-luma);
+  }
+
+  @media (min-width: 768px) {
+    .news-card {
+      flex-direction: row;
+    }
+  }
+
+  .news-card-image {
+    flex: 0 0 100%;
+    overflow: hidden;
+  }
+
+  @media (max-width: 767px) {
+    .news-card-image {
+      aspect-ratio: 16 / 9;
+      max-height: 200px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .news-card-image {
+      flex: 0 0 55%;
+      min-height: 400px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .news-card-image {
+      min-height: 500px;
+    }
+  }
+
+  .news-card-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .news-card:hover .news-card-image img {
+    transform: scale(1.03);
+  }
+
+  .news-card-content {
+    flex: 1;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .news-card-content {
+      padding: 2.5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .news-card-content {
+      padding: 3rem;
+    }
+  }
+
+  /* Secondary articles */
+  .news-secondary {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    margin-top: 2rem;
+  }
+
+  @media (min-width: 640px) {
+    .news-secondary {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .news-secondary-item {
+    padding: 1.5rem 1.5rem 1.5rem 0;
+    border-right: 1px solid rgba(226, 232, 240, 0.6);
+  }
+
+  .news-secondary-item:first-child {
+    padding-left: 0;
+  }
+
+  .news-secondary-item:last-child {
+    border-right: none;
+    padding-right: 0;
+  }
+
+  @media (max-width: 768px) {
+    .news-section {
+      padding: 4rem 1.5rem;
+    }
+
+    .news-secondary {
+      grid-template-columns: 1fr;
+      gap: 0;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 2px solid rgba(226, 232, 240, 0.6);
+    }
+
+    .news-secondary::before {
+      content: 'Más noticias';
+      display: block;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: 1rem;
+    }
+
+    .news-secondary-item {
+      padding: 1rem 0;
+      border-right: none;
+      border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+    }
+
+    .news-secondary-item:first-child {
+      padding-top: 0;
+    }
+
+    .news-secondary-item:last-child {
+      padding-bottom: 0;
+      border-bottom: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .news-card-image img {
+      transition: none !important;
+    }
+  }
+</style>

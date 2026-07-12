@@ -1,0 +1,11 @@
+---
+import Footer from '../Footer.astro';
+
+interface Props {
+  data: Record<string, unknown>;
+}
+
+const { data } = Astro.props;
+---
+
+<Footer footerData={data} />

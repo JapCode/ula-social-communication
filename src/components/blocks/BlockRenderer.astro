@@ -1,0 +1,78 @@
+---
+import BlockPageHeader from './BlockPageHeader.astro';
+import BlockHeroBanner from './BlockHeroBanner.astro';
+import BlockRichText from './BlockRichText.astro';
+import BlockItemsList from './BlockItemsList.astro';
+import BlockCards from './BlockCards.astro';
+import BlockStats from './BlockStats.astro';
+import BlockCTA from './BlockCTA.astro';
+import BlockAlert from './BlockAlert.astro';
+import BlockContextualHelp from './BlockContextualHelp.astro';
+import BlockStaffDirectory from './BlockStaffDirectory.astro';
+import BlockFacultyDirectory from './BlockFacultyDirectory.astro';
+import BlockSectionsList from './BlockSectionsList.astro';
+import BlockContactInfo from './BlockContactInfo.astro';
+import BlockQuickAccess from './BlockQuickAccess.astro';
+import BlockNewsSection from './BlockNewsSection.astro';
+import BlockVideoSection from './BlockVideoSection.astro';
+import BlockFiles from './BlockFiles.astro';
+import BlockGroupsWorkshops from './BlockGroupsWorkshops.astro';
+import BlockModalitiesList from './BlockModalitiesList.astro';
+import BlockResearchLines from './BlockResearchLines.astro';
+import BlockAssociationInfo from './BlockAssociationInfo.astro';
+import BlockCommunityService from './BlockCommunityService.astro';
+import BlockTestimonials from './BlockTestimonials.astro';
+import BlockArticlesList from './BlockArticlesList.astro';
+
+/**
+ * Map from GraphQL __typename (e.g. "PagesBlocksHeroBanner")
+ * to the corresponding block component.
+ */
+const componentMap: Record<string, any> = {
+  PagesBlocksPageHeader: BlockPageHeader,
+  PagesBlocksHeroBanner: BlockHeroBanner,
+  PagesBlocksRichText: BlockRichText,
+  PagesBlocksItemsList: BlockItemsList,
+  PagesBlocksCards: BlockCards,
+  PagesBlocksStats: BlockStats,
+  PagesBlocksCta: BlockCTA,
+  PagesBlocksContextualHelp: BlockContextualHelp,
+  PagesBlocksStaffDirectory: BlockStaffDirectory,
+  PagesBlocksFacultyDirectory: BlockFacultyDirectory,
+  PagesBlocksAlert: BlockAlert,
+  PagesBlocksSectionsList: BlockSectionsList,
+  PagesBlocksContactInfo: BlockContactInfo,
+  PagesBlocksQuickAccess: BlockQuickAccess,
+  PagesBlocksNewsSection: BlockNewsSection,
+  PagesBlocksVideoSection: BlockVideoSection,
+  PagesBlocksFiles: BlockFiles,
+  PagesBlocksGroupsWorkshops: BlockGroupsWorkshops,
+  PagesBlocksModalitiesList: BlockModalitiesList,
+  PagesBlocksResearchLines: BlockResearchLines,
+  PagesBlocksAssociationInfo: BlockAssociationInfo,
+  PagesBlocksCommunityService: BlockCommunityService,
+  PagesBlocksTestimonialsList: BlockTestimonials,
+  PagesBlocksArticlesList: BlockArticlesList,
+};
+
+export interface Props {
+  blocks: Array<Record<string, any>>;
+}
+
+const { blocks } = Astro.props;
+
+// Resolve component from __typename to avoid data transformation
+// that would strip Tina proxy metadata (needed for live preview)
+const rendered = blocks
+  .map(block => {
+    const typename = block.__typename as string | undefined;
+    const Component = typename ? componentMap[typename] : null;
+    if (!Component) return null;
+    return { Component, block };
+  })
+  .filter(Boolean);
+---
+
+{rendered.map(({ Component, block }) => (
+  <Component block={block} />
+))}

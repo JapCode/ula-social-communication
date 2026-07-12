@@ -1,20 +1,29 @@
 ---
-pageType: index
-pageId: student-life-index
 title: Vida Estudiantil
-subtitle: "Actividades, organizaciones y oportunidades para los estudiantes de Comunicación Social"
-eyebrow: Comunidad
-items:
-  - title: Asociación
-    description: Representación estudiantil
-    href: /student-life/association
-  - title: Grupos y Talleres
-    description: Cine, teatro, radio, fotografía
-    href: /student-life/groups
-  - title: Servicio Comunitario
-    description: Proyectos sociales
-    href: /student-life/community
-  - title: Eventos
-    description: Foros, charlas, actividades
-    href: /student-life/events
+description: Actividades, organizaciones y oportunidades para los estudiantes de Comunicación Social
+blocks:
+  - _template: pageHeader
+    eyebrow: "Comunidad"
+    pageTitle: "Vida Estudiantil"
+    subtitle: "Actividades, organizaciones y oportunidades para los estudiantes de Comunicación Social"
+    breadcrumb: []
+  - _template: cards
+    heading: ""
+    cards:
+      - title: Asociación
+        description: Representación estudiantil
+        href: /student-life/association
+        icon: "users-three"
+      - title: Grupos y Talleres
+        description: Cine, teatro, radio, fotografía
+        href: /student-life/groups
+        icon: "mask-happy"
+      - title: Servicio Comunitario
+        description: Proyectos sociales
+        href: /student-life/community
+        icon: "heart"
+      - title: Eventos
+        description: Foros, charlas, actividades
+        href: /student-life/events
+        icon: "calendar"
 ---

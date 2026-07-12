@@ -1,0 +1,66 @@
+---
+import { PhArrowRight } from "phosphor-icons-astro";
+import { getIcon } from "@/lib/phosphorIcons";
+
+interface ContactItem {
+  title: string;
+  value: string;
+  detail?: string;
+  icon?: string;
+  href?: string;
+  Icon?: any;
+}
+
+interface Props {
+  contacts: ContactItem[];
+}
+
+const { contacts } = Astro.props;
+---
+
+<div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+  {contacts.map((contact, i) => (
+    contact.href ? (
+      <a key={i} href={contact.href} class="group block bg-white border border-tinted rounded-luma p-6 md:p-8 transition-all duration-300 hover:shadow-luma hover:border-tinted-strong hover:-translate-y-1">
+        {contact.Icon && (
+          <div class="w-12 h-12 bg-primary/5 rounded-full flex items-center justify-center mb-4 transition-transform duration-300 group-hover:scale-110">
+            <contact.Icon size={20} weight="light" class="text-primary" />
+          </div>
+        )}
+        <h3 class="text-sm md:text-base font-bold text-ink tracking-tight group-hover:text-primary transition-colors leading-snug">
+          {contact.title}
+        </h3>
+        <p class="mt-1 text-sm text-slate-500 leading-relaxed">
+          {contact.value}
+        </p>
+        {contact.detail && (
+          <p class="text-xs text-slate-400 mt-1.5 font-medium">
+            {contact.detail}
+          </p>
+        )}
+        <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-primary mt-3 group-hover:gap-2 transition-all">
+          Visitar <PhArrowRight size={12} weight="bold" />
+        </span>
+      </a>
+    ) : (
+      <div key={i} class="bg-white border border-tinted rounded-luma p-6 md:p-8">
+        {contact.Icon && (
+          <div class="w-12 h-12 bg-primary/5 rounded-full flex items-center justify-center mb-4">
+            <contact.Icon size={20} weight="light" class="text-primary" />
+          </div>
+        )}
+        <h3 class="text-sm md:text-base font-bold text-ink tracking-tight leading-snug">
+          {contact.title}
+        </h3>
+        <p class="mt-1 text-sm text-slate-500 leading-relaxed">
+          {contact.value}
+        </p>
+        {contact.detail && (
+          <p class="text-xs text-slate-400 mt-1.5 font-medium">
+            {contact.detail}
+          </p>
+        )}
+      </div>
+    )
+  ))}
+</div>

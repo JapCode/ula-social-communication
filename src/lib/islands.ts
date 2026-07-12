@@ -4,8 +4,36 @@ import { client } from '../../tina/__generated__/client';
 import IslandHome from '../components/islands/IslandHome.astro';
 import IslandArticle from '../components/islands/IslandArticle.astro';
 import IslandEvent from '../components/islands/IslandEvent.astro';
+import IslandNav from '../components/islands/IslandNav.astro';
+import IslandFooter from '../components/islands/IslandFooter.astro';
 
 export const islands: IslandRegistry = {
+  // ── Navigation ───────────────────────────────────────────
+  navigation: {
+    fetch: async () => {
+      const enriched = await requestWithMetadata(
+        client.queries.navigation({ relativePath: 'navigation.json' })
+      );
+      return enriched.data.navigation;
+    },
+    component: IslandNav,
+    wrapper: { tag: 'nav' },
+    propsFromData: (data) => ({ data }),
+  },
+
+  // ── Footer ─────────────────────────────────────────────
+  footer: {
+    fetch: async () => {
+      const enriched = await requestWithMetadata(
+        client.queries.footer({ relativePath: 'footer.json' })
+      );
+      return enriched.data.footer;
+    },
+    component: IslandFooter,
+    wrapper: { tag: 'div' },
+    propsFromData: (data) => ({ data }),
+  },
+
   // ── Home page ─────────────────────────────────────────────
   pageHome: {
     fetch: async () => {

@@ -1,0 +1,53 @@
+---
+import Layout from "../layouts/Layout.astro";
+import TopNav from "../components/TopNav.astro";
+import BlockRenderer from "../components/blocks/BlockRenderer.astro";
+import Footer from "../components/Footer.astro";
+import WhatsAppButton from "../components/WhatsAppButton.astro";
+import SearchModal from "../components/SearchModal.astro";
+import BackToTop from "../components/BackToTop.astro";
+import TinaIsland from "@tinacms/astro/TinaIsland.astro";
+import { requestWithMetadata } from "@tinacms/astro/data";
+import { client } from "../../tina/__generated__/client";
+import { getPageFilename } from "@/lib/routeMap";
+import "@/styles/global.css";
+
+const slug = Astro.params.slug;
+const urlPath = slug ? `/${slug}` : '/';
+
+const filename = getPageFilename(urlPath);
+if (!filename) {
+  return new Response(null, { status: 404 });
+}
+
+const enriched = await requestWithMetadata(
+  client.queries.pages({ relativePath: `${filename}.md` }),
+  { priority: 'primary' }
+);
+
+const pageData = enriched.data.pages;
+
+if (!pageData) {
+  return new Response(null, { status: 404 });
+}
+
+const pageTitle = pageData.title || filename;
+const blocks = pageData.blocks || [];
+---
+
+<Layout title={pageTitle}>
+  <TinaIsland name="navigation" wrapper={{ tag: 'header' }}>
+    <TopNav />
+  </TinaIsland>
+  <TinaIsland name="pages" wrapper={{ tag: 'main' }} params={{ relativePath: `${filename}.md` }} primary>
+    <main id="main-content" class="relative" role="main">
+      <BlockRenderer blocks={blocks} />
+    </main>
+  </TinaIsland>
+  <TinaIsland name="footer" wrapper={{ tag: 'div' }}>
+    <Footer />
+  </TinaIsland>
+  <WhatsAppButton />
+  <BackToTop />
+  <SearchModal />
+</Layout>

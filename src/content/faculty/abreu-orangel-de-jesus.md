@@ -1,5 +1,5 @@
 ---
-name: Abreu, Orangel de Jesús
+name: 'Abreu, Orangel de Jesús'
 title: Profesor
 specialization: Comunicación Social
 bio: |-
@@ -7,4 +7,6 @@ bio: |-
   Ú2008- Inglés 20
   Ú2015- Inglés 20
 status: active
+classification: ordinario
 ---
+

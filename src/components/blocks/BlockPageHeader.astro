@@ -1,0 +1,82 @@
+---
+import { tinaField } from "@tinacms/astro/tina-field";
+import { PhHouse, PhCaretRight } from "phosphor-icons-astro";
+
+export interface Props {
+  block: {
+    _template: 'pageHeader';
+    eyebrow?: string;
+    pageTitle?: string;
+    subtitle?: string;
+    breadcrumb?: Array<{ label: string; href: string }>;
+  };
+}
+
+const { block } = Astro.props;
+const breadcrumb = block.breadcrumb || [];
+---
+
+<section class="relative overflow-hidden bg-gradient-to-b from-surface to-white border-b border-tinted">
+  <div class="max-w-7xl mx-auto px-6 md:px-12 lg:px-16 pt-24 pb-10 md:pt-28 md:pb-14">
+
+    <!-- Breadcrumbs -->
+    {breadcrumb.length > 0 && (
+      <nav class="mb-5" aria-label="Breadcrumb">
+        <ol class="flex items-center flex-wrap gap-1.5 text-xs text-slate-400">
+          <li>
+            <a href="/" class="inline-flex items-center gap-1.5 hover:text-primary transition-colors duration-300">
+              <PhHouse size={14} weight="regular" />
+              <span>Inicio</span>
+            </a>
+          </li>
+          {breadcrumb.map((item, i) => (
+            <>
+              <li class="text-slate-300"><PhCaretRight size={12} weight="regular" /></li>
+              <li>
+                {i === breadcrumb.length - 1 ? (
+                  <span class="text-slate-500 font-medium">{item.label}</span>
+                ) : (
+                  <a href={item.href} class="hover:text-primary transition-colors duration-300">{item.label}</a>
+                )}
+              </li>
+            </>
+          ))}
+        </ol>
+      </nav>
+    )}
+
+    <!-- Eyebrow -->
+    {block.eyebrow && (
+      <span class="inline-block text-[10px] md:text-[11px] font-bold tracking-[0.4em] uppercase text-slate-400 mb-3" data-tina-field={tinaField(block, 'eyebrow')}>
+        {block.eyebrow}
+      </span>
+    )}
+
+    <!-- Title -->
+    {block.pageTitle && (
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-display font-bold text-ink leading-[1.05] tracking-tighter text-wrap balance" data-tina-field={tinaField(block, 'pageTitle')}>
+        {block.pageTitle}
+      </h1>
+    )}
+
+    <!-- Subtitle -->
+    {block.subtitle && (
+      <p class="mt-3 text-sm md:text-base text-slate-500 max-w-2xl leading-relaxed" data-tina-field={tinaField(block, 'subtitle')}>
+        {block.subtitle}
+      </p>
+    )}
+
+    <!-- Subtle divider -->
+    <div class="mt-6 border-t border-tinted">
+      <p class="text-xs text-slate-400">Escuela de Comunicación Social — ULA NURR</p>
+    </div>
+  </div>
+
+  <!-- Background decoration -->
+  <div class="absolute top-0 right-0 w-80 h-80 opacity-[0.06] pointer-events-none" aria-hidden="true">
+    <div class="w-full h-full rounded-full" style="background: radial-gradient(circle, var(--color-primary) 0%, transparent 70%);"></div>
+  </div>
+  <div class="absolute bottom-0 left-1/4 w-64 h-64 opacity-[0.04] pointer-events-none" aria-hidden="true">
+    <div class="w-full h-full rounded-full" style="background: radial-gradient(circle, var(--color-accent) 0%, transparent 70%);"></div>
+  </div>
+</section>
